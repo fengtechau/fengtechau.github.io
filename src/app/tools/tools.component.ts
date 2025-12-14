@@ -6,12 +6,11 @@ import * as changeCase from 'change-case';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { AppTitleService } from '../services/app-title.service';
 @Component({
-  selector: 'app-tools',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule],
-  templateUrl: './tools.component.html',
-  styleUrl: './tools.component.scss',
-  providers: [AppTitleService],
+    selector: 'app-tools',
+    imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule],
+    templateUrl: './tools.component.html',
+    styleUrl: './tools.component.scss',
+    providers: [AppTitleService]
 })
 export class ToolsComponent implements OnInit {
   faChevronDown = faChevronDown;
