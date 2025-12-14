@@ -21,7 +21,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## Deploy
 
-To deploy to website as Github Pages use `ng deploy --base-href=/`.
+To deploy to website as Github Pages use `ng deploy --base-href=/ --dir=dist/root/browser`.
 
 ## Text tools
 
