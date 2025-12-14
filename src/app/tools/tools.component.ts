@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import * as changeCase from 'change-case';
@@ -7,7 +7,7 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { AppTitleService } from '../services/app-title.service';
 @Component({
     selector: 'app-tools',
-    imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule],
+    imports: [ReactiveFormsModule, FontAwesomeModule],
     templateUrl: './tools.component.html',
     styleUrl: './tools.component.scss',
     providers: [AppTitleService]

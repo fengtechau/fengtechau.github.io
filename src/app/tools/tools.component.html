@@ -1,28 +1,30 @@
 <div class="container">
-    <div class="mb-3">
-      <label for="inputText" class="form-label">Input Text</label>
-      <textarea id="inputText" class="form-control" [formControl]="textInput" placeholder="Enter text" rows="8"></textarea>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-4">
-            <div class="input-group">
-                <select id="caseSelect" class="form-control" [formControl]="selectedCase" (change)="transformText()">
-                  <option *ngFor="let caseOption of caseOptions" [value]="caseOption">{{caseDescriptions[caseOption]}}</option>
-                </select>
-                <div class="input-group-append">
-                    <fa-icon [icon]="faChevronDown"></fa-icon>
-                </div>
-              </div>
-        </div>
-        <div class="col-md-2">
-          <button class="btn btn-primary mt-md-0 mt-2 w-100" (click)="transformText()">Transform Text</button>
-        </div>
-        <div class="col-md-4">
-        </div>
-      </div>
-    <div class="mb-3">
-        <label for="outputText" class="form-label">Output Text</label>
-        <textarea id="outputText" class="form-control" [formControl]="textOutput" readonly rows="8"></textarea>
-        <button class="btn btn-secondary ml-2" (click)="copyToClipboard()">Copy to Clipboard</button>
-      </div>
+  <div class="mb-3">
+    <label for="inputText" class="form-label">Input Text</label>
+    <textarea id="inputText" class="form-control" [formControl]="textInput" placeholder="Enter text" rows="8"></textarea>
   </div>
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <div class="input-group">
+        <select id="caseSelect" class="form-control" [formControl]="selectedCase" (change)="transformText()">
+          @for (caseOption of caseOptions; track caseOption) {
+            <option [value]="caseOption">{{caseDescriptions[caseOption]}}</option>
+          }
+        </select>
+        <div class="input-group-append">
+          <fa-icon [icon]="faChevronDown"></fa-icon>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary mt-md-0 mt-2 w-100" (click)="transformText()">Transform Text</button>
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="outputText" class="form-label">Output Text</label>
+    <textarea id="outputText" class="form-control" [formControl]="textOutput" readonly rows="8"></textarea>
+    <button class="btn btn-secondary ml-2" (click)="copyToClipboard()">Copy to Clipboard</button>
+  </div>
+</div>

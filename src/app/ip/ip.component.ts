@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { HttpClient } from '@angular/common/http';
 import { AppTitleService } from '../services/app-title.service';
 
 @Component({
     selector: 'app-ip',
-    imports: [CommonModule],
+    imports: [],
     templateUrl: './ip.component.html',
     styleUrl: './ip.component.scss',
     providers: [AppTitleService]
