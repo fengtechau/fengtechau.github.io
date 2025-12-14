@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-
+import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AppTitleService } from '../services/app-title.service';
 
 @Component({
-    selector: 'app-ip',
-    imports: [],
-    templateUrl: './ip.component.html',
-    styleUrl: './ip.component.scss',
-    providers: [AppTitleService]
+  selector: 'app-ip',
+  imports: [RouterModule],
+  templateUrl: './ip.component.html',
+  styleUrl: './ip.component.scss',
+  providers: [AppTitleService],
 })
 export class IpComponent implements OnInit {
   ip: string = '';
