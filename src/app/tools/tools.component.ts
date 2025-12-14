@@ -6,11 +6,11 @@ import * as changeCase from 'change-case';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { AppTitleService } from '../services/app-title.service';
 @Component({
-    selector: 'app-tools',
-    imports: [ReactiveFormsModule, FontAwesomeModule],
-    templateUrl: './tools.component.html',
-    styleUrl: './tools.component.scss',
-    providers: [AppTitleService]
+  selector: 'app-tools',
+  imports: [ReactiveFormsModule, FontAwesomeModule],
+  templateUrl: './tools.component.html',
+  styleUrl: './tools.component.scss',
+  providers: [AppTitleService],
 })
 export class ToolsComponent implements OnInit {
   faChevronDown = faChevronDown;
@@ -47,7 +47,7 @@ export class ToolsComponent implements OnInit {
       this.selectedCase.setValue(storedCase);
     }
 
-    this.selectedCase.valueChanges.subscribe((value) => {
+    this.selectedCase.valueChanges.subscribe((value: any) => {
       localStorage.setItem('selectedCase', value ?? 'kebab');
     });
   }
