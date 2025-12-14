@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <title>ProMetronome</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #1e293b; }
+      ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+      .no-select { user-select: none; -webkit-user-select: none; }
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.263.1",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+</head>
+<body class="bg-slate-950 text-slate-200 antialiased overflow-hidden">
+    <div id="root"></div>
+    <script type="text/babel" data-type="module" data-presets="typescript,react">
+        import React, { useState, useEffect, useRef, useCallback } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import { Play, Pause, RotateCcw } from 'lucide-react';
+
+        // --- TYPES ---
+        // (Babel will strip these interfaces)
+        type Language = 'en' | 'zh';
+        type Gender = 'male' | 'female';
+
+        interface BeatColumn {
+          id: number;
+          active: [boolean, boolean, boolean, boolean];
+        }
+
+        interface SoundConfig {
+          voiceEnabled: boolean;
+          firstBeatAccent: boolean;
+          gender: Gender;
+        }
+
+        // --- AUDIO ENGINE ---
+        
+        const FORMANTS = {
+          'a': [800, 1200],
+          'i': [300, 2500],
+          'u': [300, 800],
+          'e': [500, 1800]
+        };
+
+        const VOICE_MAP_EN = ['i', 'u', 'a', 'e'];
+        const VOICE_MAP_ZH = ['i', 'a', 'a', 'i'];
+
+        class AudioEngine {
+          audioCtx = null;
+          nextNoteTime = 0.0;
+          timerID = null;
+          current16thNote = 0;
+          lookahead = 25.0;
+          scheduleAheadTime = 0.1;
+          isPlaying = false;
+          
+          bpm = 100;
+          grid = [];
+          soundConfig = { voiceEnabled: false, firstBeatAccent: true, gender: 'female' };
+          language = 'en';
+          onBeatUpdate = null;
+
+          init() {
+            if (!this.audioCtx) {
+              this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (this.audioCtx.state === 'suspended') {
+              this.audioCtx.resume();
+            }
+          }
+
+          setParams(bpm, grid, config, lang) {
+            this.bpm = bpm;
+            this.grid = grid;
+            this.soundConfig = config;
+            this.language = lang;
+          }
+
+          setCallback(cb) {
+            this.onBeatUpdate = cb;
+          }
+
+          start() {
+            if (this.isPlaying) return;
+            this.init();
+            this.isPlaying = true;
+            this.current16thNote = 0;
+            this.nextNoteTime = this.audioCtx.currentTime + 0.05;
+            this.scheduler();
+          }
+
+          stop() {
+            this.isPlaying = false;
+            if (this.timerID !== null) {
+              window.clearTimeout(this.timerID);
+              this.timerID = null;
+            }
+          }
+
+          scheduler() {
+            if (!this.isPlaying || !this.audioCtx) return;
+
+            while (this.nextNoteTime < this.audioCtx.currentTime + this.scheduleAheadTime) {
+              this.scheduleNote(this.current16thNote, this.nextNoteTime);
+              this.nextNote();
+            }
+            
+            this.timerID = window.setTimeout(() => this.scheduler(), this.lookahead);
+          }
+
+          nextNote() {
+            const secondsPerBeat = 60.0 / this.bpm;
+            this.nextNoteTime += 0.25 * secondsPerBeat;
+            
+            this.current16thNote++;
+            if (this.current16thNote === 16) {
+              this.current16thNote = 0;
+            }
+          }
+
+          scheduleNote(beatNumber, time) {
+            if (!this.audioCtx) return;
+
+            const columnIdx = Math.floor(beatNumber / 4);
+            const subIdx = beatNumber % 4;
+            
+            const isActive = this.grid[columnIdx]?.active[subIdx];
+
+            if (isActive) {
+              if (subIdx === 0) {
+                if (this.soundConfig.voiceEnabled) {
+                  this.playVoice(columnIdx, time);
+                } else {
+                  this.playQuarterSound(columnIdx, time);
+                }
+              } else if (subIdx === 2) {
+                this.playEighthSound(time);
+              } else {
+                this.playSixteenthSound(time);
+              }
+            }
+
+            const lookaheadDraw = (time - this.audioCtx.currentTime) * 1000;
+            setTimeout(() => {
+                if (this.onBeatUpdate && this.isPlaying) {
+                    this.onBeatUpdate(beatNumber);
+                }
+            }, Math.max(0, lookaheadDraw));
+          }
+
+          playQuarterSound(beatIndex, time) {
+            if (!this.audioCtx) return;
+            const osc = this.audioCtx.createOscillator();
+            const gainNode = this.audioCtx.createGain();
+
+            const isFirstBeat = beatIndex === 0;
+            const accent = this.soundConfig.firstBeatAccent && isFirstBeat;
+
+            osc.connect(gainNode);
+            gainNode.connect(this.audioCtx.destination);
+
+            osc.type = isFirstBeat ? 'square' : 'triangle';
+            osc.frequency.setValueAtTime(accent ? 1200 : 800, time);
+            
+            gainNode.gain.setValueAtTime(0, time);
+            gainNode.gain.linearRampToValueAtTime(accent ? 1.0 : 0.8, time + 0.005);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.1);
+
+            osc.start(time);
+            osc.stop(time + 0.1);
+          }
+
+          playEighthSound(time) {
+            if (!this.audioCtx) return;
+            const osc = this.audioCtx.createOscillator();
+            const gainNode = this.audioCtx.createGain();
+
+            osc.connect(gainNode);
+            gainNode.connect(this.audioCtx.destination);
+
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(600, time);
+
+            gainNode.gain.setValueAtTime(0, time);
+            gainNode.gain.linearRampToValueAtTime(0.6, time + 0.005);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.08);
+
+            osc.start(time);
+            osc.stop(time + 0.08);
+          }
+
+          playSixteenthSound(time) {
+            if (!this.audioCtx) return;
+            const osc = this.audioCtx.createOscillator();
+            const gainNode = this.audioCtx.createGain();
+
+            osc.connect(gainNode);
+            gainNode.connect(this.audioCtx.destination);
+
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(2000, time);
+            
+            gainNode.gain.setValueAtTime(0, time);
+            gainNode.gain.linearRampToValueAtTime(0.3, time + 0.002);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.03);
+
+            osc.start(time);
+            osc.stop(time + 0.03);
+          }
+
+          playVoice(beatIndex, time) {
+            if (!this.audioCtx) return;
+
+            const genderPitch = this.soundConfig.gender === 'female' ? 280 : 130;
+            
+            const map = this.language === 'zh' ? VOICE_MAP_ZH : VOICE_MAP_EN;
+            const vowelKey = map[beatIndex % 4];
+            const [f1, f2] = FORMANTS[vowelKey];
+            
+            const pitch = beatIndex === 0 && this.soundConfig.firstBeatAccent ? genderPitch * 1.2 : genderPitch;
+
+            const osc = this.audioCtx.createOscillator();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(pitch, time);
+            osc.frequency.exponentialRampToValueAtTime(pitch * 0.9, time + 0.15);
+
+            const filter1 = this.audioCtx.createBiquadFilter();
+            filter1.type = 'bandpass';
+            filter1.frequency.setValueAtTime(f1, time);
+            filter1.Q.value = 5;
+
+            const filter2 = this.audioCtx.createBiquadFilter();
+            filter2.type = 'bandpass';
+            filter2.frequency.setValueAtTime(f2, time);
+            filter2.Q.value = 5;
+
+            const gainNode = this.audioCtx.createGain();
+            gainNode.gain.setValueAtTime(0, time);
+            gainNode.gain.linearRampToValueAtTime(1.0, time + 0.02);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, time + 0.25);
+
+            osc.connect(filter1);
+            osc.connect(filter2);
+            
+            filter1.connect(gainNode);
+            filter2.connect(gainNode);
+            
+            gainNode.connect(this.audioCtx.destination);
+
+            osc.start(time);
+            osc.stop(time + 0.3);
+          }
+        }
+
+        // --- COMPONENTS ---
+
+        const TimerDisplay = () => {
+          const [seconds, setSeconds] = useState(0);
+          const [isRunning, setIsRunning] = useState(false);
+
+          useEffect(() => {
+            let interval;
+            if (isRunning) {
+              interval = window.setInterval(() => {
+                setSeconds(s => s + 1);
+              }, 1000);
+            }
+            return () => {
+              if (interval) clearInterval(interval);
+            };
+          }, [isRunning]);
+
+          const toggleTimer = () => setIsRunning(!isRunning);
+          
+          const reset = () => {
+            setIsRunning(false);
+            setSeconds(0);
+          };
+
+          const format = (totalSeconds) => {
+            const m = Math.floor(totalSeconds / 60);
+            const s = totalSeconds % 60;
+            return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+          };
+
+          return (
+            <div className="flex flex-col items-center gap-3">
+              <div className={`font-mono text-4xl tabular-nums tracking-widest transition-colors ${isRunning ? 'text-emerald-400' : 'text-slate-500'}`}>
+                {format(seconds)}
+              </div>
+              
+              <div className="flex items-center gap-4">
+                <button 
+                  onClick={toggleTimer}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold text-sm transition-colors ${
+                    isRunning 
+                      ? 'bg-amber-500/10 text-amber-500 hover:bg-amber-500/20' 
+                      : 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20'
+                  }`}
+                >
+                  {isRunning ? <><Pause size={16} fill="currentColor" /> Pause</> : <><Play size={16} fill="currentColor" /> Start</>}
+                </button>
+                
+                <button 
+                  onClick={reset}
+                  className="p-2 rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-slate-200 transition-colors"
+                  title="Reset Timer"
+                >
+                  <RotateCcw size={16} />
+                </button>
+              </div>
+            </div>
+          );
+        };
+
+        const MetronomeGrid = ({ grid, currentBeat16th, isPlaying, onToggleCell }) => {
+          return (
+            <div className="w-full max-w-lg mx-auto p-4 bg-slate-900 rounded-xl border border-slate-800 shadow-xl">
+              <div className="flex justify-between mb-2 text-xs text-slate-500 font-mono px-1">
+                <span>BEAT 1</span>
+                <span>BEAT 2</span>
+                <span>BEAT 3</span>
+                <span>BEAT 4</span>
+              </div>
+              
+              <div className="flex justify-between gap-2 md:gap-4">
+                {grid.map((column, colIdx) => (
+                  <div key={column.id} className="flex-1 flex flex-col gap-1.5">
+                    {column.active.map((isActive, rowIdx) => {
+                      const cellBeatIndex = (colIdx * 4) + rowIdx;
+                      const isCurrent = isPlaying && currentBeat16th === cellBeatIndex;
+
+                      let label = '';
+                      if (rowIdx === 0) label = (colIdx + 1).toString();
+                      else if (rowIdx === 1) label = 'e';
+                      else if (rowIdx === 2) label = 'and';
+                      else if (rowIdx === 3) label = 'r';
+
+                      let baseColor = 'bg-slate-800 border-slate-700';
+                      if (isActive) {
+                        if (rowIdx === 0) baseColor = 'bg-cyan-600 border-cyan-500 shadow-[0_0_10px_rgba(8,145,178,0.5)]';
+                        else if (rowIdx === 2) baseColor = 'bg-indigo-600 border-indigo-500';
+                        else baseColor = 'bg-slate-600 border-slate-500';
+                      } else {
+                        baseColor = 'bg-slate-900/50 border-slate-800 opacity-40';
+                      }
+
+                      if (isCurrent) {
+                        baseColor = 'bg-white border-white shadow-[0_0_15px_rgba(255,255,255,0.8)] scale-105';
+                      }
+
+                      return (
+                        <button
+                          key={`${colIdx}-${rowIdx}`}
+                          onClick={() => onToggleCell(colIdx, rowIdx)}
+                          className={`
+                            w-full h-10 md:h-12 rounded-md border transition-all duration-75 ease-out
+                            flex items-center justify-center relative
+                            ${baseColor}
+                            hover:brightness-110 active:scale-95
+                          `}
+                        >
+                          <span className={`text-[10px] md:text-xs font-bold ${isActive ? 'text-white/90' : 'text-slate-600'}`}>
+                            {label}
+                          </span>
+                          {isCurrent && (
+                             <span className="absolute w-2 h-2 bg-red-500 rounded-full top-1 right-1 animate-ping" />
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        };
+
+        const INITIAL_GRID = Array.from({ length: 4 }, (_, i) => ({
+          id: i,
+          active: [true, false, false, false],
+        }));
+
+        const App = () => {
+          const [bpm, setBpm] = useState(100);
+          const [isPlaying, setIsPlaying] = useState(false);
+          const [grid, setGrid] = useState(INITIAL_GRID);
+          const [lang, setLang] = useState('en');
+          const [currentBeat16th, setCurrentBeat16th] = useState(-1);
+          const [config, setConfig] = useState({
+            voiceEnabled: false,
+            firstBeatAccent: true,
+            gender: 'female',
+          });
+          const [activePattern, setActivePattern] = useState('quarter');
+
+          const engineRef = useRef(new AudioEngine());
+
+          useEffect(() => {
+            engineRef.current.setCallback((beatIdx) => {
+              setCurrentBeat16th(beatIdx);
+            });
+          }, []);
+
+          useEffect(() => {
+            engineRef.current.setParams(bpm, grid, config, lang);
+          }, [bpm, grid, config, lang]);
+
+          const togglePlay = useCallback(() => {
+            if (isPlaying) {
+              engineRef.current.stop();
+              setIsPlaying(false);
+              setCurrentBeat16th(-1);
+            } else {
+              engineRef.current.start();
+              setIsPlaying(true);
+            }
+          }, [isPlaying]);
+
+          const toggleCell = (colIdx, rowIdx) => {
+            setActivePattern(null);
+            setGrid(prev => prev.map((col, c) => {
+              if (c !== colIdx) return col;
+              const newActive = [...col.active];
+              newActive[rowIdx] = !newActive[rowIdx];
+              return { ...col, active: newActive };
+            }));
+          };
+
+          const handleBpmChange = (e) => {
+            setBpm(Number(e.target.value));
+          };
+
+          const adjustBpm = (delta) => {
+            setBpm(prev => Math.min(300, Math.max(20, prev + delta)));
+          };
+
+          const setPattern = (type) => {
+            setActivePattern(type);
+            const newGrid = grid.map(col => {
+              const active = [true, false, false, false];
+              if (type === 'eighth' || type === 'sixteenth') active[2] = true;
+              if (type === 'sixteenth') { active[1] = true; active[3] = true; }
+              return { ...col, active };
+            });
+            setGrid(newGrid);
+          };
+
+          return (
+            <div className="min-h-screen bg-slate-950 flex flex-col items-center py-8 px-4 font-sans overflow-y-auto">
+              <div className="w-full max-w-lg flex justify-between items-center mb-6">
+                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent no-select">
+                  ProMetronome
+                </h1>
+                <button 
+                  onClick={() => setLang(l => l === 'en' ? 'zh' : 'en')}
+                  className="px-3 py-1 rounded bg-slate-800 text-slate-300 text-xs font-bold uppercase hover:bg-slate-700 transition"
+                >
+                  {lang === 'en' ? 'English' : '中文'}
+                </button>
+              </div>
+
+              <div className="w-full max-w-lg bg-slate-900/80 backdrop-blur border border-slate-800 rounded-2xl p-6 shadow-2xl relative">
+                <div className="flex flex-col items-center mb-6">
+                  <div className="relative">
+                     <span className="text-7xl md:text-8xl font-black text-white tracking-tighter tabular-nums no-select">
+                      {bpm}
+                    </span>
+                    <span className="absolute -bottom-2 right-0 text-xs font-bold text-slate-500">BPM</span>
+                  </div>
+                  
+                  <div className="w-full flex items-center gap-4 mt-4">
+                     <button onClick={() => adjustBpm(-1)} className="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-bold active:scale-95 transition">-</button>
+                     <input 
+                      type="range" 
+                      min="20" 
+                      max="300" 
+                      value={bpm} 
+                      onChange={handleBpmChange}
+                      className="flex-1 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
+                    />
+                     <button onClick={() => adjustBpm(1)} className="w-10 h-10 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center font-bold active:scale-95 transition">+</button>
+                  </div>
+                </div>
+
+                <div className="flex justify-center mb-8">
+                  <button
+                    onClick={togglePlay}
+                    className={`
+                      w-24 h-24 rounded-full flex items-center justify-center shadow-lg transition-all duration-200
+                      ${isPlaying 
+                        ? 'bg-red-500/10 text-red-500 border-2 border-red-500 hover:bg-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.2)]' 
+                        : 'bg-cyan-500 text-slate-950 hover:bg-cyan-400 hover:scale-105 shadow-[0_0_30px_rgba(6,182,212,0.4)]'
+                      }
+                    `}
+                  >
+                    {isPlaying ? <Pause size={40} fill="currentColor" /> : <Play size={40} fill="currentColor" className="ml-1" />}
+                  </button>
+                </div>
+
+                <div className="bg-slate-950/50 rounded-xl p-4 border border-slate-800/50 mb-6">
+                   <h3 className="text-xs text-slate-500 font-bold uppercase mb-4 tracking-wider">
+                      {lang === 'en' ? 'Settings & Patterns' : '设置与节奏模式'}
+                   </h3>
+                   
+                   <div className="grid grid-cols-2 gap-4">
+                     <div className="flex items-center justify-between bg-slate-900 p-2 rounded border border-slate-800">
+                        <span className="text-xs text-slate-300">{lang === 'en' ? 'Voice' : '人声'}</span>
+                        <button 
+                          onClick={() => setConfig(c => ({...c, voiceEnabled: !c.voiceEnabled}))}
+                          className={`w-8 h-4 rounded-full transition-colors relative ${config.voiceEnabled ? 'bg-cyan-600' : 'bg-slate-700'}`}
+                        >
+                          <div className={`absolute w-2.5 h-2.5 rounded-full bg-white top-0.5 transition-transform ${config.voiceEnabled ? 'left-5' : 'left-0.5'}`} />
+                        </button>
+                     </div>
+
+                     <div className="flex items-center justify-between bg-slate-900 p-2 rounded border border-slate-800">
+                        <span className="text-xs text-slate-300">{lang === 'en' ? 'Accent 1' : '重音'}</span>
+                        <button 
+                          onClick={() => setConfig(c => ({...c, firstBeatAccent: !c.firstBeatAccent}))}
+                          className={`w-8 h-4 rounded-full transition-colors relative ${config.firstBeatAccent ? 'bg-indigo-600' : 'bg-slate-700'}`}
+                        >
+                           <div className={`absolute w-2.5 h-2.5 rounded-full bg-white top-0.5 transition-transform ${config.firstBeatAccent ? 'left-5' : 'left-0.5'}`} />
+                        </button>
+                     </div>
+
+                     <div className="col-span-2 flex items-center justify-between bg-slate-900 p-2 rounded border border-slate-800">
+                        <span className="text-xs text-slate-300">{lang === 'en' ? 'Voice' : '声线'}</span>
+                        <div className="flex gap-1">
+                           <button 
+                            onClick={() => setConfig(c => ({...c, gender: 'male'}))}
+                            className={`px-2 py-1 rounded text-xs transition ${config.gender === 'male' ? 'bg-cyan-700 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+                           >
+                             {lang === 'en' ? 'Male' : '男声'}
+                           </button>
+                           <button 
+                             onClick={() => setConfig(c => ({...c, gender: 'female'}))}
+                             className={`px-2 py-1 rounded text-xs transition ${config.gender === 'female' ? 'bg-pink-700 text-white' : 'text-slate-500 hover:text-slate-300'}`}
+                           >
+                             {lang === 'en' ? 'Female' : '女声'}
+                           </button>
+                        </div>
+                     </div>
+
+                     <div className="col-span-2 flex gap-2 pt-2 border-t border-slate-800/50 mt-1">
+                        <button 
+                          onClick={() => setPattern('quarter')} 
+                          className={`flex-1 py-1.5 rounded text-xs transition ${activePattern === 'quarter' ? 'bg-cyan-600 text-white font-bold shadow-[0_0_10px_rgba(8,145,178,0.5)]' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'}`}
+                        >
+                          1/4
+                        </button>
+                        <button 
+                          onClick={() => setPattern('eighth')} 
+                          className={`flex-1 py-1.5 rounded text-xs transition ${activePattern === 'eighth' ? 'bg-cyan-600 text-white font-bold shadow-[0_0_10px_rgba(8,145,178,0.5)]' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'}`}
+                        >
+                          1/8
+                        </button>
+                        <button 
+                          onClick={() => setPattern('sixteenth')} 
+                          className={`flex-1 py-1.5 rounded text-xs transition ${activePattern === 'sixteenth' ? 'bg-cyan-600 text-white font-bold shadow-[0_0_10px_rgba(8,145,178,0.5)]' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'}`}
+                        >
+                          1/16
+                        </button>
+                     </div>
+                   </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-800">
+                   <TimerDisplay />
+                </div>
+              </div>
+
+              <div className="w-full max-w-lg mt-6 pb-12">
+                <h3 className="text-slate-500 text-xs font-bold uppercase mb-2 pl-2">Rhythm Matrix</h3>
+                <MetronomeGrid 
+                  grid={grid} 
+                  currentBeat16th={currentBeat16th}
+                  isPlaying={isPlaying}
+                  onToggleCell={toggleCell}
+                />
+                <p className="text-center text-slate-600 text-xs mt-4">
+                  {lang === 'en' ? 'Tap grid blocks to toggle individual notes.' : '点击方块可开启或关闭特定拍点的声音。'}
+                </p>
+              </div>
+
+            </div>
+          );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
