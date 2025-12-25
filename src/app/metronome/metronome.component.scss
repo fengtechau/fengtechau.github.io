@@ -75,6 +75,9 @@
 }
 
 .btn-circle {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
     width: 38px;
     height: 38px;
     border-radius: 999px;
@@ -133,12 +136,31 @@
     /* 兜底宽度：给 2/4、3/4 等非 4/6/8 的拍号 */
     flex: 0 0 78px;
     min-width: 78px;
+    position: relative; // ✅ 让 ::before 定位
 }
 
 /* ✅ 只有演奏到的列显示背景色 */
 .beat-col.active-now {
     background: rgba(255, 161, 74, 0.18);
 }
+
+
+.beat-col.group-start::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.00),
+            rgba(0, 0, 0, 0.06) 20%,
+            rgba(0, 0, 0, 0.06) 80%,
+            rgba(0, 0, 0, 0.00));
+    pointer-events: none;
+}
+
 
 /* =========================================================
    ✅ 列宽按拍数占比（你要求）
@@ -275,6 +297,11 @@
     white-space: nowrap;
 }
 
+.pattern-select {
+    width: 220px;
+    white-space: nowrap;
+}
+
 @media (max-width: 576px) {
     .sig-select {
         width: 170px;
@@ -352,4 +379,10 @@
         width: 34px;
         height: 34px;
     }
+
+
+    .pattern-select {
+        width: 210px;
+    }
+
 }

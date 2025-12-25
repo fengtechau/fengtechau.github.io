@@ -38,6 +38,29 @@
                     {{ p.labelKey | translate }}
                 </option>
             </select>
+
+
+            <!-- Pattern dropdown + actions -->
+            <select class="form-select form-select-sm pattern-select" [ngModel]="activePatternId()"
+                (ngModelChange)="onSelectPattern($event)">
+                <option [ngValue]="''" disabled>Pattern</option>
+                <option *ngFor="let p of patterns()" [ngValue]="p.id">
+                    {{ p.name }}
+                </option>
+            </select>
+
+            <button class="btn btn-outline-secondary btn-sm px-2" (click)="savePatternOverwrite()" title="Save">
+                Save
+            </button>
+
+            <button class="btn btn-outline-secondary btn-sm px-2" (click)="savePatternAs()" title="Save As">
+                Save As
+            </button>
+
+            <button class="btn btn-outline-danger btn-sm px-2" (click)="deletePattern()" title="Delete">
+                Del
+            </button>
+
         </div>
 
         <!-- Grouping -->
@@ -62,12 +85,18 @@
             </div>
 
             <div class="tempo-row">
-                <button class="btn btn-outline-secondary btn-circle" (click)="bpmMinus()">−</button>
 
+                <button class="btn btn-outline-secondary btn-circle" (pointerdown)="startBpmHold(-1, $event)"
+                    (pointerup)="stopBpmHold()" (pointercancel)="stopBpmHold()" (pointerleave)="stopBpmHold()">
+                    −
+                </button>
                 <input type="range" class="form-range tempo-range" min="20" max="300" [ngModel]="state().bpm"
                     (ngModelChange)="onBpmChange($event)">
+                <button class="btn btn-outline-secondary btn-circle" (pointerdown)="startBpmHold(+1, $event)"
+                    (pointerup)="stopBpmHold()" (pointercancel)="stopBpmHold()" (pointerleave)="stopBpmHold()">
+                    +
+                </button>
 
-                <button class="btn btn-outline-secondary btn-circle" (click)="bpmPlus()">+</button>
             </div>
         </div>
 
@@ -87,7 +116,7 @@
     <div class="mt-2">
         <div class="grid-outer" [ngClass]="'beats-' + state().beatsPerBar">
             <div class="beat-col" *ngFor="let col of pattern; let beat = index"
-                [class.active-now]="isBeatActiveNow(beat)">
+                [class.active-now]="isBeatActiveNow(beat)" [class.group-start]="isGroupStart(beat)">
 
                 <button *ngFor="let cell of col; let level = index" type="button" class="cell"
                     [ngClass]="levelClass(level)" [class.off]="!pattern[beat][level]" [class.hit]="state().isRunning

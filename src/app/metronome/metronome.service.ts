@@ -201,6 +201,7 @@ export class MetronomeService {
   toggleCell(beat: number, level: number) {
     if (!this.pattern[beat] || this.pattern[beat][level] === undefined) return;
     this.pattern[beat][level] = !this.pattern[beat][level];
+    this.patchState({ currentBeatIndex: this.getState().currentBeatIndex });
   }
 
   /** 全部开启/全部静音（可选功能） */
@@ -263,7 +264,7 @@ export class MetronomeService {
     this.patchState({ beatsPerBar, denominator });
   }
 
-  private resetTransport() {
+  public resetTransport() {
     // 以 “当前时间 + 少量偏移” 作为起点更稳
     const now = this.audioCtx?.currentTime ?? 0;
     this.nextNoteTime = now + 0.05;
@@ -482,6 +483,104 @@ export class MetronomeService {
   private patchState(patch: Partial<MetronomeState>) {
     this.stateSubject.next({ ...this.stateSubject.value, ...patch });
   }
+
+  /** 读取全部 Pattern（map） */
+  private getPatternsMap(): Record<PatternId, MetronomePatternV1> {
+    return safeJsonParse<Record<PatternId, MetronomePatternV1>>(
+      localStorage.getItem(LS_PATTERNS),
+      {}
+    );
+  }
+
+  /** 写入全部 Pattern（map） */
+  private setPatternsMap(map: Record<PatternId, MetronomePatternV1>) {
+    localStorage.setItem(LS_PATTERNS, JSON.stringify(map));
+  }
+
+  /** 列表（按更新时间倒序） */
+  listPatterns(): MetronomePatternV1[] {
+    const map = this.getPatternsMap();
+    return Object.values(map).sort((a, b) => b.updatedAt - a.updatedAt);
+  }
+
+  getActivePatternId(): PatternId | null {
+    return localStorage.getItem(LS_ACTIVE_ID);
+  }
+
+  setActivePatternId(id: PatternId) {
+    localStorage.setItem(LS_ACTIVE_ID, id);
+  }
+
+  loadPattern(id: PatternId): MetronomePatternV1 | null {
+    const map = this.getPatternsMap();
+    return map[id] ?? null;
+  }
+
+  deletePattern(id: PatternId) {
+    const map = this.getPatternsMap();
+    delete map[id];
+    this.setPatternsMap(map);
+
+    if (this.getActivePatternId() === id) {
+      localStorage.removeItem(LS_ACTIVE_ID);
+    }
+  }
+
+  /** 导出当前状态为 Pattern（可用于另存为/覆盖保存） */
+  exportCurrentPattern(
+    name: string,
+    selectedPreset?: PatternPreset
+  ): MetronomePatternV1 {
+    const st = this.getState();
+    return {
+      id: uid(),
+      name,
+      updatedAt: Date.now(),
+      bpm: st.bpm,
+      timeSignature: st.timeSignature,
+      accentFirstBeat: st.accentFirstBeat,
+      groupingPreset: st.groupingPreset,
+      selectedPreset,
+      pattern: deepClonePattern(this.pattern),
+    };
+  }
+
+  /** 保存 Pattern（若传入 id 则覆盖） */
+  savePattern(p: MetronomePatternV1) {
+    const map = this.getPatternsMap();
+    map[p.id] = { ...p, updatedAt: Date.now() };
+    this.setPatternsMap(map);
+    this.setActivePatternId(p.id);
+  }
+
+  /**
+   * 应用 Pattern：
+   * 1) 先 setTimeSignature 触发 rebuildPattern / grouping 默认
+   * 2) 再 setBpm / accent / grouping
+   * 3) 最后把 pattern 矩阵覆盖进去（并做尺寸归一）
+   */
+  applyPattern(p: MetronomePatternV1) {
+    // 先切拍号（会 rebuildPattern）
+    this.setTimeSignature(p.timeSignature);
+
+    // 再设基础参数
+    this.setBpm(p.bpm);
+    this.setAccentFirstBeat(p.accentFirstBeat);
+
+    // grouping 会重算 accentBeats
+    this.setGrouping(p.groupingPreset ?? 'none');
+
+    // 按新拍号的 beats/levels 归一化 pattern 尺寸
+    const st = this.getState();
+    const levels = st.denominator === 4 ? 4 : 2;
+    this.pattern = normalizePattern(p.pattern ?? [], st.beatsPerBar, levels);
+
+    // active id 记录
+    this.setActivePatternId(p.id);
+
+    // 如果正在播放，避免错位：建议回到小节起点
+    if (st.isRunning) this.resetTransport();
+  }
 }
 
 export type GroupingPreset =
@@ -494,3 +593,60 @@ export type GroupingPreset =
   | '3+3+2'
   | '2+3+3'
   | '3+2+3';
+
+// ===== Pattern persistence (localStorage) =====
+
+export type PatternId = string;
+
+export interface MetronomePatternV1 {
+  id: PatternId;
+  name: string;
+  updatedAt: number;
+
+  bpm: number;
+  timeSignature: TimeSignature;
+  accentFirstBeat: boolean;
+  groupingPreset: GroupingPreset;
+
+  // UI 里当前选中的 preset（可选，仅用于下拉回显）
+  selectedPreset?: PatternPreset;
+
+  // 核心：你的 pattern 矩阵
+  pattern: boolean[][];
+}
+
+const LS_PATTERNS = 'metronome.patterns.v1';
+const LS_ACTIVE_ID = 'metronome.patterns.activeId.v1';
+
+function safeJsonParse<T>(raw: string | null, fallback: T): T {
+  if (!raw) return fallback;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return fallback;
+  }
+}
+
+function uid(): string {
+  return Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
+
+function deepClonePattern(p: boolean[][]): boolean[][] {
+  return p.map((row) => row.slice());
+}
+
+function normalizePattern(
+  incoming: boolean[][],
+  beatsPerBar: number,
+  levels: number
+): boolean[][] {
+  const out: boolean[][] = Array.from({ length: beatsPerBar }, (_, b) => {
+    const srcRow = incoming?.[b] ?? [];
+    return Array.from({ length: levels }, (_, l) => !!srcRow[l]);
+  });
+
+  // 如果你希望默认主拍为 true（当缺失时），可打开下面逻辑：
+  // for (let b = 0; b < beatsPerBar; b++) out[b][0] = out[b][0] ?? true;
+
+  return out;
+}

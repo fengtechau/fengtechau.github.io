@@ -5,6 +5,8 @@ import {
   MetronomeService,
   TimeSignature,
   PatternPreset,
+  MetronomePatternV1,
+  PatternId,
 } from './metronome.service';
 
 // ngx-translate
@@ -27,8 +29,16 @@ export class MetronomeComponent {
   // 订阅 service 状态
   private sub = this.metro.state$.subscribe((s) => this.state.set(s));
 
+  // ✅ Pattern 列表与当前选中
+  patterns = signal<MetronomePatternV1[]>([]);
+  activePatternId = signal<PatternId | ''>('');
+
+  // BPM 长按连发
+  private bpmHoldTimeout?: number;
+  private bpmHoldInterval?: number;
+
   // UI 数据
-  timeSignatures: TimeSignature[] = ['2/4', '3/4', '4/4', '4/8', '6/8', '8/8'];
+  timeSignatures: TimeSignature[] = ['2/4', '3/4', '4/4', '6/8', '8/8'];
 
   // levels label（显示 1/4 1/8 1/16 等）
   levels = computed(() => {
@@ -54,6 +64,7 @@ export class MetronomeComponent {
   selectedPreset: PatternPreset = 'mainOnly';
 
   applyPreset(p: PatternPreset) {
+    this.selectedPreset = p;
     this.metro.applyPreset(p);
   }
 
@@ -66,10 +77,91 @@ export class MetronomeComponent {
   constructor() {
     // i18n 默认英文
     this.i18n.use('en');
+
+    // ✅ 初始化 Pattern 列表 & 自动载入上次使用
+    this.refreshPatterns();
+
+    const lastId = this.metro.getActivePatternId();
+    if (lastId) {
+      const p = this.metro.loadPattern(lastId);
+      if (p) {
+        this.metro.applyPattern(p);
+        // 下拉回显
+        this.activePatternId.set(p.id);
+        // preset 回显（可选）
+        if (p.selectedPreset) this.selectedPreset = p.selectedPreset;
+      }
+    }
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.stopBpmHold();
+  }
+
+  // ===== Pattern UI handlers =====
+
+  refreshPatterns() {
+    this.patterns.set(this.metro.listPatterns());
+    this.activePatternId.set(this.metro.getActivePatternId() ?? '');
+  }
+
+  onSelectPattern(id: string) {
+    if (!id) return;
+    const p = this.metro.loadPattern(id);
+    if (!p) return;
+    this.metro.applyPattern(p);
+    this.activePatternId.set(p.id);
+    if (p.selectedPreset) this.selectedPreset = p.selectedPreset;
+    this.refreshPatterns();
+  }
+
+  savePatternOverwrite() {
+    const id = this.activePatternId();
+    if (!id) {
+      this.savePatternAs();
+      return;
+    }
+
+    const existing = this.metro.loadPattern(id);
+    if (!existing) {
+      this.savePatternAs();
+      return;
+    }
+
+    // 用同一个 id 覆盖保存
+    const current = this.metro.exportCurrentPattern(
+      existing.name,
+      this.selectedPreset
+    );
+    const merged = { ...current, id: existing.id, name: existing.name };
+    this.metro.savePattern(merged);
+
+    this.activePatternId.set(existing.id);
+    this.refreshPatterns();
+  }
+
+  savePatternAs() {
+    const name = prompt('Pattern name', 'Practice');
+    if (!name) return;
+    const p = this.metro.exportCurrentPattern(name, this.selectedPreset);
+    this.metro.savePattern(p);
+    this.activePatternId.set(p.id);
+    this.refreshPatterns();
+  }
+
+  deletePattern() {
+    const id = this.activePatternId();
+    if (!id) return;
+
+    const p = this.metro.loadPattern(id);
+    const label = p?.name ?? id;
+
+    if (!confirm(`Delete Pattern: ${label} ?`)) return;
+
+    this.metro.deletePattern(id);
+    this.activePatternId.set(this.metro.getActivePatternId() ?? '');
+    this.refreshPatterns();
   }
 
   // ===== handlers =====
@@ -138,8 +230,6 @@ export class MetronomeComponent {
     this.metro.setGrouping(preset);
   }
 
-  // ✅ 8分母显示方案B：用 a
-
   cellText(beat: number, level: number): string {
     const st = this.state();
     if (st.denominator === 4) {
@@ -165,12 +255,48 @@ export class MetronomeComponent {
     return !!col && col.some((v) => v);
   }
 
+  // ✅ 分组起始列（用于极淡标记）：复用 state().accentBeats
+  isGroupStart(beat: number): boolean {
+    const st = this.state();
+    return Array.isArray(st.accentBeats) && st.accentBeats.includes(beat);
+  }
+
   // ✅ BPM 微调
   bpmMinus() {
     this.metro.setBpm(this.state().bpm - 1);
   }
   bpmPlus() {
     this.metro.setBpm(this.state().bpm + 1);
+  }
+
+  // ✅ 长按 BPM（手机爽）
+  startBpmHold(delta: number, ev?: Event) {
+    ev?.preventDefault();
+    ev?.stopPropagation();
+
+    // 先立即触发一次
+    this.metro.setBpm(this.state().bpm + delta);
+
+    window.clearTimeout(this.bpmHoldTimeout);
+    window.clearInterval(this.bpmHoldInterval);
+
+    // 250ms 后开始连发
+    this.bpmHoldTimeout = window.setTimeout(() => {
+      let ticks = 0;
+      this.bpmHoldInterval = window.setInterval(() => {
+        ticks++;
+        // 按久一点自动加速：1 -> 2 -> 5
+        const accel = ticks > 18 ? 5 : ticks > 10 ? 2 : 1;
+        this.metro.setBpm(this.state().bpm + delta * accel);
+      }, 90);
+    }, 250);
+  }
+
+  stopBpmHold() {
+    window.clearTimeout(this.bpmHoldTimeout);
+    window.clearInterval(this.bpmHoldInterval);
+    this.bpmHoldTimeout = undefined;
+    this.bpmHoldInterval = undefined;
   }
 
   // ✅ 秒表控制（独立于节拍器播放）
