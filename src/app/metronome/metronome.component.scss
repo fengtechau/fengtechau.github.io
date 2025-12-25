@@ -154,16 +154,16 @@
 
 /* 6拍：每列占 14%（比8拍稍宽一点） */
 .grid-outer.beats-6 .beat-col {
-    flex: 0 0 clamp(90px, 14%, 180px);
-    max-width: clamp(90px, 14%, 180px);
-    min-width: clamp(90px, 14%, 180px);
+    flex: 0 0 clamp(60px, 14%, 180px);
+    max-width: clamp(60px, 14%, 180px);
+    min-width: clamp(60px, 14%, 180px);
 }
 
 /* 8拍：每列占 12% */
 .grid-outer.beats-8 .beat-col {
-    flex: 0 0 clamp(50px, 12%, 160px);
-    max-width: clamp(50px, 12%, 160px);
-    min-width: clamp(50px, 12%, 160px);
+    flex: 0 0 clamp(45px, 12%, 160px);
+    max-width: clamp(45px, 12%, 160px);
+    min-width: clamp(45px, 12%, 160px);
 }
 
 /* ===== Bar：更大一些；白底；无边框；无间隙 ===== */
@@ -326,16 +326,16 @@
 
     /* 6拍：每列占 14%（比8拍稍宽一点） */
     .grid-outer.beats-6 .beat-col {
-        flex: 0 0 clamp(70px, 14%, 120px);
-        max-width: clamp(70px, 14%, 120px);
-        min-width: clamp(70px, 14%, 120px);
+        flex: 0 0 clamp(60px, 14%, 120px);
+        max-width: clamp(60px, 14%, 120px);
+        min-width: clamp(60px, 14%, 120px);
     }
 
     /* 8拍：每列占 12%，最小 58px（A方案） */
     .grid-outer.beats-8 .beat-col {
-        flex: 0 0 clamp(50px, 12%, 105px);
-        max-width: clamp(50px, 12%, 105px);
-        min-width: clamp(50px, 12%, 105px);
+        flex: 0 0 clamp(45px, 12%, 105px);
+        max-width: clamp(45px, 12%, 105px);
+        min-width: clamp(45px, 12%, 105px);
     }
 
     /* bar 高度和字略收，避免纵向太占 */
