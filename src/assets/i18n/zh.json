@@ -1,0 +1,19 @@
+
+{
+  "TITLE": "节拍器",
+  "TIME_SIGNATURE": "拍号",
+  "BPM": "速度 (BPM)",
+  "ACCENT_FIRST": "第一拍加重（更高音）",
+  "PLAY": "开始",
+  "PAUSE": "暂停",
+  "GRID_HINT": "点击方块切换静音：变暗为静音。",
+  "BAR": "小节",
+  "BEATS": "拍",
+  "GROUPING": "分组重音",
+  "GROUPING_HINT": "对每个分组的起始拍加重（例如 3+3 表示第1与第4拍更强）。",
+  "SIG": "拍号",
+  "PRESET_MAIN_ONLY": "仅主拍",
+  "PRESET_ALL_AND": "启用所有 and（反拍）",
+  "PRESET_ALL_SIXTEENTH": "启用所有 e/a（十六分）",
+  "PRESET_AND_AND_SIXTEENTH": "启用 and + e/a"
+}

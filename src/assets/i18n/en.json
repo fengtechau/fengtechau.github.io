@@ -1,0 +1,18 @@
+{
+  "TITLE": "Metronome",
+  "TIME_SIGNATURE": "Time Signature",
+  "BPM": "Tempo (BPM)",
+  "ACCENT_FIRST": "Accent the first beat",
+  "PLAY": "Play",
+  "PAUSE": "Pause",
+  "GRID_HINT": "Tap blocks to mute/unmute. Dark = muted.",
+  "BAR": "Bar",
+  "BEATS": "beats",
+  "GROUPING": "Accent grouping",
+  "GROUPING_HINT": "Accents apply to the first beat of each group (e.g., 3+3).",
+  "SIG": "Sig" ,
+  "PRESET_MAIN_ONLY": "Main beats only",
+  "PRESET_ALL_AND": "Enable all and (offbeats)",
+  "PRESET_ALL_SIXTEENTH": "Enable all e/a (16th)",
+  "PRESET_AND_AND_SIXTEENTH": "Enable and + e/a"
+}

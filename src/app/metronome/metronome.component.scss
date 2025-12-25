@@ -1,0 +1,234 @@
+/* ===== 全局白底 ===== */
+.metronome-wrap {
+    background: #fff;
+}
+
+.grid-outer {
+    background: #fff;
+}
+
+/* ===== 顶部控件更紧凑 + 防文字竖排 ===== */
+.sig-label {
+    min-width: 40px;
+    color: rgba(0, 0, 0, .6);
+}
+
+.sig-select {
+    width: 140px;
+    /* ✅ 拍号更宽 */
+}
+
+.play-btn {
+    min-width: 110px;
+    /* ✅ 开始按钮更宽 */
+    white-space: nowrap;
+    /* ✅ 防止文字竖起来 */
+    padding: 0.35rem 0.9rem;
+}
+
+.stop-btn {
+    min-width: 72px;
+    white-space: nowrap;
+}
+
+.preset-select {
+    width: 210px;
+    white-space: nowrap;
+}
+
+.grouping-select {
+    width: 160px;
+}
+
+.tiny-hint {
+    font-size: 11px;
+    opacity: .75;
+}
+
+/* ===== Tempo 行：圆形 +/- 按钮夹滑条 ===== */
+.tempo-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.tempo-range {
+    flex: 1;
+    margin: 0;
+}
+
+/* ===== Grid：列与 bar 更紧凑 ===== */
+.grid-outer {
+    display: flex;
+    gap: 8px;
+    /* 列之间可以留一点 */
+    overflow-x: auto;
+    padding: 6px;
+    border: none;
+    /* 你说不要边框 */
+}
+
+/* 每列 stack：默认白底、无边框 */
+.beat-col {
+    display: flex;
+    flex-direction: column;
+
+    gap: 0;
+    /* ✅ bars 之间 0 间隙 */
+    padding: 0;
+    /* ✅ 去掉 padding，贴紧 */
+    background: #fff;
+    border: none;
+    /* ✅ inactive 不要边框 */
+    border-radius: 10px;
+    min-width: 54px;
+}
+
+/* ✅ 只有演奏到的列才有背景色 */
+.beat-col.active-now {
+    background: rgba(255, 161, 74, 0.18);
+    /* 轻橘底 */
+}
+
+/* ===== Bar：白底为主；disable 看不见字 ===== */
+.cell {
+    width: 100%;
+    height: 28px;
+    /* 更扁一点 */
+    border: none;
+    /* ✅ 你说不要边框 */
+    border-radius: 0;
+    /* ✅ 贴合无间隙效果 */
+    background: #fff;
+    padding: 0;
+}
+
+/* 给整列顶部/底部一点圆角（可选，观感更像一条 stack） */
+.beat-col .cell:first-child {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.beat-col .cell:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* 默认：enable 时文字黑 */
+.cell-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #111;
+    /* ✅ enable 黑字 */
+    user-select: none;
+}
+
+/* ✅ disable：背景白，文字白（看不出来） */
+.cell.off {
+    background: #fff;
+}
+
+.cell.off .cell-label {
+    color: #fff;
+    /* ✅ 看不见 */
+}
+
+/* ===== 只有 active-now 那列：对 enable 的 cell 上色（disable 仍白） ===== */
+:root {
+    --orange-main: #ff6a00;
+    /* 深橘 */
+    --orange-and: #ff9a3d;
+    /* 橘 */
+    --orange-light: #ffd6b3;
+    /* 浅橘 */
+}
+
+/* active 列中启用才上色：用 beat-col.active-now 限定 */
+.beat-col.active-now .cell.lvl-main:not(.off) {
+    background: var(--orange-main);
+}
+
+.beat-col.active-now .cell.lvl-and:not(.off),
+.beat-col.active-now .cell.lvl-a:not(.off) {
+    background: var(--orange-and);
+}
+
+.beat-col.active-now .cell.lvl-e:not(.off),
+.beat-col.active-now .cell.lvl-r:not(.off) {
+    background: var(--orange-light);
+}
+
+/* ✅ 主拍数字默认黑色（你要求）——即使是深橘背景也保持黑字 */
+.beat-col.active-now .cell.lvl-main:not(.off) .cell-label {
+    color: #111;
+}
+
+/* 其他层（and/a/e/r）启用也用黑字，辨识更清楚 */
+.beat-col.active-now .cell:not(.off) .cell-label {
+    color: #111;
+}
+
+/* ===== Timer：白字 + 有文字按钮 ===== */
+.timer-badge {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, .72);
+    color: #fff;
+    font-size: 12px;
+}
+
+.timer-text {
+    font-variant-numeric: tabular-nums;
+}
+
+.btn-xs {
+    padding: 2px 10px;
+    font-size: 12px;
+    line-height: 1.4;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+/* 手机：更好点 */
+@media (max-width: 576px) {
+    .sig-select {
+        width: 150px;
+    }
+
+    .play-btn {
+        min-width: 120px;
+    }
+
+    .preset-select {
+        width: 200px;
+    }
+
+    .beat-col {
+        min-width: 52px;
+    }
+
+    .cell {
+        height: 30px;
+    }
+
+    /* 手指更容易点 */
+}

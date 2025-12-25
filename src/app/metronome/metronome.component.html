@@ -1,1 +1,115 @@
-<p>metronome works!</p>
+<div class="container py-2 metronome-wrap">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="m-0">
+            <i class="fa-solid fa-music me-2"></i>{{ 'TITLE' | translate }}
+        </h5>
+
+        <div class="d-flex align-items-center gap-1">
+            <button class="btn btn-outline-secondary btn-sm px-2" (click)="setLang('en')">EN</button>
+            <button class="btn btn-outline-secondary btn-sm px-2" (click)="setLang('zh')">中文</button>
+        </div>
+    </div>
+
+
+    <!-- Controls (compact + wider Sig/Play) -->
+    <div class="row g-2 align-items-center">
+        <!-- Sig + Play -->
+        <div class="col-12 col-md-6 d-flex align-items-center gap-2 flex-wrap">
+            <label class="form-label small mb-0 sig-label">{{ 'SIG' | translate }}</label>
+
+            <select class="form-select form-select-sm sig-select" [ngModel]="state().timeSignature"
+                (ngModelChange)="onSigChange($event)">
+                <option *ngFor="let sig of timeSignatures" [value]="sig">{{ sig }}</option>
+            </select>
+
+            <button class="btn btn-primary btn-sm play-btn" (click)="toggle()">
+                {{ state().isRunning ? ('PAUSE' | translate) : ('PLAY' | translate) }}
+            </button>
+
+            <button class="btn btn-outline-danger btn-sm stop-btn" (click)="stop()">
+                Stop
+            </button>
+
+            <!-- Preset dropdown（你之前加的一键启用） -->
+            <select class="form-select form-select-sm preset-select" [ngModel]="selectedPreset"
+                (ngModelChange)="selectedPreset=$event; applyPreset($event)">
+                <option *ngFor="let p of presetOptions" [ngValue]="p.value">
+                    {{ p.labelKey | translate }}
+                </option>
+            </select>
+        </div>
+
+        <!-- Grouping -->
+        <div class="col-12 col-md-6" *ngIf="state().denominator === 8">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+                <select class="form-select form-select-sm grouping-select" [ngModel]="state().groupingPreset"
+                    (ngModelChange)="onGroupingChange($event)">
+                    <option *ngFor="let g of groupings()" [value]="g">{{ g }}</option>
+                </select>
+                <div class="form-text tiny-hint m-0">
+                    {{ 'GROUPING_HINT' | translate }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Tempo (under Sig) -->
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <div class="small">
+                    {{ 'BPM' | translate }}: <strong>{{ state().bpm }}</strong>
+                </div>
+            </div>
+
+            <div class="tempo-row">
+                <button class="btn btn-outline-secondary btn-circle" (click)="bpmMinus()">−</button>
+
+                <input type="range" class="form-range tempo-range" min="20" max="300" [ngModel]="state().bpm"
+                    (ngModelChange)="onBpmChange($event)">
+
+                <button class="btn btn-outline-secondary btn-circle" (click)="bpmPlus()">+</button>
+            </div>
+        </div>
+
+        <!-- Accent -->
+        <div class="col-12">
+            <div class="form-check small">
+                <input id="accent" type="checkbox" class="form-check-input" [ngModel]="state().accentFirstBeat"
+                    (ngModelChange)="onAccentChange($event)">
+                <label for="accent" class="form-check-label">
+                    {{ 'ACCENT_FIRST' | translate }}
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="mt-2">
+        <div class="grid-outer">
+            <div class="beat-col" *ngFor="let col of pattern; let beat = index"
+                [class.active-now]="isBeatActiveNow(beat)">
+
+                <button *ngFor="let cell of col; let level = index" type="button" class="cell"
+                    [ngClass]="levelClass(level)" [class.off]="!pattern[beat][level]" (click)="toggleCell(beat, level)">
+                    <span class="cell-label">{{ cellText(beat, level) }}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timer (Stopwatch) -->
+    <div class="timer-badge">
+        <span class="timer-text">
+            <i class="fa-regular fa-clock me-1"></i>{{ formatElapsed(state().elapsedMs) }}
+        </span>
+
+        <button class="btn btn-light btn-xs" (click)="toggleStopwatch()">
+            {{ state().stopwatchRunning ? ('PAUSE' | translate) : 'Start' }}
+        </button>
+
+        <button class="btn btn-light btn-xs" (click)="resetStopwatch()">
+            Reset
+        </button>
+    </div>
+
+</div>

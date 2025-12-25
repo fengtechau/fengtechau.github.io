@@ -18,7 +18,11 @@ const routes: Routes = [
   },
   {
     path: 'metronome',
-    component: MetronomeComponent,
+
+    loadComponent: () =>
+      import('./metronome/metronome.component').then(
+        (m) => m.MetronomeComponent
+      ),
   },
 ];
 @NgModule({
