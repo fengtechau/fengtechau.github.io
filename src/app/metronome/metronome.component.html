@@ -85,12 +85,15 @@
 
     <!-- Grid -->
     <div class="mt-2">
-        <div class="grid-outer">
+        <div class="grid-outer" [ngClass]="'beats-' + state().beatsPerBar">
             <div class="beat-col" *ngFor="let col of pattern; let beat = index"
                 [class.active-now]="isBeatActiveNow(beat)">
 
                 <button *ngFor="let cell of col; let level = index" type="button" class="cell"
-                    [ngClass]="levelClass(level)" [class.off]="!pattern[beat][level]" (click)="toggleCell(beat, level)">
+                    [ngClass]="levelClass(level)" [class.off]="!pattern[beat][level]" [class.hit]="state().isRunning
+                        && state().currentBeatIndex === beat
+                        && state().currentLevelIndex === level
+                        && pattern[beat][level]" (click)="toggleCell(beat, level)">
                     <span class="cell-label">{{ cellText(beat, level) }}</span>
                 </button>
             </div>
