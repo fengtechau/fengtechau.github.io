@@ -1,48 +1,245 @@
+/* Home Component Styles (v3) */
+
+:host {
+  --brand: #2D6AE3;
+  --accent: #00C2A8;
+  --text: #0B0F1A;
+  --muted: #5B667A;
+  --bg: #FBF8F5;
+  /* match the warm light background */
+  --card: #FFFFFF;
+  --border: #E6ECF5;
+  --shadow: 0 10px 25px rgba(18, 38, 63, .08);
+  display: block;
+  background: var(--bg);
+}
+
+* {
+  box-sizing: border-box
+}
+
+img {
+  max-width: 100%;
+  display: block
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px
+}
+
+.section {
+  padding: 42px 0
+}
+
+.section--alt {
+  background: rgba(255, 255, 255, .55)
+}
+
+.section__lead {
+  color: var(--muted);
+  margin: 0 0 18px
+}
+
+h2 {
+  margin: 0 0 8px
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap
+}
+
+.btn--primary {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: var(--shadow)
+}
+
+.btn--primary:hover {
+  filter: brightness(.96)
+}
+
+.btn--secondary {
+  background: #fff;
+  border: 1px solid var(--border);
+  color: var(--text)
+}
+
+.btn--secondary:hover {
+  border-color: #cfd9ea
+}
+
+/* HERO: now same section rhythm as others */
+.hero {
+  padding-top: 26px;
+  padding-bottom: 18px
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 26px;
+  align-items: center;
+  padding-bottom: 30px;
+}
+
+.hero__title {
+  font-size: clamp(32px, 4.5vw, 56px);
+  line-height: 1.05;
+  margin: 0;
+  color: var(--text)
+}
+
+.hero__subtitle {
+  color: var(--muted);
+  font-size: clamp(15px, 2vw, 18px);
+  margin: 0 0 16px;
+  max-width: 62ch
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end
+}
+
+.hero__right {
+  display: grid;
+  gap: 8px
+}
+
+/* Tools */
+.tools {
+  padding-top: 8px
+}
+
+.tools__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 12px
+}
+
+.tool {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  color: var(--text)
+}
+
+.tool:hover {
+  transform: translateY(-2px);
+  transition: .15s ease
+}
+
+.tool__icon {
+  font-size: 22px
+}
+
+.tool__label {
+  display: block;
+  margin-top: 8px;
+  font-weight: 600
+}
+
+/* Service cards with images */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 14px
+}
+
 .card {
-    background-color: #fbf8f5 !important;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow)
 }
 
-.company-slogan {
-    font-size: 3.5rem;
-    font-family: Staatliches, Robot, "Arial Narrow", Arial, sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.05em;
+.card__image {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover
 }
 
-.company-offering {
-    font-weight: 400;
-    letter-spacing: -0.05em;
-    color: #cbb26a;
+.card__title {
+  margin: 14px 16px 8px;
+  font-size: 18px;
+  color: var(--text)
 }
 
-.company-offering-text {
-    font-size: 2rem;
-    font-family: Staatliches, "Arial Narrow", Arial, sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.05em;
-    line-height: 1em;
+.card__text {
+  color: var(--muted);
+  margin: 0 16px 18px
 }
 
-.company-introduce {
-    font-size: 1.3rem;
-    font-family: Alata, Arial, sans-serif;
-    font-weight: 500;
-    line-height: 2rem;
-    text-align: justify;
+/* About */
+.about {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: center
 }
 
-.card-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: -0.05em;
-    font-family: Staatliches, "Arial Narrow", Arial, sans-serif;
+.about__image {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow)
 }
 
-.service-text {
-    font-weight: 500;
-    font-family: Alata, Arial, sans-serif;
+/* Contact */
+.contact {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  box-shadow: var(--shadow)
 }
 
-.logo {
-    height: 2rem;
+.contact__logo {
+  height: 46px
+}
+
+@media (max-width:960px) {
+  .hero__grid {
+    grid-template-columns: 1fr
+  }
+
+  .hero__actions {
+    justify-content: flex-start
+  }
+
+  .about {
+    grid-template-columns: 1fr
+  }
+
+  .cards {
+    grid-template-columns: 1fr 1fr
+  }
+}
+
+@media (max-width:680px) {
+  .cards {
+    grid-template-columns: 1fr
+  }
+
+  .tools__grid {
+    grid-template-columns: 1fr
+  }
 }
