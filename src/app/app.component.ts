@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [RouterLink, RouterOutlet, RouterLinkActive]
+  imports: [RouterOutlet],
 })
 export class AppComponent {
   title = 'FENG TECH';

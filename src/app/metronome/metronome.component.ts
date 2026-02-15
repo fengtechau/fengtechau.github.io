@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import {
   MetronomeService,
   TimeSignature,
@@ -17,7 +16,7 @@ import { AppTitleService } from '../services/app-title.service';
 @Component({
   selector: 'app-metronome',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule, RouterLink],
+  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './metronome.component.html',
   styleUrls: ['./metronome.component.scss'],
   providers: [AppTitleService],
@@ -32,10 +31,6 @@ export class MetronomeComponent implements OnDestroy {
 
   // 订阅 service 状态
   private sub = this.metro.state$.subscribe((s) => this.state.set(s));
-
-  constructor() {
-    this.appTitleService.setTitle('Metronome');
-  }
 
   // ✅ Pattern 列表与当前选中
   patterns = signal<MetronomePatternV1[]>([]);
@@ -83,6 +78,7 @@ export class MetronomeComponent implements OnDestroy {
   }
 
   constructor() {
+    this.appTitleService.setTitle('Metronome');
     // i18n 默认英文
     this.i18n.use('en');
 
@@ -140,7 +136,7 @@ export class MetronomeComponent implements OnDestroy {
     // 用同一个 id 覆盖保存
     const current = this.metro.exportCurrentPattern(
       existing.name,
-      this.selectedPreset
+      this.selectedPreset,
     );
     const merged = { ...current, id: existing.id, name: existing.name };
     this.metro.savePattern(merged);

@@ -1,24 +1,19 @@
-<div class="app-container">
-  <!-- Header -->
-  <header class="app-header">
-    <div class="header-content">
-      <img class="logo" src="/assets/images/Logo/png/BlackNoBg.png" alt="FengTech Logo" />
-      <nav class="navigation">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Home</a>
-        <a routerLink="/texttools" routerLinkActive="active" class="nav-link">Text Tools</a>
-        <a routerLink="/ip" routerLinkActive="active" class="nav-link">IP Tools</a>
-        <a routerLink="/metronome" routerLinkActive="active" class="nav-link">Metronome</a>
-      </nav>
+<div class="container border-0" role="main">
+  <!-- Toolbar -->
+  <div class="toolbar" role="nav">
+    <div class="row justify-content-center">
+      <div class="col-10 justify-content-center d-flex pt-2">
+        <img class="logo" src="/assets/images/Logo/png/BlackNoBg.png" alt="Black Logo" />
+      </div>
+      <div class="col-2 d-flex align-items-center justify-content-begin pt-2">
+        <a href="/" class="btn btn-outline-dark">
+          Home
+        </a>
+      </div>
     </div>
-  </header>
 
-  <!-- Main Content -->
-  <main class="app-main">
+    <!-- Main Content -->
     <router-outlet></router-outlet>
-  </main>
 
-  <!-- Footer -->
-  <footer class="app-footer">
-    <p>&copy; 2026 FengTech. All rights reserved.</p>
-  </footer>
+  </div>
 </div>
