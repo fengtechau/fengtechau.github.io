@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import * as changeCase from 'change-case';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { AppTitleService } from '../services/app-title.service';
+
 @Component({
   selector: 'app-tools',
   imports: [ReactiveFormsModule, FontAwesomeModule],
@@ -38,10 +38,10 @@ export class ToolsComponent implements OnInit {
   };
   selectedCase = new FormControl(this.caseOptions[0]);
 
-  constructor(private appTitleService: AppTitleService) {}
+  private appTitleService = inject(AppTitleService);
 
   ngOnInit() {
-    this.appTitleService.setTitle('Text Convertor');
+    this.appTitleService.setTitle('Text Converter');
     const storedCase = localStorage.getItem('selectedCase');
     if (storedCase) {
       this.selectedCase.setValue(storedCase);
@@ -54,6 +54,11 @@ export class ToolsComponent implements OnInit {
 
   transformText() {
     let inputText = this.textInput.value ?? '';
+    if (!inputText.trim()) {
+      this.textOutput.setValue('');
+      return;
+    }
+
     switch (this.selectedCase.value) {
       case 'camel':
         this.textOutput.setValue(changeCase.camelCase(inputText));
@@ -77,12 +82,26 @@ export class ToolsComponent implements OnInit {
         this.textOutput.setValue(changeCase.pascalCase(inputText));
         break;
       case 'dot':
-        this.textOutput.setValue(inputText.replace(/ /g, '.'));
+        this.textOutput.setValue(inputText.replace(/\s+/g, '.'));
         break;
+      default:
+        this.textOutput.setValue(inputText);
     }
   }
 
   copyToClipboard() {
-    navigator.clipboard.writeText(this.textOutput.value ?? '');
+    const outputValue = this.textOutput.value ?? '';
+    if (outputValue) {
+      navigator.clipboard.writeText(outputValue).then(() => {
+        console.log('Copied to clipboard');
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
+  }
+
+  clearText() {
+    this.textInput.setValue('');
+    this.textOutput.setValue('');
   }
 }

@@ -1,6 +1,7 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import {
   MetronomeService,
   TimeSignature,
@@ -11,23 +12,30 @@ import {
 
 // ngx-translate
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { AppTitleService } from '../services/app-title.service';
 
 @Component({
   selector: 'app-metronome',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [CommonModule, FormsModule, TranslateModule, RouterLink],
   templateUrl: './metronome.component.html',
   styleUrls: ['./metronome.component.scss'],
+  providers: [AppTitleService],
 })
-export class MetronomeComponent {
+export class MetronomeComponent implements OnDestroy {
   private metro = inject(MetronomeService);
   private i18n = inject(TranslateService);
+  private appTitleService = inject(AppTitleService);
 
   // state 用 signal 包一层（Angular 21 很适合这样写）
   state = signal(this.metro.getState());
 
   // 订阅 service 状态
   private sub = this.metro.state$.subscribe((s) => this.state.set(s));
+
+  constructor() {
+    this.appTitleService.setTitle('Metronome');
+  }
 
   // ✅ Pattern 列表与当前选中
   patterns = signal<MetronomePatternV1[]>([]);

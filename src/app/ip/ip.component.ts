@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AppTitleService } from '../services/app-title.service';
 
 @Component({
   selector: 'app-ip',
-  imports: [RouterModule],
+  imports: [RouterLink],
   templateUrl: './ip.component.html',
   styleUrl: './ip.component.scss',
   providers: [AppTitleService],
@@ -13,22 +13,18 @@ import { AppTitleService } from '../services/app-title.service';
 export class IpComponent implements OnInit {
   ip: string = '';
   ipDetails: any;
-  constructor(
-    private http: HttpClient,
-    private appTitleService: AppTitleService
-  ) {}
+  private http = inject(HttpClient);
+  private appTitleService = inject(AppTitleService);
 
-  ngOnInit() {
+  async ngOnInit() {
     this.appTitleService.setTitle('Get Current IP Address');
-    this.http
-      .get('https://api.ipify.org?format=json')
-      .subscribe((data: any) => {
-        this.ip = data.ip;
-        this.http
-          .get(`https://ipapi.co/${this.ip}/json/`)
-          .subscribe((details: any) => {
-            this.ipDetails = details;
-          });
-      });
+    try {
+      const data: any = await this.http.get('https://api.ipify.org?format=json').toPromise();
+      this.ip = data.ip;
+      const details: any = await this.http.get(`https://ipapi.co/${this.ip}/json/`).toPromise();
+      this.ipDetails = details;
+    } catch (error) {
+      console.error('Error fetching IP details:', error);
+    }
   }
 }
