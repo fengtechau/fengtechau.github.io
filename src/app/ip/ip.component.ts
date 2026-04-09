@@ -1,36 +1,60 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppTitleService } from '../services/app-title.service';
+import { catchError, of, switchMap, tap } from 'rxjs';
+
+interface IpResponse {
+  ip: string;
+}
+
+interface IpDetails {
+  ip: string;
+  city?: string;
+  region?: string;
+  country_name?: string;
+  [key: string]: any;
+}
 
 @Component({
   selector: 'app-ip',
   templateUrl: './ip.component.html',
-  styleUrl: './ip.component.scss',
+  styleUrls: ['./ip.component.scss'],
   providers: [AppTitleService],
 })
 export class IpComponent implements OnInit {
   ip: string = '';
-  ipDetails: any;
+  ipDetails: IpDetails | null = null;
+  errorMessage: string = '';
+
   private http = inject(HttpClient);
   private appTitleService = inject(AppTitleService);
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.appTitleService.setTitle('Get Current IP Address');
-    this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe({
-      next: (ipResponse) => {
-        this.ip = ipResponse.ip;
-        this.http.get(`https://ipapi.co/${this.ip}/json/`).subscribe({
-          next: (detailsResponse) => {
-            this.ipDetails = detailsResponse;
-          },
-          error: (error) => {
-            console.error('Error fetching IP details:', error);
-          }
-        });
-      },
-      error: (error) => {
-        console.error('Error fetching IP address:', error);
-      }
-    });
+
+    this.http
+      .get<IpResponse>('https://api.ipify.org?format=json')
+      .pipe(
+        tap((ipResponse) => {
+          console.log('IP response:', ipResponse);
+          this.ip = ipResponse.ip;
+        }),
+        switchMap((ipResponse) =>
+          this.http.get<IpDetails>(`https://ipapi.co/${ipResponse.ip}/json/`),
+        ),
+        tap((detailsResponse) => {
+          console.log('IP details response:', detailsResponse);
+        }),
+        catchError((error) => {
+          console.error('Error fetching IP details:', error);
+          this.errorMessage = 'Failed to load IP information.';
+          return of(null);
+        }),
+      )
+      .subscribe((detailsResponse) => {
+        if (detailsResponse) {
+          this.ipDetails = detailsResponse;
+        }
+      });
   }
 }
