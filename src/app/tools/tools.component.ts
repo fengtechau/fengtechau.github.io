@@ -47,7 +47,7 @@ export class ToolsComponent implements OnInit {
       this.selectedCase.setValue(storedCase);
     }
 
-    this.selectedCase.valueChanges.subscribe((value: any) => {
+    this.selectedCase.valueChanges.subscribe((value: string | null) => {
       localStorage.setItem('selectedCase', value ?? 'kebab');
     });
   }

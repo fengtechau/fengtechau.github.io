@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppTitleService } from '../services/app-title.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-ip',
@@ -17,14 +18,15 @@ export class IpComponent implements OnInit {
   async ngOnInit() {
     this.appTitleService.setTitle('Get Current IP Address');
     try {
-      const data: any = await this.http
-        .get('https://api.ipify.org?format=json')
-        .toPromise();
-      this.ip = data.ip;
-      const details: any = await this.http
-        .get(`https://ipapi.co/${this.ip}/json/`)
-        .toPromise();
-      this.ipDetails = details;
+      const ipResponse = await firstValueFrom(
+        this.http.get<{ ip: string }>('https://api.ipify.org?format=json')
+      );
+      this.ip = ipResponse.ip;
+      
+      const detailsResponse = await firstValueFrom(
+        this.http.get(`https://ipapi.co/${this.ip}/json/`)
+      );
+      this.ipDetails = detailsResponse;
     } catch (error) {
       console.error('Error fetching IP details:', error);
     }
