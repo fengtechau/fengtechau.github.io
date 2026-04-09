@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppTitleService } from '../services/app-title.service';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-ip',
@@ -15,20 +14,23 @@ export class IpComponent implements OnInit {
   private http = inject(HttpClient);
   private appTitleService = inject(AppTitleService);
 
-  async ngOnInit() {
+  ngOnInit() {
     this.appTitleService.setTitle('Get Current IP Address');
-    try {
-      const ipResponse = await firstValueFrom(
-        this.http.get<{ ip: string }>('https://api.ipify.org?format=json')
-      );
-      this.ip = ipResponse.ip;
-      
-      const detailsResponse = await firstValueFrom(
-        this.http.get(`https://ipapi.co/${this.ip}/json/`)
-      );
-      this.ipDetails = detailsResponse;
-    } catch (error) {
-      console.error('Error fetching IP details:', error);
-    }
+    this.http.get<{ ip: string }>('https://api.ipify.org?format=json').subscribe({
+      next: (ipResponse) => {
+        this.ip = ipResponse.ip;
+        this.http.get(`https://ipapi.co/${this.ip}/json/`).subscribe({
+          next: (detailsResponse) => {
+            this.ipDetails = detailsResponse;
+          },
+          error: (error) => {
+            console.error('Error fetching IP details:', error);
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error fetching IP address:', error);
+      }
+    });
   }
 }
