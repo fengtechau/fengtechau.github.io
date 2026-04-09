@@ -8,10 +8,9 @@ interface IpResponse {
 }
 
 interface IpDetails {
-  ip: string;
   city?: string;
   region?: string;
-  country_name?: string;
+  country?: string;
   [key: string]: any;
 }
 
@@ -40,7 +39,7 @@ export class IpComponent implements OnInit {
           this.ip = ipResponse.ip;
         }),
         switchMap((ipResponse) =>
-          this.http.get<IpDetails>(`https://ipapi.co/${ipResponse.ip}/json/`),
+          this.http.get<IpDetails>(`http://ip-api.com/json/${ipResponse.ip}`),
         ),
         tap((detailsResponse) => {
           console.log('IP details response:', detailsResponse);
