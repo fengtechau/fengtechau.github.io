@@ -1,38 +1,51 @@
 <div class="card">
     <div class="card-header">Current IP Details</div>
+
     <div class="card-body">
-        <div class="row">
-            <div class="col-sm-4">
-                <h5 class="card-title">IP:</h5>
-            </div>
-            <div class="col-sm-8">
-                <p class="card-text">{{ ip }}</p>
-            </div>
+        <div *ngIf="loading">
+            <p>Loading IP details...</p>
         </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <h5 class="card-title">City:</h5>
-            </div>
-            <div class="col-sm-8">
-                <p class="card-text">{{ ipDetails?.city }}</p>
-            </div>
+
+        <div *ngIf="!loading && errorMessage">
+            <p class="text-danger">{{ errorMessage }}</p>
         </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <h5 class="card-title">Region:</h5>
+
+        <div *ngIf="!loading && !errorMessage && ipDetails">
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <h5 class="card-title">IP:</h5>
+                </div>
+                <div class="col-sm-8">
+                    <p class="card-text">{{ ipDetails.ip || 'N/A' }}</p>
+                </div>
             </div>
-            <div class="col-sm-8">
-                <p class="card-text">{{ ipDetails?.region }}</p>
+
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <h5 class="card-title">City:</h5>
+                </div>
+                <div class="col-sm-8">
+                    <p class="card-text">{{ ipDetails.city || 'N/A' }}</p>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <h5 class="card-title">Country:</h5>
+
+            <div class="row mb-3">
+                <div class="col-sm-4">
+                    <h5 class="card-title">Region:</h5>
+                </div>
+                <div class="col-sm-8">
+                    <p class="card-text">{{ ipDetails.region || 'N/A' }}</p>
+                </div>
             </div>
-            <div class="col-sm-8">
-                <p class="card-text">{{ ipDetails?.country }}</p>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <h5 class="card-title">Country:</h5>
+                </div>
+                <div class="col-sm-8">
+                    <p class="card-text">{{ ipDetails.country || 'N/A' }}</p>
+                </div>
             </div>
         </div>
     </div>
-
 </div>
