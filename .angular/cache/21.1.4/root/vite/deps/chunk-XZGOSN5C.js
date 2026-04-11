@@ -1,30 +1,22 @@
 import {
   EVENT_MANAGER_PLUGINS,
   EventManagerPlugin
-} from "./chunk-XOHV34ZQ.js";
+} from "./chunk-TK7M3KPP.js";
 import {
   withHttpTransferCache
-} from "./chunk-NLXPBMFT.js";
+} from "./chunk-TRJOINTI.js";
 import {
   getDOM
-} from "./chunk-4JUZOGBG.js";
+} from "./chunk-XR7WONGV.js";
 import {
   ApplicationRef,
   Console,
-  DOCUMENT,
-  ENVIRONMENT_INITIALIZER,
   IS_ENABLED_BLOCKING_INITIAL_NAVIGATION,
   Inject,
   Injectable,
-  InjectionToken,
-  Injector,
   NgModule,
   Optional,
-  RuntimeError,
   SecurityContext,
-  Version,
-  XSS_SECURITY_URL,
-  _global,
   _sanitizeHtml,
   _sanitizeUrl,
   allowSanitizationBypassAndThrow,
@@ -33,10 +25,6 @@ import {
   bypassSanitizationTrustScript,
   bypassSanitizationTrustStyle,
   bypassSanitizationTrustUrl,
-  formatRuntimeError,
-  forwardRef,
-  inject,
-  makeEnvironmentProviders,
   provideStabilityDebugging,
   setClassMetadata,
   unwrapSafeValue,
@@ -44,11 +32,25 @@ import {
   withEventReplay,
   withI18nSupport,
   withIncrementalHydration,
+  ɵɵdefineNgModule
+} from "./chunk-JBF5IHBW.js";
+import {
+  DOCUMENT,
+  ENVIRONMENT_INITIALIZER,
+  InjectionToken,
+  Injector,
+  RuntimeError,
+  Version,
+  XSS_SECURITY_URL,
+  _global,
+  formatRuntimeError,
+  forwardRef,
+  inject,
+  makeEnvironmentProviders,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
-  ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-L7CQP2GH.js";
+} from "./chunk-7CZRKCMK.js";
 
 // node_modules/@angular/platform-browser/fesm2022/platform-browser.mjs
 var Meta = class _Meta {
@@ -654,4 +656,4 @@ export {
   provideClientHydration,
   VERSION
 };
-//# sourceMappingURL=chunk-LJL72KDV.js.map
+//# sourceMappingURL=chunk-XZGOSN5C.js.map

@@ -1,51 +1,41 @@
 /* =========================
-   Metronome - Final SCSS (All-in-one)
-   - 全白底
-   - Inactive stack：白底无边框
-   - Active-now stack：才显示浅橘背景
-   - Bar：默认白底
-   - Disable(off)：白底 + 白字(看不见)
-   - Enable：黑字可见
-   - Active-now 列：enable 才上橙色
-   - Hit：Active-now 且 enable 时显示蓝色内边框（大/小屏一致）
-   - Grid：大屏 75vw，小屏 90vw
-   - 列宽按拍数占比：
-       * 4拍：22%
-       * 6拍：14%（比8拍稍宽）
-       * 8拍：12%
+   Metronome - Final SCSS
+   - 白底
+   - 只有 active-now 列显示浅橘背景
+   - enable/off 清晰区分
+   - accent / normal / sub 命中样式分级
+   - 2/4、3/4 比 4/4 稍大
    ========================= */
 
 .metronome-wrap {
     background: #fff;
 
-    /* 橙色体系 */
     --orange-main: #ff6a00;
-    /* 深橘：主拍 */
+    /* 主拍 */
     --orange-and: #ff9a3d;
-    /* 橘：and/a */
+    /* 次强调 */
     --orange-light: #ffd6b3;
-    /* 浅橘：e/r */
+    /* 更浅 */
 
-    /* Hit 边框 */
     --hit-blue: rgba(13, 110, 253, 0.95);
+    --hit-purple: rgba(111, 66, 193, 0.85);
+    --hit-accent: rgba(255, 122, 0, 0.98);
 }
 
-/* ===== 顶部控件：紧凑 + 防竖字 ===== */
+/* ===== 顶部控件 ===== */
 .sig-label {
     min-width: 40px;
-    color: rgba(0, 0, 0, .6);
+    color: rgba(0, 0, 0, 0.6);
 }
 
 .sig-select {
     width: 160px;
 }
 
-/* 拍号更宽 */
 .play-btn {
     min-width: 140px;
-    /* 开始按钮更宽 */
     white-space: nowrap;
-    padding: 0.40rem 1.05rem;
+    padding: 0.4rem 1.05rem;
 }
 
 .stop-btn {
@@ -58,16 +48,21 @@
     white-space: nowrap;
 }
 
+.pattern-select {
+    width: 220px;
+    white-space: nowrap;
+}
+
 .grouping-select {
     width: 190px;
 }
 
 .tiny-hint {
     font-size: 11px;
-    opacity: .75;
+    opacity: 0.75;
 }
 
-/* ===== Tempo 行：圆形 +/- 按钮夹滑条 ===== */
+/* ===== Tempo 行 ===== */
 .tempo-row {
     display: flex;
     align-items: center;
@@ -95,9 +90,8 @@
 }
 
 /* =========================================================
-   Grid：大屏 75vw / 小屏 90vw + 居中
+   Grid
    ========================================================= */
-
 .grid-outer {
     background: #fff;
     display: flex;
@@ -111,7 +105,7 @@
     margin: 0 auto;
     max-width: 1400px;
 
-    /* ✅ 关键：末尾缓冲区，避免最后一列被遮挡/贴边 */
+    /* 末尾缓冲区，避免最后一列贴边 */
     padding-right: 90px;
     scroll-padding-right: 90px;
 }
@@ -121,85 +115,99 @@
     flex: 0 0 90px;
 }
 
-
-/* ===== 每列 stack：默认白底无边框；bars 无间隙 ===== */
+/* ===== 每列 stack ===== */
 .beat-col {
     display: flex;
     flex-direction: column;
     gap: 0;
-    /* ✅ bars 之间 0 间隙 */
     padding: 0;
     background: #fff;
     border: none;
     border-radius: 12px;
 
-    /* 兜底宽度：给 2/4、3/4 等非 4/6/8 的拍号 */
-    flex: 0 0 78px;
-    min-width: 78px;
-    position: relative; // ✅ 让 ::before 定位
+    /* fallback */
+    flex: 0 0 82px;
+    min-width: 82px;
+    position: relative;
 }
 
-/* ✅ 只有演奏到的列显示背景色 */
+/* 只有演奏到的列显示背景 */
 .beat-col.active-now {
     background: rgba(255, 161, 74, 0.18);
 }
 
-
+/* 分组起始列：更明显一些 */
 .beat-col.group-start::before {
     content: '';
     position: absolute;
-    left: 0;
-    top: 8px;
-    bottom: 8px;
-    width: 2px;
-    border-radius: 2px;
+    left: -1px;
+    top: 6px;
+    bottom: 6px;
+    width: 4px;
+    border-radius: 999px;
     background: linear-gradient(to bottom,
-            rgba(0, 0, 0, 0.00),
-            rgba(0, 0, 0, 0.06) 20%,
-            rgba(0, 0, 0, 0.06) 80%,
-            rgba(0, 0, 0, 0.00));
+            rgba(255, 106, 0, 0.10),
+            rgba(255, 106, 0, 0.45) 20%,
+            rgba(255, 106, 0, 0.45) 80%,
+            rgba(255, 106, 0, 0.10));
     pointer-events: none;
 }
 
-
 /* =========================================================
-   ✅ 列宽按拍数占比（你要求）
-   - 用 clamp(min, %, max) 防止过小/过大
+   列宽
+   - 2/4、3/4 比 4/4 稍大
    ========================================================= */
 
-/* 4拍：每列占 22% */
+/* 2拍：比 4/4 更宽一点 */
+.grid-outer.beats-2 .beat-col {
+    flex: 0 0 clamp(118px, 26%, 300px);
+    max-width: clamp(118px, 26%, 300px);
+    min-width: clamp(118px, 26%, 300px);
+}
+
+/* 3拍：也比 4/4 稍宽一点 */
+.grid-outer.beats-3 .beat-col {
+    flex: 0 0 clamp(108px, 24%, 280px);
+    max-width: clamp(108px, 24%, 280px);
+    min-width: clamp(108px, 24%, 280px);
+}
+
+/* 4拍 */
 .grid-outer.beats-4 .beat-col {
     flex: 0 0 clamp(100px, 22%, 260px);
     max-width: clamp(100px, 22%, 260px);
     min-width: clamp(100px, 22%, 260px);
 }
 
-/* 6拍：每列占 14%（比8拍稍宽一点） */
+/* 6拍 */
 .grid-outer.beats-6 .beat-col {
     flex: 0 0 clamp(60px, 14%, 180px);
     max-width: clamp(60px, 14%, 180px);
     min-width: clamp(60px, 14%, 180px);
 }
 
-/* 8拍：每列占 12% */
+/* 8拍 */
 .grid-outer.beats-8 .beat-col {
     flex: 0 0 clamp(45px, 12%, 160px);
     max-width: clamp(45px, 12%, 160px);
     min-width: clamp(45px, 12%, 160px);
 }
 
-/* ===== Bar：更大一些；白底；无边框；无间隙 ===== */
+/* ===== Cell ===== */
 .cell {
     width: 100%;
-    height: 46px;
-    /* ✅ bar 更大（大屏） */
+    height: 48px;
     border: none;
     border-radius: 0;
     background: #fff;
     padding: 0;
+    transition:
+        background-color 90ms ease,
+        box-shadow 90ms ease,
+        outline-color 90ms ease,
+        transform 90ms ease;
 }
 
-/* stack 顶/底圆角 */
 .beat-col .cell:first-child {
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
@@ -210,16 +218,16 @@
     border-bottom-right-radius: 12px;
 }
 
-/* ===== 文本：enable 默认黑；disable 白字隐藏 ===== */
+/* ===== 文字 ===== */
 .cell-label {
     font-size: 15px;
-    /* ✅ 字更大 */
     font-weight: 800;
     color: #111;
     user-select: none;
+    letter-spacing: 0.02em;
 }
 
-/* disable(off)：白底 + 白字（看不出来） */
+/* disable(off)：白底 + 白字隐藏 */
 .cell.off {
     background: #fff;
 }
@@ -228,7 +236,7 @@
     color: #fff;
 }
 
-/* ===== Active-now 列：enable 才上色（disable 仍白） ===== */
+/* ===== Active-now 列：enable 才上色 ===== */
 .beat-col.active-now .cell.lvl-main:not(.off) {
     background: var(--orange-main);
 }
@@ -238,35 +246,55 @@
     background: var(--orange-and);
 }
 
-.beat-col.active-now .cell.lvl-e:not(.off),
-.beat-col.active-now .cell.lvl-r:not(.off) {
+.beat-col.active-now .cell.lvl-e:not(.off) {
     background: var(--orange-light);
 }
 
-/* 主拍数字默认黑（即使深橘背景） */
-.beat-col.active-now .cell.lvl-main:not(.off) .cell-label {
-    color: #111;
-}
-
-/* 其他层 enable 也黑字 */
+/* active-now 列中，文字统一黑 */
 .beat-col.active-now .cell:not(.off) .cell-label {
     color: #111;
 }
 
 /* =========================================================
-   Hit 蓝色内边框（大/小屏一致）
-   - 仅 active-now 列的 hit 且非 off 显示
-   - outline + 负 offset：不占空间，不破坏无缝 stack
+   Hit states
+   - accent / normal / sub 分级
    ========================================================= */
+
 .beat-col.active-now .cell.hit:not(.off) {
-    outline: 3px solid var(--hit-blue);
-    outline-offset: -3px;
     position: relative;
     z-index: 1;
 }
 
-.beat-col.active-now .cell.off.hit {
+.beat-col.active-now .cell.hit-accent:not(.off) {
+    outline: 4px solid var(--hit-accent);
+    outline-offset: -4px;
+    box-shadow:
+        inset 0 0 0 2px rgba(255, 255, 255, 0.92),
+        0 0 0 3px rgba(255, 183, 77, 0.35);
+    transform: scale(1.03);
+}
+
+.beat-col.active-now .cell.hit-normal:not(.off) {
+    outline: 3px solid var(--hit-blue);
+    outline-offset: -3px;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.78);
+}
+
+.beat-col.active-now .cell.hit-sub:not(.off) {
+    outline: 2px solid var(--hit-purple);
+    outline-offset: -2px;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.beat-col.active-now .cell.off.hit,
+.beat-col.active-now .cell.off.hit-accent,
+.beat-col.active-now .cell.off.hit-normal,
+.beat-col.active-now .cell.off.hit-sub {
     outline: none;
+    box-shadow: none;
+    transform: none;
 }
 
 /* ===== Timer ===== */
@@ -280,7 +308,7 @@
     gap: 10px;
     padding: 8px 12px;
     border-radius: 999px;
-    background: rgba(0, 0, 0, .72);
+    background: rgba(0, 0, 0, 0.72);
     color: #fff;
     font-size: 13px;
 }
@@ -297,11 +325,9 @@
     white-space: nowrap;
 }
 
-.pattern-select {
-    width: 220px;
-    white-space: nowrap;
-}
-
+/* =========================================================
+   Mobile
+   ========================================================= */
 @media (max-width: 576px) {
     .sig-select {
         width: 170px;
@@ -315,6 +341,9 @@
         width: 230px;
     }
 
+    .pattern-select {
+        width: 210px;
+    }
 
     .grid-outer {
         width: 90vw;
@@ -326,7 +355,6 @@
         -webkit-overflow-scrolling: touch;
         touch-action: pan-x;
 
-        /* ✅ 小屏缓冲区更大 */
         padding-right: 110px;
         scroll-padding-right: 110px;
     }
@@ -336,36 +364,41 @@
         flex: 0 0 110px;
     }
 
+    /* 2拍：手机上也比 4/4 大 */
+    .grid-outer.beats-2 .beat-col {
+        flex: 0 0 clamp(96px, 28%, 170px);
+        max-width: clamp(96px, 28%, 170px);
+        min-width: clamp(96px, 28%, 170px);
+    }
 
-    /* =========================================================
-     小屏列宽：整体缩小，避免 4/4 & 8/8 看不到后面的 stack
-     - 4拍：22% 但 clamp 大幅收缩
-     - 6拍：14%（比8拍稍宽）也收缩
-     - 8拍：12% 最窄，最小 58px（你选的 A）
-     ========================================================= */
+    /* 3拍：略大于 4/4 */
+    .grid-outer.beats-3 .beat-col {
+        flex: 0 0 clamp(88px, 24%, 155px);
+        max-width: clamp(88px, 24%, 155px);
+        min-width: clamp(88px, 24%, 155px);
+    }
 
-    /* 4拍：每列占 22% */
+    /* 4拍 */
     .grid-outer.beats-4 .beat-col {
         flex: 0 0 clamp(78px, 22%, 140px);
         max-width: clamp(78px, 22%, 140px);
         min-width: clamp(78px, 22%, 140px);
     }
 
-    /* 6拍：每列占 14%（比8拍稍宽一点） */
+    /* 6拍 */
     .grid-outer.beats-6 .beat-col {
         flex: 0 0 clamp(60px, 14%, 120px);
         max-width: clamp(60px, 14%, 120px);
         min-width: clamp(60px, 14%, 120px);
     }
 
-    /* 8拍：每列占 12%，最小 58px（A方案） */
+    /* 8拍 */
     .grid-outer.beats-8 .beat-col {
         flex: 0 0 clamp(45px, 12%, 105px);
         max-width: clamp(45px, 12%, 105px);
         min-width: clamp(45px, 12%, 105px);
     }
 
-    /* bar 高度和字略收，避免纵向太占 */
     .cell {
         height: 40px;
     }
@@ -374,15 +407,8 @@
         font-size: 13px;
     }
 
-    /* +/- 也略小一点 */
     .btn-circle {
         width: 34px;
         height: 34px;
     }
-
-
-    .pattern-select {
-        width: 210px;
-    }
-
 }

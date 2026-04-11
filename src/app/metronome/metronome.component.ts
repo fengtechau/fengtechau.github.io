@@ -1,15 +1,17 @@
-import { Component, computed, inject, signal, OnDestroy } from '@angular/core';
+import { Component, computed, inject, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
+
 import {
-  MetronomeService,
-  TimeSignature,
-  PatternPreset,
+  GroupingPreset,
   MetronomePatternV1,
+  MetronomeService,
   PatternId,
+  PatternPreset,
+  TimeSignature,
 } from './metronome.service';
 
-// ngx-translate
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AppTitleService } from '../services/app-title.service';
 
@@ -22,36 +24,29 @@ import { AppTitleService } from '../services/app-title.service';
   providers: [AppTitleService],
 })
 export class MetronomeComponent implements OnDestroy {
-  private metro = inject(MetronomeService);
-  private i18n = inject(TranslateService);
-  private appTitleService = inject(AppTitleService);
+  private readonly metro = inject(MetronomeService);
+  private readonly i18n = inject(TranslateService);
+  private readonly appTitleService = inject(AppTitleService);
 
-  // state 用 signal 包一层（Angular 21 很适合这样写）
-  state = signal(this.metro.getState());
+  readonly state = toSignal(this.metro.state$, {
+    initialValue: this.metro.getState(),
+  });
 
-  // 订阅 service 状态
-  private sub = this.metro.state$.subscribe((s) => this.state.set(s));
+  readonly patterns = signal<MetronomePatternV1[]>([]);
+  readonly activePatternId = signal<PatternId | ''>('');
 
-  // ✅ Pattern 列表与当前选中
-  patterns = signal<MetronomePatternV1[]>([]);
-  activePatternId = signal<PatternId | ''>('');
-
-  // BPM 长按连发
   private bpmHoldTimeout?: number;
   private bpmHoldInterval?: number;
 
-  // UI 数据
-  timeSignatures: TimeSignature[] = ['2/4', '3/4', '4/4', '6/8', '8/8'];
+  readonly timeSignatures: TimeSignature[] = [
+    '2/4',
+    '3/4',
+    '4/4',
+    '6/8',
+    '8/8',
+  ];
 
-  // levels label（显示 1/4 1/8 1/16 等）
-  levels = computed(() => {
-    const st = this.state();
-    return st.denominator === 4
-      ? ['1/4', '1/8', '1/16', '1/16']
-      : ['1/8', '1/16'];
-  });
-
-  presetOptions = [
+  readonly presetOptions = [
     { value: 'mainOnly' as PatternPreset, labelKey: 'PRESET_MAIN_ONLY' },
     { value: 'allAnd' as PatternPreset, labelKey: 'PRESET_ALL_AND' },
     {
@@ -66,91 +61,148 @@ export class MetronomeComponent implements OnDestroy {
 
   selectedPreset: PatternPreset = 'mainOnly';
 
-  applyPreset(p: PatternPreset) {
-    this.selectedPreset = p;
-    this.metro.applyPreset(p);
-  }
+  readonly isDenominator4 = computed(() => this.state().denominator === 4);
 
-  // ✅ active = 当前播放到的那一拍（只有这一列显示背景）
-  isBeatActiveNow(beat: number): boolean {
-    const st = this.state();
-    return st.isRunning && st.currentBeatIndex === beat;
-  }
+  readonly levels = computed(() =>
+    this.isDenominator4() ? ['1/4', '1/16', '1/8', '1/16'] : ['1/8', '1/16'],
+  );
+
+  readonly availableGroupings = computed(() => {
+    this.state(); // 让 computed 跟随拍号变化
+    return this.metro.getAvailableGroupings();
+  });
+
+  private readonly levelClassMap4 = [
+    'lvl-main',
+    'lvl-e',
+    'lvl-and',
+    'lvl-a',
+  ] as const;
+  private readonly levelClassMap8 = ['lvl-main', 'lvl-a'] as const;
 
   constructor() {
     this.appTitleService.setTitle('Metronome');
-    // i18n 默认英文
     this.i18n.use('en');
 
-    // ✅ 初始化 Pattern 列表 & 自动载入上次使用
     this.refreshPatterns();
-
-    const lastId = this.metro.getActivePatternId();
-    if (lastId) {
-      const p = this.metro.loadPattern(lastId);
-      if (p) {
-        this.metro.applyPattern(p);
-        // 下拉回显
-        this.activePatternId.set(p.id);
-        // preset 回显（可选）
-        if (p.selectedPreset) this.selectedPreset = p.selectedPreset;
-      }
-    }
+    this.restoreLastPattern();
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
     this.stopBpmHold();
   }
 
-  // ===== Pattern UI handlers =====
+  // =========================================================
+  // Pattern init / restore
+  // =========================================================
+
+  private restoreLastPattern() {
+    const lastId = this.metro.getActivePatternId();
+    if (!lastId) return;
+
+    const p = this.metro.loadPattern(lastId);
+    if (!p) return;
+
+    this.metro.applyPattern(p);
+    this.activePatternId.set(p.id);
+
+    if (p.selectedPreset) {
+      this.selectedPreset = p.selectedPreset;
+    }
+  }
 
   refreshPatterns() {
     this.patterns.set(this.metro.listPatterns());
     this.activePatternId.set(this.metro.getActivePatternId() ?? '');
   }
 
+  get pattern(): boolean[][] {
+    return this.metro.getPattern();
+  }
+
+  // =========================================================
+  // Controls
+  // =========================================================
+
+  toggle() {
+    this.metro.toggle();
+  }
+
+  stop() {
+    this.metro.stop();
+  }
+
+  onBpmChange(v: number) {
+    this.metro.setBpm(v);
+  }
+
+  changeBpm(delta: number) {
+    this.metro.setBpm(this.state().bpm + delta);
+  }
+
+  onSigChange(sig: TimeSignature) {
+    this.metro.setTimeSignature(sig);
+  }
+
+  onAccentChange(v: boolean) {
+    this.metro.setAccentFirstBeat(v);
+  }
+
+  applyPreset(p: PatternPreset) {
+    this.selectedPreset = p;
+    this.metro.applyPreset(p);
+  }
+
+  onGroupingChange(preset: GroupingPreset) {
+    this.metro.setGrouping(preset);
+  }
+
+  toggleCell(beat: number, level: number) {
+    this.metro.toggleCell(beat, level);
+  }
+
+  // =========================================================
+  // Pattern actions
+  // =========================================================
+
   onSelectPattern(id: string) {
     if (!id) return;
+
     const p = this.metro.loadPattern(id);
     if (!p) return;
+
     this.metro.applyPattern(p);
     this.activePatternId.set(p.id);
-    if (p.selectedPreset) this.selectedPreset = p.selectedPreset;
+
+    if (p.selectedPreset) {
+      this.selectedPreset = p.selectedPreset;
+    }
+
     this.refreshPatterns();
   }
 
   savePatternOverwrite() {
     const id = this.activePatternId();
-    if (!id) {
-      this.savePatternAs();
-      return;
-    }
+    if (!id) return this.savePatternAs();
 
     const existing = this.metro.loadPattern(id);
-    if (!existing) {
-      this.savePatternAs();
-      return;
-    }
+    if (!existing) return this.savePatternAs();
 
-    // 用同一个 id 覆盖保存
-    const current = this.metro.exportCurrentPattern(
-      existing.name,
-      this.selectedPreset,
-    );
-    const merged = { ...current, id: existing.id, name: existing.name };
-    this.metro.savePattern(merged);
-
-    this.activePatternId.set(existing.id);
-    this.refreshPatterns();
+    this.savePattern(existing.name, existing.id);
   }
 
   savePatternAs() {
     const name = prompt('Pattern name', 'Practice');
     if (!name) return;
-    const p = this.metro.exportCurrentPattern(name, this.selectedPreset);
-    this.metro.savePattern(p);
-    this.activePatternId.set(p.id);
+    this.savePattern(name);
+  }
+
+  private savePattern(name: string, id?: PatternId) {
+    const exported = this.metro.exportCurrentPattern(name, this.selectedPreset);
+    const pattern = id ? { ...exported, id, name } : exported;
+
+    this.metro.savePattern(pattern);
+    this.activePatternId.set(pattern.id);
     this.refreshPatterns();
   }
 
@@ -164,60 +216,28 @@ export class MetronomeComponent implements OnDestroy {
     if (!confirm(`Delete Pattern: ${label} ?`)) return;
 
     this.metro.deletePattern(id);
-    this.activePatternId.set(this.metro.getActivePatternId() ?? '');
     this.refreshPatterns();
   }
 
-  // ===== handlers =====
-  toggle() {
-    this.metro.toggle();
-  }
-  stop() {
-    this.metro.stop();
-  }
+  // =========================================================
+  // UI helpers
+  // =========================================================
 
-  onBpmChange(v: number) {
-    this.metro.setBpm(v);
-  }
-  onSigChange(sig: TimeSignature) {
-    this.metro.setTimeSignature(sig);
-  }
-
-  onPresetChange(ev: Event) {
-    const target = ev.target as HTMLSelectElement | null;
-    const value = target?.value as PatternPreset | undefined;
-    if (value) this.applyPreset(value);
-  }
-
-  onAccentChange(v: boolean) {
-    this.metro.setAccentFirstBeat(v);
-  }
-
-  toggleCell(beat: number, level: number) {
-    this.metro.toggleCell(beat, level);
-  }
-
-  get pattern() {
-    return this.metro.getPattern();
-  }
-
-  // language switch
   setLang(lang: 'en' | 'zh') {
     this.i18n.use(lang);
   }
 
-  // mm:ss.S
-  formatElapsed(ms: number) {
-    const totalSec = Math.floor(ms / 1000);
-    const min = Math.floor(totalSec / 60);
-    const sec = totalSec % 60;
-    const tenths = Math.floor((ms % 1000) / 100);
-    return `${min.toString().padStart(2, '0')}:${sec
-      .toString()
-      .padStart(2, '0')}.${tenths}`;
+  isBeatActiveNow(beat: number): boolean {
+    const st = this.state();
+    return st.isRunning && st.currentBeatIndex === beat;
   }
 
-  isPlayingCell(beat: number, level: number) {
+  isGroupStart(beat: number): boolean {
+    const st = this.state();
+    return Array.isArray(st.accentBeats) && st.accentBeats.includes(beat);
+  }
+
+  isPlayingCell(beat: number, level: number): boolean {
     const st = this.state();
     return (
       st.isRunning &&
@@ -226,72 +246,64 @@ export class MetronomeComponent implements OnDestroy {
     );
   }
 
-  groupings() {
-    return this.metro.getAvailableGroupings();
-  }
-
-  onGroupingChange(preset: any) {
-    this.metro.setGrouping(preset);
+  isAccentCell(beat: number, level: number): boolean {
+    const st = this.state();
+    return (
+      level === 0 &&
+      Array.isArray(st.accentBeats) &&
+      st.accentBeats.includes(beat)
+    );
   }
 
   cellText(beat: number, level: number): string {
-    const st = this.state();
-    if (st.denominator === 4) {
+    if (this.isDenominator4()) {
       if (level === 0) return String(beat + 1);
       if (level === 1) return 'e';
-      if (level === 2) return 'and';
-      return 'r';
+      if (level === 2) return '&';
+      return 'a';
     }
-    return level === 0 ? String(beat + 1) : 'a'; // ✅ 方案B
+
+    return level === 0 ? String(beat + 1) : '&';
   }
 
   levelClass(level: number): string {
-    const st = this.state();
-    if (st.denominator === 4) {
-      return ['lvl-main', 'lvl-e', 'lvl-and', 'lvl-r'][level] ?? '';
-    }
-    return level === 0 ? 'lvl-main' : 'lvl-a';
+    return this.isDenominator4()
+      ? (this.levelClassMap4[level] ?? '')
+      : (this.levelClassMap8[level] ?? '');
   }
 
-  // ✅ 该列是否“active”（任意格开启）
-  isBeatActive(beat: number): boolean {
-    const col = this.pattern?.[beat];
-    return !!col && col.some((v) => v);
+  cellClasses(beat: number, level: number) {
+    const enabled = !!this.pattern?.[beat]?.[level];
+    const playing = this.isPlayingCell(beat, level);
+    const accent = this.isAccentCell(beat, level);
+
+    return {
+      [this.levelClass(level)]: true,
+      off: !enabled,
+      hit: playing && enabled,
+      'hit-accent': playing && enabled && accent,
+      'hit-normal': playing && enabled && !accent && level === 0,
+      'hit-sub': playing && enabled && level > 0,
+    };
   }
 
-  // ✅ 分组起始列（用于极淡标记）：复用 state().accentBeats
-  isGroupStart(beat: number): boolean {
-    const st = this.state();
-    return Array.isArray(st.accentBeats) && st.accentBeats.includes(beat);
-  }
+  // =========================================================
+  // BPM long press
+  // =========================================================
 
-  // ✅ BPM 微调
-  bpmMinus() {
-    this.metro.setBpm(this.state().bpm - 1);
-  }
-  bpmPlus() {
-    this.metro.setBpm(this.state().bpm + 1);
-  }
-
-  // ✅ 长按 BPM（手机爽）
   startBpmHold(delta: number, ev?: Event) {
     ev?.preventDefault();
     ev?.stopPropagation();
 
-    // 先立即触发一次
-    this.metro.setBpm(this.state().bpm + delta);
+    this.changeBpm(delta);
+    this.stopBpmHold();
 
-    window.clearTimeout(this.bpmHoldTimeout);
-    window.clearInterval(this.bpmHoldInterval);
-
-    // 250ms 后开始连发
     this.bpmHoldTimeout = window.setTimeout(() => {
       let ticks = 0;
       this.bpmHoldInterval = window.setInterval(() => {
         ticks++;
-        // 按久一点自动加速：1 -> 2 -> 5
         const accel = ticks > 18 ? 5 : ticks > 10 ? 2 : 1;
-        this.metro.setBpm(this.state().bpm + delta * accel);
+        this.changeBpm(delta * accel);
       }, 90);
     }, 250);
   }
@@ -303,11 +315,26 @@ export class MetronomeComponent implements OnDestroy {
     this.bpmHoldInterval = undefined;
   }
 
-  // ✅ 秒表控制（独立于节拍器播放）
+  // =========================================================
+  // Stopwatch
+  // =========================================================
+
   toggleStopwatch() {
     this.metro.toggleStopwatch();
   }
+
   resetStopwatch() {
     this.metro.resetStopwatch();
+  }
+
+  formatElapsed(ms: number) {
+    const totalSec = Math.floor(ms / 1000);
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    const tenths = Math.floor((ms % 1000) / 100);
+
+    return `${min.toString().padStart(2, '0')}:${sec
+      .toString()
+      .padStart(2, '0')}.${tenths}`;
   }
 }

@@ -1,50 +1,52 @@
 import {
   CommonModule,
   PLATFORM_BROWSER_ID
-} from "./chunk-52VBFYK3.js";
+} from "./chunk-E3LMLMIN.js";
 import {
   DomAdapter,
   XhrFactory,
   getDOM,
   parseCookieValue,
   setRootDomAdapter
-} from "./chunk-4JUZOGBG.js";
+} from "./chunk-XR7WONGV.js";
 import {
   APP_ID,
   ApplicationModule,
   CSP_NONCE,
-  DOCUMENT,
-  ErrorHandler,
-  INJECTOR_SCOPE,
   Inject,
   Injectable,
-  InjectionToken,
   NgModule,
-  NgZone,
   Optional,
   PLATFORM_ID,
   PLATFORM_INITIALIZER,
   RendererFactory2,
   RendererStyleFlags2,
-  RuntimeError,
   TESTABILITY,
   TESTABILITY_GETTER,
   Testability,
   TracingService,
   ViewEncapsulation,
-  _global,
   allLeavingAnimations,
   createPlatformFactory,
-  inject,
   internalCreateApplication,
   platformCore,
   setClassMetadata,
   setDocument,
+  ɵɵdefineNgModule
+} from "./chunk-JBF5IHBW.js";
+import {
+  DOCUMENT,
+  ErrorHandler,
+  INJECTOR_SCOPE,
+  InjectionToken,
+  NgZone,
+  RuntimeError,
+  _global,
+  inject,
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
-  ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-L7CQP2GH.js";
+} from "./chunk-7CZRKCMK.js";
 import {
   __async,
   __spreadValues
@@ -1121,4 +1123,4 @@ export {
   platformBrowser,
   BrowserModule
 };
-//# sourceMappingURL=chunk-XOHV34ZQ.js.map
+//# sourceMappingURL=chunk-TK7M3KPP.js.map

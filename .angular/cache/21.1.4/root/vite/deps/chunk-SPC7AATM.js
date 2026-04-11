@@ -3,19 +3,21 @@ import {
   Directive,
   ElementRef,
   Injectable,
-  InjectionToken,
   Input,
   NgModule,
   Pipe,
-  inject,
   setClassMetadata,
   ɵɵdefineDirective,
-  ɵɵdefineInjectable,
-  ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵdefinePipe,
   ɵɵgetInheritedFactory
-} from "./chunk-L7CQP2GH.js";
+} from "./chunk-JBF5IHBW.js";
+import {
+  InjectionToken,
+  inject,
+  ɵɵdefineInjectable,
+  ɵɵdefineInjector
+} from "./chunk-7CZRKCMK.js";
 import {
   Subject,
   concat,
@@ -1272,4 +1274,4 @@ export {
   defaultProviders,
   TranslateModule
 };
-//# sourceMappingURL=chunk-ZV2TY3LR.js.map
+//# sourceMappingURL=chunk-SPC7AATM.js.map
