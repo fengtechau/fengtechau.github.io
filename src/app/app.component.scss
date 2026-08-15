@@ -1,13 +1,219 @@
-.logo {
-    height: 4rem;
+.site-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-footer {
-    background-color: #f2f2f2 !important;
+// Skip link (a11y)
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 2000;
+  padding: 8px 16px;
+  background: var(--ft-brand);
+  color: #fff;
+  border-radius: var(--ft-radius-sm);
 }
 
-@media screen and (max-width: 992px) {
-    .company-slogan {
-        font-size: x-large;
-    }
+.skip-link:focus {
+  top: 12px;
+}
+
+// ------------------------------------------------------------
+// Header
+// ------------------------------------------------------------
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ft-header-bg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--ft-border);
+  transition: background-color 220ms ease;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 64px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ft-text);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.brand:hover {
+  color: var(--ft-text);
+}
+
+.brand__logo {
+  height: 38px;
+  width: auto;
+}
+
+.brand__name {
+  font-size: 1.05rem;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.site-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.site-nav__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: var(--ft-radius-full);
+  color: var(--ft-text-secondary);
+  font-size: 0.92rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition:
+    background var(--ft-transition),
+    color var(--ft-transition);
+}
+
+.site-nav__link:hover {
+  background: var(--ft-surface-alt);
+  color: var(--ft-text);
+}
+
+.site-nav__link.is-active {
+  background: var(--ft-brand-soft);
+  color: var(--ft-brand);
+}
+
+// ------------------------------------------------------------
+// Theme switcher
+// ------------------------------------------------------------
+.site-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-full);
+  background: var(--ft-surface);
+  flex: 0 0 auto;
+}
+
+.site-theme__btn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--ft-radius-full);
+  background: transparent;
+  color: var(--ft-text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background var(--ft-transition),
+    color var(--ft-transition);
+}
+
+.site-theme__btn:hover {
+  color: var(--ft-text);
+}
+
+.site-theme__btn.is-active {
+  background: var(--ft-brand-soft);
+  color: var(--ft-brand);
+}
+
+// ------------------------------------------------------------
+// Main
+// ------------------------------------------------------------
+.site-main {
+  flex: 1;
+}
+
+.site-main:focus {
+  outline: none;
+}
+
+// ------------------------------------------------------------
+// Footer
+// ------------------------------------------------------------
+.site-footer {
+  border-top: 1px solid var(--ft-border);
+  background: var(--ft-surface);
+}
+
+.site-footer__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding-block: 20px;
+}
+
+.site-footer__brand {
+  margin: 0;
+  color: var(--ft-text-muted);
+  font-size: 0.88rem;
+}
+
+.site-footer__links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ft-text-muted);
+  font-size: 0.88rem;
+}
+
+.site-footer__links a {
+  color: var(--ft-text-secondary);
+  font-weight: 500;
+}
+
+.site-footer__links a:hover {
+  color: var(--ft-brand);
+}
+
+@media (max-width: 640px) {
+  .site-header__inner {
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding-block: 8px;
+    padding-right: 60px;
+  }
+
+  .site-theme {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+  }
+
+  .site-nav {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .site-footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 }

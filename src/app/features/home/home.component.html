@@ -1,0 +1,177 @@
+<section class="hero" aria-labelledby="hero-title">
+  <div class="ft-container hero__grid">
+    <div class="hero__left">
+      <img
+        class="hero__image"
+        src="/assets/brand/logo/banner.png"
+        alt="FengTech banner"
+      />
+    </div>
+    <div class="hero__right">
+      <h1 id="hero-title" class="hero__title">IT services & tools, done properly.</h1>
+      <p class="hero__subtitle">
+        Operating out of Sydney, we provide information technology services to our
+        clients — practical, reliable and cost-efficient.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#contact">
+          Get in Touch
+          <fa-icon [icon]="icons.faArrowRight" aria-hidden="true" />
+        </a>
+        <a class="btn btn--secondary" href="#services">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section tools" aria-labelledby="tools-title">
+  <div class="ft-container">
+    <h2 id="tools-title" class="section__title">Quick Tools</h2>
+    <p class="section__lead">Free, fast and no sign-up required.</p>
+
+    <div class="tools__grid">
+      <a
+        class="tool"
+        routerLink="/ip"
+        aria-label="IP Tools — find your current IP address"
+      >
+        <span class="tool__icon tool__icon--blue"
+          ><fa-icon [icon]="icons.faNetworkWired"
+        /></span>
+        <span class="tool__label">IP Tools</span>
+        <span class="tool__desc"
+          >Find your current public IP address and location details.</span
+        >
+      </a>
+      <a
+        class="tool"
+        routerLink="/texttools"
+        aria-label="Case Converter — convert text between cases"
+      >
+        <span class="tool__icon tool__icon--green"
+          ><fa-icon [icon]="icons.faFont"
+        /></span>
+        <span class="tool__label">Case Converter</span>
+        <span class="tool__desc"
+          >Convert text between camel, snake, kebab, title and more.</span
+        >
+      </a>
+      <a
+        class="tool"
+        routerLink="/metronome"
+        aria-label="Metronome — sample-accurate practice metronome"
+      >
+        <span class="tool__icon tool__icon--orange"
+          ><fa-icon [icon]="icons.faMusic"
+        /></span>
+        <span class="tool__label">Metronome</span>
+        <span class="tool__desc"
+          >Sample-accurate metronome with patterns, sounds and tap tempo.</span
+        >
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="services" class="section" aria-labelledby="services-title">
+  <div class="ft-container">
+    <h2 id="services-title" class="section__title">Comprehensive IT Services</h2>
+    <p class="section__lead">What you can anticipate receiving:</p>
+
+    <div class="cards">
+      <article class="card">
+        <img
+          class="card__image"
+          src="/assets/images/About/about1.jpg"
+          alt="Website development illustration"
+          loading="lazy"
+        />
+        <div class="card__body">
+          <h3 class="card__title">Website Development Services</h3>
+          <p class="card__text">
+            Inform us of your desired timeline for website development, and we will
+            construct it promptly while incorporating impressive attributes, such as
+            exceptional design and mobile optimization.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <img
+          class="card__image"
+          src="/assets/images/About/about2.jpg"
+          alt="Reliable maintenance illustration"
+          loading="lazy"
+        />
+        <div class="card__body">
+          <h3 class="card__title">Reliable Maintenance Services</h3>
+          <p class="card__text">
+            In the event of your computers encountering technical difficulties that
+            impact productivity, please inform us, and we will promptly diagnose and
+            rectify the issue.
+          </p>
+        </div>
+      </article>
+
+      <article class="card">
+        <img
+          class="card__image"
+          src="/assets/images/About/about3.jpg"
+          alt="Professional IT expert illustration"
+          loading="lazy"
+        />
+        <div class="card__body">
+          <h3 class="card__title">Personable and Professional IT Expert</h3>
+          <p class="card__text">
+            We pride ourselves on employing IT professionals who consistently
+            demonstrate helpfulness, kindness, and respect towards all individuals.
+          </p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="section section--alt" aria-labelledby="about-title">
+  <div class="ft-container about">
+    <div class="about__text">
+      <h2 id="about-title" class="section__title">About FengTech</h2>
+      <p>
+        With years of experience in the IT industry, we provide practical, reliable
+        solutions for small and medium businesses, focusing on security, performance,
+        and cost-efficiency.
+      </p>
+    </div>
+    <figure class="about__image">
+      <img
+        src="/assets/brand/illustrations/about-fengtech.jpg"
+        alt="Modern office and technology"
+        loading="lazy"
+      />
+    </figure>
+  </div>
+</section>
+
+<section id="contact" class="section">
+  <div class="ft-container">
+    <div class="contact">
+      <div class="contact__info">
+        <h2 class="section__title">Start a Project</h2>
+        <p class="contact__line">
+          <strong>Phone:</strong>
+          <a href="tel:+61411758128">0411 758 128</a>
+        </p>
+        <p class="contact__line">
+          <strong>Email:</strong>
+          <a href="mailto:info@fengtech.com.au">info@fengtech.com.au</a>
+        </p>
+      </div>
+      <img
+        class="contact__logo"
+        src="/assets/images/Logo/png/ColorNoBg.png"
+        alt="FengTech logo"
+        loading="lazy"
+      />
+    </div>
+  </div>
+</section>

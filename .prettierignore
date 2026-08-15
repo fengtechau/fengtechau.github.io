@@ -1,0 +1,7 @@
+dist
+node_modules
+.angular
+.tools
+coverage
+package-lock.json
+docs

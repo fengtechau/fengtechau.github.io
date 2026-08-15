@@ -1,0 +1,138 @@
+.ip-page {
+  max-width: 640px;
+}
+
+.ip-page__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.ip-page__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ft-radius-md);
+  background: var(--ft-brand-soft);
+  color: var(--ft-brand);
+  font-size: 1.1rem;
+}
+
+.ip-page__title {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.ip-card {
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-lg);
+  box-shadow: var(--ft-shadow-sm);
+  overflow: hidden;
+}
+
+.ip-card__state {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  padding: 56px 20px;
+  color: var(--ft-text-muted);
+  text-align: center;
+}
+
+.ip-card__state p {
+  margin: 0;
+}
+
+.ip-card__error {
+  color: var(--ft-danger) !important;
+  font-weight: 600;
+}
+
+.ip-card__rows {
+  display: grid;
+}
+
+.ip-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 22px;
+  border-bottom: 1px solid var(--ft-border);
+}
+
+.ip-card__row:last-child {
+  border-bottom: none;
+}
+
+.ip-card__row--primary {
+  background: var(--ft-surface-alt);
+}
+
+.ip-card__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ft-text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ip-card__row--primary .ip-card__label {
+  color: var(--ft-brand);
+}
+
+.ip-card__value-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ip-card__value {
+  color: var(--ft-text);
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
+
+.ip-card__row--primary .ip-card__value {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.ip-card__copy {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-sm);
+  background: var(--ft-surface);
+  color: var(--ft-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--ft-transition),
+    color var(--ft-transition);
+}
+
+.ip-card__copy:hover {
+  background: var(--ft-brand-soft);
+  color: var(--ft-brand);
+}
+
+@media (max-width: 520px) {
+  .ip-card__row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .ip-card__value {
+    text-align: left;
+  }
+}
