@@ -1,0 +1,1 @@
+import{_ as I,wt as v,xt as uF}from"./main-HU7WA5EO.js";var n=`FENG TECH`;var T=(()=>{class t{constructor(){this.title=v(uF)}getTitle(){return this.title.getTitle()}setTitle(e){this.title.setTitle(`${e} \xB7 ${n}`)}static{this.ɵfac=function(c){return new(c||t)}}static{this.ɵprov=I({token:t,factory:t.ɵfac,providedIn:`root`})}}return t})();export{T as t};
