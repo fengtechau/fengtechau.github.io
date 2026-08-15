@@ -1,18 +1,60 @@
 {
-  "TITLE": "Metronome",
-  "TIME_SIGNATURE": "Time Signature",
-  "BPM": "Tempo (BPM)",
-  "ACCENT_FIRST": "Accent the first beat",
-  "PLAY": "Play",
-  "PAUSE": "Pause",
-  "GRID_HINT": "Tap blocks to mute/unmute. Dark = muted.",
-  "BAR": "Bar",
-  "BEATS": "beats",
-  "GROUPING": "Accent grouping",
-  "GROUPING_HINT": "Accents apply to the first beat of each group (e.g., 3+3).",
-  "SIG": "Sig" ,
-  "PRESET_MAIN_ONLY": "Main beats only",
-  "PRESET_ALL_AND": "Enable all and (offbeats)",
-  "PRESET_ALL_SIXTEENTH": "Enable all e/a (16th)",
-  "PRESET_AND_AND_SIXTEENTH": "Enable and + e/a"
+  "METRONOME": {
+    "TITLE": "Metronome",
+    "SUBTITLE": "Sample-accurate practice metronome",
+    "CONTROLS": "Metronome controls",
+    "VISUAL": "Beat display",
+
+    "BPM": "Tempo (BPM)",
+    "INCREASE_BPM": "Increase tempo",
+    "DECREASE_BPM": "Decrease tempo",
+    "PLAY": "Play",
+    "PAUSE": "Pause",
+    "STOP": "Stop",
+    "TAP": "Tap",
+
+    "TIME_SIGNATURE": "Time Signature",
+    "SUBDIVISION": "Subdivision",
+    "SUB_QUARTER": "Quarter",
+    "SUB_EIGHTH": "Eighth",
+    "SUB_TRIPLET": "Triplet",
+    "SUB_SIXTEENTH": "Sixteenth",
+
+    "ACCENT_FIRST": "Accent first beat",
+    "GROUPING": "Grouping",
+
+    "SOUND": "Click Sound",
+    "SOUND_CLASSIC": "Classic",
+    "SOUND_WOOD": "Woodblock",
+    "SOUND_BEEP": "Beep",
+    "SOUND_PULSE": "Pulse",
+
+    "VOLUME": "Volume",
+    "KEEP_AWAKE": "Keep screen awake",
+    "FULLSCREEN": "Fullscreen",
+    "EXIT_FULLSCREEN": "Exit fullscreen",
+
+    "GRID_HINT": "Tap cells to mute or unmute steps. Bright = sounds, dim = muted.",
+    "PATTERNS": "Saved Patterns",
+    "PATTERN_PLACEHOLDER": "Select a saved pattern…",
+    "PATTERN_LOADED": "Pattern loaded",
+    "SAVE": "Save",
+    "SAVE_AS": "Save As",
+    "DELETE": "Delete",
+    "PATTERN_NAME": "Pattern name",
+    "DELETE_CONFIRM": "Delete pattern",
+    "SAVED": "Pattern saved",
+    "DELETED": "Pattern deleted",
+    "CANCEL": "Cancel",
+
+    "STOPWATCH": "Practice timer",
+    "START": "Start",
+    "RESET": "Reset",
+
+    "SHORTCUTS": "Shortcuts",
+    "KEY_SPACE": "Play / pause",
+    "KEY_ARROWS": "Tempo ±1 BPM",
+    "KEY_SHIFT_ARROWS": "Tempo ±10 BPM",
+    "KEY_TAP": "Tap tempo"
+  }
 }

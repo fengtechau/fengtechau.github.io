@@ -53,6 +53,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Local tooling (portable Node runtime used for builds)
+.tools/
+
+# Angular cache
+.angular/
+
 # Java/Gradle
 .gradle/
 build/

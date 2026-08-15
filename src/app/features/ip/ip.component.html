@@ -1,0 +1,75 @@
+<div class="ft-page">
+  <div class="ft-container ip-page">
+    <header class="ip-page__header">
+      <span class="ip-page__icon"><fa-icon [icon]="icons.faNetworkWired" /></span>
+      <h1 class="ip-page__title">Current IP Details</h1>
+    </header>
+
+    <div class="ip-card">
+      @switch (status()) {
+        @case ('loading') {
+          <div class="ip-card__state" role="status">
+            <span class="ft-spinner"></span>
+            <p>Loading IP details…</p>
+          </div>
+        }
+        @case ('error') {
+          <div class="ip-card__state" role="alert">
+            <p class="ip-card__error">{{ errorMessage() }}</p>
+            <button
+              type="button"
+              class="ft-btn ft-btn--outline"
+              (click)="loadIpDetails()"
+            >
+              <fa-icon [icon]="icons.faRotateRight" aria-hidden="true" />
+              Try Again
+            </button>
+          </div>
+        }
+        @case ('success') {
+          @if (info(); as details) {
+            <div class="ip-card__rows">
+              <div class="ip-card__row ip-card__row--primary">
+                <span class="ip-card__label">
+                  <fa-icon [icon]="icons.faLocationDot" aria-hidden="true" />
+                  IP Address
+                </span>
+                <div class="ip-card__value-wrap">
+                  <span class="ip-card__value ft-mono">{{ details.ip }}</span>
+                  <button
+                    type="button"
+                    class="ip-card__copy"
+                    [attr.aria-label]="copied() ? 'Copied' : 'Copy IP address'"
+                    (click)="copyIp()"
+                  >
+                    <fa-icon
+                      [icon]="copied() ? icons.faCheck : icons.faCopy"
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
+              </div>
+
+              <div class="ip-card__row">
+                <span class="ip-card__label">City</span>
+                <span class="ip-card__value">{{ details.city }}</span>
+              </div>
+              <div class="ip-card__row">
+                <span class="ip-card__label">Region</span>
+                <span class="ip-card__value">{{ details.region }}</span>
+              </div>
+              <div class="ip-card__row">
+                <span class="ip-card__label">Country</span>
+                <span class="ip-card__value">{{ details.country }}</span>
+              </div>
+              <div class="ip-card__row">
+                <span class="ip-card__label">ISP</span>
+                <span class="ip-card__value">{{ details.isp }}</span>
+              </div>
+            </div>
+          }
+        }
+      }
+    </div>
+  </div>
+</div>

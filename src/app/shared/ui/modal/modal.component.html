@@ -1,0 +1,30 @@
+@if (open()) {
+  <div
+    class="modal-backdrop"
+    tabindex="0"
+    (click)="onBackdropClick($event)"
+    (keydown)="onBackdropKeydown($event)"
+  >
+    <div
+      class="modal-dialog"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="title()"
+    >
+      <header class="modal-header">
+        <h2 class="modal-title">{{ title() }}</h2>
+        <button
+          type="button"
+          class="modal-close"
+          [attr.aria-label]="'Close dialog'"
+          (click)="closed.emit()"
+        >
+          <fa-icon [icon]="icons.faXmark" aria-hidden="true" />
+        </button>
+      </header>
+      <div class="modal-body">
+        <ng-content />
+      </div>
+    </div>
+  </div>
+}

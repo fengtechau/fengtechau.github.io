@@ -1,19 +1,49 @@
-<div class="container border-0" role="main">
-  <!-- Toolbar -->
-  <div class="toolbar" role="nav">
-    <div class="row justify-content-center">
-      <div class="col-10 justify-content-center d-flex pt-2">
-        <img class="logo" src="/assets/images/Logo/png/BlackNoBg.png" alt="Black Logo" />
-      </div>
-      <div class="col-2 d-flex align-items-center justify-content-begin pt-2">
-        <a href="/" class="btn btn-outline-dark">
-          Home
-        </a>
+<div class="site-shell">
+  <a
+    class="ft-sr-only skip-link"
+    routerLink="/"
+    fragment="main-content"
+    skipLocationChange
+    >Skip to main content</a
+  >
+
+  <header class="site-header">
+    <div class="ft-container site-header__inner">
+      <a class="brand" routerLink="/home" aria-label="FengTech — home">
+        <img class="brand__logo" src="/assets/images/Logo/png/BlackNoBg.png" alt="" />
+        <span class="brand__name">FENG&nbsp;TECH</span>
+      </a>
+
+      <nav class="site-nav" aria-label="Main navigation">
+        @for (item of navItems; track item.path) {
+          <a
+            class="site-nav__link"
+            [routerLink]="[item.path]"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <fa-icon [icon]="item.icon" aria-hidden="true" />
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="site-main" tabindex="-1">
+    <router-outlet />
+  </main>
+
+  <footer class="site-footer">
+    <div class="ft-container site-footer__inner">
+      <p class="site-footer__brand">
+        © {{ currentYear }} FengTech Pty Ltd · Sydney, Australia
+      </p>
+      <div class="site-footer__links">
+        <a href="mailto:info@fengtech.com.au">info@fengtech.com.au</a>
+        <span aria-hidden="true">·</span>
+        <a href="tel:+61411758128">0411 758 128</a>
       </div>
     </div>
-
-    <!-- Main Content -->
-    <router-outlet></router-outlet>
-
-  </div>
+  </footer>
 </div>

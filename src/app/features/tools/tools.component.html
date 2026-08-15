@@ -1,0 +1,80 @@
+<div class="ft-page">
+  <div class="ft-container">
+    <header class="tools__header">
+      <h1 class="tools__title">Case Converter</h1>
+      <p class="tools__subtitle">Paste text, pick a case, copy the result.</p>
+    </header>
+
+    <div class="tools__panel">
+      <div class="tools__field">
+        <label class="tools__label" for="input-text">Input Text</label>
+        <textarea
+          id="input-text"
+          class="tools__textarea"
+          rows="10"
+          placeholder="Enter text…"
+          [value]="inputText()"
+          (input)="inputText.set($any($event.target).value)"
+        ></textarea>
+      </div>
+
+      <div class="tools__toolbar">
+        <div class="tools__select-wrap">
+          <label class="tools__label" for="case-select">Case</label>
+          <select
+            id="case-select"
+            class="tools__select"
+            [value]="selectedCase()"
+            (change)="onCaseChange($event)"
+          >
+            @for (option of caseOptions; track option) {
+              <option [value]="option">{{ caseLabels[option] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="tools__actions">
+          <button
+            type="button"
+            class="ft-btn"
+            (click)="transformText()"
+            [disabled]="!inputText().trim()"
+          >
+            <fa-icon [icon]="icons.faArrowsRotate" aria-hidden="true" />
+            Transform
+          </button>
+          <button type="button" class="ft-btn ft-btn--secondary" (click)="clearText()">
+            <fa-icon [icon]="icons.faEraser" aria-hidden="true" />
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <div class="tools__field">
+        <label class="tools__label" for="output-text">Output Text</label>
+        <textarea
+          id="output-text"
+          class="tools__textarea"
+          rows="10"
+          readonly
+          [value]="outputText()"
+          aria-live="polite"
+        ></textarea>
+        <button
+          type="button"
+          class="ft-btn tools__copy"
+          [class.ft-btn--outline]="!copied()"
+          [class.ft-btn--success]="copied()"
+          (click)="copyToClipboard()"
+          [disabled]="!outputText()"
+        >
+          <fa-icon
+            [icon]="copied() ? icons.faCheck : icons.faCopy"
+            aria-hidden="true"
+          />
+          {{ copied() ? 'Copied!' : 'Copy to Clipboard' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

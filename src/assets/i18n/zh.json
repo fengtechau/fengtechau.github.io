@@ -1,19 +1,60 @@
-
 {
-  "TITLE": "节拍器",
-  "TIME_SIGNATURE": "拍号",
-  "BPM": "速度 (BPM)",
-  "ACCENT_FIRST": "第一拍加重（更高音）",
-  "PLAY": "开始",
-  "PAUSE": "暂停",
-  "GRID_HINT": "点击方块切换静音：变暗为静音。",
-  "BAR": "小节",
-  "BEATS": "拍",
-  "GROUPING": "分组重音",
-  "GROUPING_HINT": "对每个分组的起始拍加重（例如 3+3 表示第1与第4拍更强）。",
-  "SIG": "拍号",
-  "PRESET_MAIN_ONLY": "仅主拍",
-  "PRESET_ALL_AND": "启用所有 and（反拍）",
-  "PRESET_ALL_SIXTEENTH": "启用所有 e/a（十六分）",
-  "PRESET_AND_AND_SIXTEENTH": "启用 and + e/a"
+  "METRONOME": {
+    "TITLE": "节拍器",
+    "SUBTITLE": "采样级精度的练习节拍器",
+    "CONTROLS": "节拍器控制区",
+    "VISUAL": "节拍显示区",
+
+    "BPM": "速度 (BPM)",
+    "INCREASE_BPM": "提高速度",
+    "DECREASE_BPM": "降低速度",
+    "PLAY": "开始",
+    "PAUSE": "暂停",
+    "STOP": "停止",
+    "TAP": "Tap 测速",
+
+    "TIME_SIGNATURE": "拍号",
+    "SUBDIVISION": "节奏细分",
+    "SUB_QUARTER": "四分",
+    "SUB_EIGHTH": "八分",
+    "SUB_TRIPLET": "三连音",
+    "SUB_SIXTEENTH": "十六分",
+
+    "ACCENT_FIRST": "第一拍加重",
+    "GROUPING": "分组重音",
+
+    "SOUND": "节拍音色",
+    "SOUND_CLASSIC": "经典",
+    "SOUND_WOOD": "木鱼",
+    "SOUND_BEEP": "电子音",
+    "SOUND_PULSE": "脉冲",
+
+    "VOLUME": "音量",
+    "KEEP_AWAKE": "保持屏幕常亮",
+    "FULLSCREEN": "全屏模式",
+    "EXIT_FULLSCREEN": "退出全屏",
+
+    "GRID_HINT": "点击格子切换静音：亮色发声，暗色静音。",
+    "PATTERNS": "已存预设",
+    "PATTERN_PLACEHOLDER": "选择已保存的预设…",
+    "PATTERN_LOADED": "已载入预设",
+    "SAVE": "保存",
+    "SAVE_AS": "另存为",
+    "DELETE": "删除",
+    "PATTERN_NAME": "预设名称",
+    "DELETE_CONFIRM": "确定删除预设",
+    "SAVED": "预设已保存",
+    "DELETED": "预设已删除",
+    "CANCEL": "取消",
+
+    "STOPWATCH": "练习计时器",
+    "START": "开始",
+    "RESET": "复位",
+
+    "SHORTCUTS": "快捷键",
+    "KEY_SPACE": "开始 / 暂停",
+    "KEY_ARROWS": "速度 ±1 BPM",
+    "KEY_SHIFT_ARROWS": "速度 ±10 BPM",
+    "KEY_TAP": "Tap 测速"
+  }
 }
