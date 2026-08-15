@@ -10,10 +10,26 @@ this release. Run the app with `npm start` and open `/metronome`.
 | 120 BPM, 4/4, 16ths — 15 s playhead probe | avg step 124.93 ms vs 125 ms target (deviation **-0.06%**) |
 | Rapid start/stop ×10, BPM 20↔300 swings, 6 signature changes while playing | no page errors, state consistent |
 | 40 structural UI checks (shell, grid, modals, keyboard, a11y, mobile overflow) | all passed |
-| `npm run build` / `lint` / `test` / `format:check` | all green (56 unit tests) |
+| 13 theme checks (light/dark unification, persistence, auto mode, post-switch playback) | all passed |
+| `npm run build` / `lint` / `test` / `format:check` | all green (61 unit tests) |
 
 Screenshots are committed under `docs/screenshots/`
-(`01-home-desktop.png` … `07-metronome-mobile.png`).
+(`01-home-desktop.png` … `10-home-dark.png`).
+
+## 8. Color series (theme) checks
+
+- [ ] Default (light) series: the metronome page background, cards,
+      text, buttons and borders share the exact same tone as the rest
+      of the site — no dark navy panel remains.
+- [ ] Header theme switcher: Light / Dark / Auto buttons reflect the
+      current series; pressing one restyles every page instantly.
+- [ ] Dark series: all pages (home, IP, tools, metronome) switch
+      together; no leftover hardcoded light or orange elements.
+- [ ] Reload keeps the chosen series (stored in `localStorage`); a hard
+      refresh shows no light flash before paint.
+- [ ] Auto follows the OS preference and reacts to changes.
+- [ ] Metronome playback, tap tempo, modals and stopwatch behave
+      identically in both series.
 
 ## 1. Timing accuracy (P0)
 

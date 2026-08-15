@@ -2,19 +2,24 @@
 // FengTech — Global design system
 // Single source of truth for color, typography, spacing,
 // radius, shadow and interaction states used across the site.
-// Bootstrap (5.3) is re-themed through its CSS custom properties.
+// Two color series are defined: the default light tokens on
+// `:root`, and a dark series on `[data-theme='dark']`. Every
+// component — including the metronome — consumes only tokens.
 // ============================================================
 
 // ------------------------------------------------------------
-// Design tokens
+// Design tokens — light series (default)
 // ------------------------------------------------------------
 :root {
+  color-scheme: light;
+
   // Brand
   --ft-brand: #2d6ae3;
   --ft-brand-hover: #1f55c7;
   --ft-brand-active: #17439f;
   --ft-brand-soft: #eaf0fe;
   --ft-accent: #00c2a8;
+  --ft-accent-strong: #0a9e88;
   --ft-accent-soft: #e0f7f1;
 
   // Neutrals
@@ -26,6 +31,7 @@
   --ft-text-muted: #7c8aa0;
   --ft-border: #e2e8f0;
   --ft-border-strong: #cbd5e1;
+  --ft-header-bg: rgba(255, 255, 255, 0.88);
 
   // Feedback
   --ft-danger: #e5484d;
@@ -34,6 +40,7 @@
   --ft-success: #179a57;
   --ft-success-soft: #e6f6ed;
   --ft-warning: #e8930c;
+  --ft-warning-strong: #c77b06;
   --ft-warning-soft: #fdf3e3;
 
   // Typography
@@ -68,6 +75,51 @@
   // Focus & motion
   --ft-focus-ring: 0 0 0 3px rgba(45, 106, 227, 0.3);
   --ft-transition: 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ------------------------------------------------------------
+// Design tokens — dark series
+// ------------------------------------------------------------
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  // Brand (lifted for contrast on dark surfaces)
+  --ft-brand: #5b8def;
+  --ft-brand-hover: #7aa3f5;
+  --ft-brand-active: #86acf7;
+  --ft-brand-soft: rgba(91, 141, 239, 0.16);
+  --ft-accent: #2ad4bc;
+  --ft-accent-strong: #4de0cb;
+  --ft-accent-soft: rgba(42, 212, 188, 0.14);
+
+  // Neutrals
+  --ft-bg: #0d1420;
+  --ft-surface: #141d2e;
+  --ft-surface-alt: #0a111d;
+  --ft-text: #e8edf7;
+  --ft-text-secondary: #c3ccda;
+  --ft-text-muted: #8fa0b8;
+  --ft-border: #263246;
+  --ft-border-strong: #38465e;
+  --ft-header-bg: rgba(13, 20, 32, 0.88);
+
+  // Feedback
+  --ft-danger: #ff6471;
+  --ft-danger-strong: #ff7d88;
+  --ft-danger-soft: rgba(255, 100, 113, 0.14);
+  --ft-success: #34c97c;
+  --ft-success-soft: rgba(52, 201, 124, 0.14);
+  --ft-warning: #f5a623;
+  --ft-warning-strong: #ffb63d;
+  --ft-warning-soft: rgba(245, 166, 35, 0.14);
+
+  // Shadows (deeper on dark backgrounds)
+  --ft-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.35);
+  --ft-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4), 0 12px 24px rgba(0, 0, 0, 0.35);
+  --ft-shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.5), 0 32px 64px rgba(0, 0, 0, 0.45);
+
+  // Focus
+  --ft-focus-ring: 0 0 0 3px rgba(91, 141, 239, 0.35);
 }
 
 // Bootstrap 5.3 theme alignment (Bootstrap components read these variables)
@@ -106,6 +158,9 @@ body {
   color: var(--ft-text);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease;
 }
 
 *,

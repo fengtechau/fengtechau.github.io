@@ -65,7 +65,7 @@ src/app/
 │       ├── metronome-audio.service.ts # Web Audio click synthesis
 │       ├── metronome-storage.service.ts # localStorage persistence
 │       ├── metronome.service.ts       # State + scheduling engine
-│       └── metronome.component.*      # UI (dark instrument panel)
+│       └── metronome.component.*      # UI (same color series as the site)
 └── shared/
     └── ui/modal/            # Reusable accessible modal
 ```
@@ -81,6 +81,28 @@ src/app/
   and `npm run format:check`.
 - **Design tokens** in `src/styles.scss`: colors, spacing, radii,
   shadows, focus rings, button system — no CSS framework dependency.
+
+### Color theme series
+
+A theme switcher in the site header offers three series — **Light**
+(default), **Dark** and **Auto** (follows the OS preference). The choice
+is persisted in `localStorage` (`fengtech.theme`) and applied to
+`<html data-theme="…">` before first paint, so there is no flash on
+reload. Every page — including the metronome — consumes only the global
+tokens, so switching restyles the whole site consistently.
+
+| Token group          | Light (default)           | Dark                    |
+| -------------------- | ------------------------- | ----------------------- |
+| Background / surface | `#f4f6fa` / `#ffffff`     | `#0d1420` / `#141d2e`   |
+| Text / muted         | `#0f172a` / `#7c8aa0`     | `#e8edf7` / `#8fa0b8`   |
+| Brand / hover        | `#2d6ae3` / `#1f55c7`     | `#5b8def` / `#7aa3f5`   |
+| Beat accent / danger | `#e8930c` / `#e5484d`     | `#f5a623` / `#ff6471`   |
+
+The metronome maps its semantic colors (`--m-bg`, `--m-surface`,
+`--m-accent`, `--m-beat`, `--m-downbeat`, …) onto those tokens, so its
+panel is visually identical in tone to the rest of the site in both
+series — primary controls in brand blue, the active beat in the amber
+accent, the downbeat in red.
 
 ### Metronome timing model
 
@@ -130,7 +152,10 @@ src/app/
 - **Unified design system**: global tokens (color/typography/spacing/
   radius/shadow), app shell with header + footer, accessible modal,
   loading/error/empty states, `prefers-reduced-motion` support.
-- **Quality gates**: ESLint + Prettier, 56 unit tests, strict templates.
+- **Quality gates**: ESLint + Prettier, 61 unit tests, strict templates.
+- **Color theme series (this release)**: the metronome panel now shares
+  the site-wide color series, and a header switcher offers Light / Dark /
+  Auto themes, persisted in `localStorage` and applied to every page.
 
 ## Verification
 

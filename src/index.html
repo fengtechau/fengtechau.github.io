@@ -17,6 +17,21 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <script>
+      // Apply the saved color theme before first paint to avoid a flash.
+      (function () {
+        try {
+          var mode = localStorage.getItem('fengtech.theme');
+          var dark =
+            mode === 'dark' ||
+            ((!mode || mode === 'auto') &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
   </head>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-T6MJBQ5P0Z"></script>

@@ -27,9 +27,10 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.88);
+  background: var(--ft-header-bg);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--ft-border);
+  transition: background-color 220ms ease;
 }
 
 .site-header__inner {
@@ -100,6 +101,45 @@
 }
 
 // ------------------------------------------------------------
+// Theme switcher
+// ------------------------------------------------------------
+.site-theme {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-full);
+  background: var(--ft-surface);
+  flex: 0 0 auto;
+}
+
+.site-theme__btn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: var(--ft-radius-full);
+  background: transparent;
+  color: var(--ft-text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition:
+    background var(--ft-transition),
+    color var(--ft-transition);
+}
+
+.site-theme__btn:hover {
+  color: var(--ft-text);
+}
+
+.site-theme__btn.is-active {
+  background: var(--ft-brand-soft);
+  color: var(--ft-brand);
+}
+
+// ------------------------------------------------------------
 // Main
 // ------------------------------------------------------------
 .site-main {
@@ -152,9 +192,18 @@
 
 @media (max-width: 640px) {
   .site-header__inner {
+    position: relative;
     flex-direction: column;
+    align-items: flex-start;
     gap: 4px;
     padding-block: 8px;
+    padding-right: 60px;
+  }
+
+  .site-theme {
+    position: absolute;
+    top: 14px;
+    right: 20px;
   }
 
   .site-nav {

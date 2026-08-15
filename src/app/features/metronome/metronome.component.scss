@@ -1,36 +1,49 @@
 /* ============================================================
-   Metronome — professional instrument panel (dark)
+   Metronome — professional instrument panel
+   Every color derives from the global design-system tokens, so the
+   panel stays in the same color series as the rest of the site and
+   follows the light/dark/auto theme switching automatically.
    ============================================================ */
 
 .metro {
-  /* Local tokens */
-  --m-bg: #0d1420;
-  --m-bg-soft: #131c2c;
-  --m-surface: rgba(255, 255, 255, 0.045);
-  --m-surface-strong: rgba(255, 255, 255, 0.08);
-  --m-border: rgba(255, 255, 255, 0.09);
-  --m-text: #e8edf7;
-  --m-text-dim: #93a1b8;
-  --m-accent: #ff7a1a;
-  --m-accent-strong: #ff5c1f;
-  --m-accent-soft: rgba(255, 122, 26, 0.16);
-  --m-blue: #4c9aff;
-  --m-downbeat: #ff5470;
-  --m-danger: #ff5470;
+  /* Semantic tokens mapped onto the global design system */
+  --m-bg: var(--ft-bg);
+  --m-bg-soft: var(--ft-surface-alt);
+  --m-surface: var(--ft-surface);
+  --m-surface-strong: var(--ft-surface-alt);
+  --m-border: var(--ft-border);
+  --m-border-strong: var(--ft-border-strong);
+  --m-text: var(--ft-text);
+  --m-text-dim: var(--ft-text-muted);
+  --m-accent: var(--ft-brand);
+  --m-accent-strong: var(--ft-brand-hover);
+  --m-accent-soft: var(--ft-brand-soft);
+  --m-main-soft: var(--ft-brand-soft);
+  --m-beat: var(--ft-warning);
+  --m-beat-soft: var(--ft-warning-soft);
+  --m-beat-glow: rgba(232, 147, 12, 0.55);
+  --m-downbeat: var(--ft-danger);
+  --m-downbeat-soft: var(--ft-danger-soft);
+  --m-downbeat-glow: rgba(229, 72, 77, 0.55);
+  --m-danger: var(--ft-danger);
   --m-radius: 14px;
-  --m-glow: 0 0 0 4px rgba(255, 122, 26, 0.28), 0 0 24px rgba(255, 122, 26, 0.35);
 
   min-height: calc(100vh - 64px);
   padding: 28px 20px 48px;
+  background: var(--m-bg);
+  color: var(--m-text);
+  font-family: var(--ft-font-sans);
+}
+
+/* Dark series: add back a subtle brand glow for depth. */
+[data-theme='dark'] .metro {
   background:
     radial-gradient(
       1200px 500px at 50% -10%,
-      rgba(45, 106, 227, 0.16),
+      rgba(91, 141, 239, 0.12),
       transparent 60%
     ),
     var(--m-bg);
-  color: var(--m-text);
-  font-family: var(--ft-font-sans);
 }
 
 /* ============================================================
@@ -61,7 +74,7 @@
   background: linear-gradient(135deg, var(--m-accent), var(--m-accent-strong));
   color: #fff;
   font-size: 1.15rem;
-  box-shadow: 0 6px 18px rgba(255, 92, 31, 0.35);
+  box-shadow: 0 6px 18px rgba(45, 106, 227, 0.35);
 }
 
 .metro__title {
@@ -188,7 +201,7 @@
 .metro__text-input:focus-visible {
   outline: none;
   border-color: var(--m-accent);
-  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.25);
+  box-shadow: var(--ft-focus-ring);
 }
 
 .metro__select option {
@@ -240,7 +253,7 @@
 .metro__bpm-input:focus-visible {
   outline: none;
   border-color: var(--m-accent);
-  box-shadow: 0 0 0 3px rgba(255, 122, 26, 0.25);
+  box-shadow: var(--ft-focus-ring);
 }
 
 .metro__step-btn {
@@ -294,9 +307,9 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  border: 3px solid var(--m-bg);
+  border: 3px solid var(--m-surface);
   background: var(--m-accent);
-  box-shadow: 0 0 0 2px rgba(255, 122, 26, 0.5);
+  box-shadow: 0 0 0 2px rgba(45, 106, 227, 0.45);
   cursor: grab;
 }
 
@@ -304,9 +317,9 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 3px solid var(--m-bg);
+  border: 3px solid var(--m-surface);
   background: var(--m-accent);
-  box-shadow: 0 0 0 2px rgba(255, 122, 26, 0.5);
+  box-shadow: 0 0 0 2px rgba(45, 106, 227, 0.45);
   cursor: grab;
 }
 
@@ -345,7 +358,7 @@
 
 .metro__chip.is-active {
   background: var(--m-accent-soft);
-  border-color: rgba(255, 122, 26, 0.45);
+  border-color: var(--m-accent);
   color: var(--m-accent);
 }
 
@@ -384,7 +397,7 @@
   color: #fff;
   font-size: 1.4rem;
   cursor: pointer;
-  box-shadow: 0 10px 26px rgba(255, 92, 31, 0.4);
+  box-shadow: 0 10px 26px rgba(45, 106, 227, 0.4);
   transition:
     transform 120ms ease,
     box-shadow 120ms ease;
@@ -400,18 +413,20 @@
 
 .metro__play.is-running {
   animation: metro-pulse 1.4s ease-out infinite;
-  box-shadow: var(--m-glow);
+  box-shadow:
+    0 0 0 4px rgba(45, 106, 227, 0.28),
+    0 0 24px rgba(45, 106, 227, 0.35);
 }
 
 @keyframes metro-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 122, 26, 0.45);
+    box-shadow: 0 0 0 0 rgba(45, 106, 227, 0.45);
   }
   70% {
-    box-shadow: 0 0 0 16px rgba(255, 122, 26, 0);
+    box-shadow: 0 0 0 16px rgba(45, 106, 227, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 122, 26, 0);
+    box-shadow: 0 0 0 0 rgba(45, 106, 227, 0);
   }
 }
 
@@ -528,7 +543,7 @@
   width: 40px;
   height: 22px;
   border-radius: 999px;
-  background: var(--m-surface-strong);
+  background: var(--m-border-strong);
   transition: background var(--ft-transition);
 }
 
@@ -598,18 +613,18 @@
 }
 
 .metro__led.is-downbeat {
-  background: rgba(255, 84, 112, 0.45);
+  background: var(--m-downbeat-soft);
 }
 
 .metro__led.is-active {
-  background: var(--m-accent);
+  background: var(--m-beat);
   transform: scale(1.5);
-  box-shadow: 0 0 14px rgba(255, 122, 26, 0.9);
+  box-shadow: 0 0 14px var(--m-beat-glow);
 }
 
 .metro__led.is-downbeat.is-active {
   background: var(--m-downbeat);
-  box-shadow: 0 0 14px rgba(255, 84, 112, 0.9);
+  box-shadow: 0 0 14px var(--m-downbeat-glow);
 }
 
 /* ============================================================
@@ -651,7 +666,7 @@
 }
 
 .metro__beat-col.is-group-start {
-  box-shadow: inset 3px 0 0 rgba(255, 122, 26, 0.55);
+  box-shadow: inset 3px 0 0 var(--m-beat);
 }
 
 .metro__cell {
@@ -684,47 +699,47 @@
 }
 
 .metro__cell.is-main {
-  background: rgba(76, 154, 255, 0.22);
-  border-color: rgba(76, 154, 255, 0.4);
+  background: var(--m-main-soft);
+  border-color: var(--m-accent-soft);
 }
 
 .metro__cell.is-downbeat {
-  background: rgba(255, 84, 112, 0.26);
-  border-color: rgba(255, 84, 112, 0.5);
+  background: var(--m-downbeat-soft);
+  border-color: var(--m-downbeat-soft);
 }
 
 .metro__cell.is-accent {
-  background: rgba(255, 122, 26, 0.24);
-  border-color: rgba(255, 122, 26, 0.5);
+  background: var(--m-beat-soft);
+  border-color: var(--m-beat-soft);
 }
 
 .metro__cell.is-off {
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.06);
+  border-color: var(--m-border);
 }
 
 .metro__cell.is-off .metro__cell-label {
-  opacity: 0.22;
+  opacity: 0.25;
 }
 
 .metro__cell.is-playing {
   transform: scale(1.04);
   box-shadow:
-    0 0 0 3px rgba(255, 122, 26, 0.65),
-    0 0 22px rgba(255, 122, 26, 0.55);
+    0 0 0 3px var(--m-beat),
+    0 0 22px var(--m-beat-glow);
   z-index: 1;
 }
 
 .metro__cell.is-downbeat.is-playing {
   box-shadow:
-    0 0 0 3px rgba(255, 84, 112, 0.7),
-    0 0 22px rgba(255, 84, 112, 0.6);
+    0 0 0 3px var(--m-downbeat),
+    0 0 22px var(--m-downbeat-glow);
 }
 
 /* Muted steps still show the playhead passing, just dimmer. */
 .metro__cell.is-off.is-playing {
   transform: scale(1.02);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.28);
+  box-shadow: 0 0 0 2px var(--m-border-strong);
 }
 
 .metro__hint {
@@ -752,7 +767,7 @@
 }
 
 .metro__timer-icon {
-  color: var(--m-blue);
+  color: var(--m-accent);
   font-size: 1rem;
 }
 
@@ -811,12 +826,12 @@
 .metro__icon-btn:hover {
   background: var(--m-surface-strong);
   color: var(--m-accent);
-  border-color: rgba(255, 122, 26, 0.4);
+  border-color: var(--m-accent);
 }
 
 .metro__icon-btn--danger:hover {
   color: var(--m-danger);
-  border-color: rgba(255, 84, 112, 0.5);
+  border-color: var(--m-danger);
 }
 
 .metro__icon-btn:disabled {
@@ -870,7 +885,7 @@
   gap: 8px;
   padding: 10px 18px;
   border-radius: 999px;
-  background: rgba(19, 28, 44, 0.95);
+  background: var(--m-surface);
   border: 1px solid var(--m-border);
   color: var(--m-text);
   font-size: 0.85rem;
