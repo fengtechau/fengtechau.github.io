@@ -1,29 +1,45 @@
 <div class="site-shell">
-  <a class="ft-sr-only skip-link" routerLink="/" fragment="main-content" skipLocationChange>Skip to main content</a>
+  <a
+    class="ft-sr-only skip-link"
+    routerLink="/"
+    fragment="main-content"
+    skipLocationChange
+    >Skip to main content</a
+  >
 
   <header class="site-header">
     <div class="ft-container site-header__inner">
       <a class="brand" routerLink="/home" aria-label="FengTech — home">
-        <img class="brand__logo" src="/assets/images/Logo/png/BlackNoBg.png" alt="FENG TECH" />
+        <img class="brand__logo" [src]="headerLogo()" alt="FengTech — FENG TECH" />
       </a>
 
       <nav class="site-nav" aria-label="Main navigation">
         @for (item of navItems; track item.path) {
-        <a class="site-nav__link" [routerLink]="[item.path]" routerLinkActive="is-active"
-          [routerLinkActiveOptions]="{ exact: true }">
-          <fa-icon [icon]="item.icon" aria-hidden="true" />
-          <span>{{ item.label }}</span>
-        </a>
+          <a
+            class="site-nav__link"
+            [routerLink]="[item.path]"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <fa-icon [icon]="item.icon" aria-hidden="true" />
+            <span>{{ item.label }}</span>
+          </a>
         }
       </nav>
 
       <div class="site-theme" role="group" aria-label="Color theme">
         @for (option of themeOptions; track option.mode) {
-        <button type="button" class="site-theme__btn" [class.is-active]="theme.mode() === option.mode"
-          [attr.aria-pressed]="theme.mode() === option.mode" [attr.aria-label]="option.label" [title]="option.label"
-          (click)="setTheme(option.mode)">
-          <fa-icon [icon]="option.icon" aria-hidden="true" />
-        </button>
+          <button
+            type="button"
+            class="site-theme__btn"
+            [class.is-active]="theme.mode() === option.mode"
+            [attr.aria-pressed]="theme.mode() === option.mode"
+            [attr.aria-label]="option.label"
+            [title]="option.label"
+            (click)="setTheme(option.mode)"
+          >
+            <fa-icon [icon]="option.icon" aria-hidden="true" />
+          </button>
         }
       </div>
     </div>

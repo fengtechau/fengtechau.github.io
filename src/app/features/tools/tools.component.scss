@@ -1,5 +1,20 @@
 .tools__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
   margin-bottom: 22px;
+}
+
+.tools__header-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--ft-radius-md);
+  background: var(--ft-accent-soft);
+  color: var(--ft-accent-strong);
+  font-size: 1.15rem;
 }
 
 .tools__title {

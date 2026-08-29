@@ -5,6 +5,7 @@ import {
   faCheck,
   faCopy,
   faEraser,
+  faFont,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { AppTitleService } from '../../core/services/app-title.service';
@@ -32,6 +33,7 @@ export class ToolsComponent implements OnInit {
     faCheck,
     faCopy,
     faEraser,
+    faFont,
   };
 
   readonly caseOptions = CASE_OPTIONS;
@@ -45,7 +47,7 @@ export class ToolsComponent implements OnInit {
   private copiedTimer: number | undefined;
 
   ngOnInit(): void {
-    this.appTitleService.setTitle('Text Converter');
+    this.appTitleService.setTitle('Case Converter');
     this.selectedCase.set(this.readSavedCase());
   }
 

@@ -4,15 +4,36 @@
   display: block;
 }
 
+/* ------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------ */
 .hero {
-  padding: 48px 0 8px;
+  position: relative;
+  padding: 48px 0 16px;
+  background-image: radial-gradient(var(--ft-border) 1px, transparent 1px);
+  background-size: 26px 26px;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 15%, var(--ft-brand-soft), transparent 55%);
+  pointer-events: none;
 }
 
 .hero__grid {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1.1fr;
   gap: 40px;
   align-items: center;
+}
+
+.hero__image-wrap {
+  display: grid;
+  place-items: center;
 }
 
 .hero__image {
@@ -21,15 +42,24 @@
   display: block;
 }
 
+.hero__eyebrow {
+  margin: 0 0 10px;
+  color: var(--ft-text-muted);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .hero__title {
   margin: 0 0 14px;
-  font-size: clamp(30px, 4.5vw, 52px);
-  line-height: 1.08;
-  letter-spacing: -0.02em;
+  font-size: clamp(30px, 4.5vw, 48px);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
 }
 
 .hero__subtitle {
-  margin: 0 0 22px;
+  margin: 0 0 26px;
   color: var(--ft-text-secondary);
   font-size: clamp(15px, 2vw, 18px);
   line-height: 1.6;
@@ -42,52 +72,78 @@
   gap: 12px;
 }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
+/* ------------------------------------------------------------
+   Promises
+   ------------------------------------------------------------ */
+.promises {
+  padding: 8px 0 32px;
+}
+
+.promises__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.promise {
+  display: grid;
   gap: 8px;
-  padding: 12px 22px;
-  border-radius: var(--ft-radius-md);
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-decoration: none;
-  white-space: nowrap;
-  transition:
-    background var(--ft-transition),
-    border-color var(--ft-transition),
-    box-shadow var(--ft-transition),
-    transform var(--ft-transition);
-}
-
-.btn--primary {
-  background: var(--ft-brand);
-  color: #fff;
-  box-shadow: var(--ft-shadow-md);
-}
-
-.btn--primary:hover {
-  background: var(--ft-brand-hover);
-  color: #fff;
-  transform: translateY(-1px);
-}
-
-.btn--secondary {
+  padding: 20px 22px;
   background: var(--ft-surface);
   border: 1px solid var(--ft-border);
-  color: var(--ft-text);
+  border-radius: var(--ft-radius-lg);
+  box-shadow: var(--ft-shadow-sm);
 }
 
-.btn--secondary:hover {
-  border-color: var(--ft-border-strong);
-  color: var(--ft-text);
+.promise__icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--ft-radius-md);
+  font-size: 1.05rem;
 }
 
+.promise__icon--blue {
+  background: var(--ft-brand-soft);
+  color: var(--ft-brand);
+}
+
+.promise__icon--green {
+  background: var(--ft-accent-soft);
+  color: var(--ft-accent-strong);
+}
+
+.promise__icon--orange {
+  background: var(--ft-warning-soft);
+  color: var(--ft-warning);
+}
+
+.promise__title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.promise__text {
+  margin: 0;
+  color: var(--ft-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+/* ------------------------------------------------------------
+   Sections
+   ------------------------------------------------------------ */
 .section {
   padding: 44px 0;
 }
 
 .section--alt {
-  background: var(--ft-surface-alt);
+  background-color: var(--ft-surface-alt);
+  background-image:
+    linear-gradient(var(--ft-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ft-border) 1px, transparent 1px);
+  background-size: 44px 44px;
   border-block: 1px solid var(--ft-border);
 }
 
@@ -103,7 +159,7 @@
 }
 
 /* ------------------------------------------------------------
-   Quick tools
+   Free tools
    ------------------------------------------------------------ */
 .tools__grid {
   display: grid;
@@ -169,7 +225,7 @@
 }
 
 /* ------------------------------------------------------------
-   Service cards
+   Services
    ------------------------------------------------------------ */
 .cards {
   display: grid;
@@ -185,6 +241,14 @@
   border-radius: var(--ft-radius-lg);
   overflow: hidden;
   box-shadow: var(--ft-shadow-sm);
+  transition:
+    transform var(--ft-transition),
+    box-shadow var(--ft-transition);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ft-shadow-md);
 }
 
 .card__image {
@@ -194,12 +258,42 @@
 }
 
 .card__body {
-  padding: 16px 18px 20px;
+  display: grid;
+  gap: 10px;
+  padding: 16px 20px 22px;
 }
 
 .card__title {
-  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
   font-size: 1.05rem;
+}
+
+.card__icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--ft-radius-sm);
+  font-size: 0.9rem;
+}
+
+.card__icon--blue {
+  background: var(--ft-brand-soft);
+  color: var(--ft-brand);
+}
+
+.card__icon--green {
+  background: var(--ft-accent-soft);
+  color: var(--ft-accent-strong);
+}
+
+.card__icon--orange {
+  background: var(--ft-warning-soft);
+  color: var(--ft-warning);
 }
 
 .card__text {
@@ -210,12 +304,12 @@
 }
 
 /* ------------------------------------------------------------
-   About
+   About — photo on the right with a rotating ring-text badge
    ------------------------------------------------------------ */
-.about {
+.about__grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
   align-items: center;
 }
 
@@ -224,16 +318,83 @@
   line-height: 1.7;
 }
 
-.about__image {
+.about__text p + p {
+  margin-top: 12px;
+}
+
+.about__note {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 20px 24px;
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-left: 4px solid var(--ft-brand);
+  border-radius: var(--ft-radius-md);
+  box-shadow: var(--ft-shadow-sm);
+  color: var(--ft-brand);
+}
+
+.about__note fa-icon {
+  font-size: 1.25rem;
+}
+
+.about__note blockquote {
   margin: 0;
+  color: var(--ft-text);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.about__figure {
+  position: relative;
+  margin: 0 10px 10px 0;
+}
+
+.about__figure-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
   border-radius: var(--ft-radius-lg);
-  overflow: hidden;
   box-shadow: var(--ft-shadow-md);
 }
 
-.about__image img {
-  display: block;
-  width: 100%;
+.about__badge {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  display: grid;
+  place-items: center;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  box-shadow: var(--ft-shadow-md);
+}
+
+.about__badge-ring {
+  position: absolute;
+  inset: 2px;
+}
+
+.about__badge-spin {
+  /* Rotation is driven by the Web Animations API in the component. */
+}
+
+.about__badge-text {
+  fill: var(--ft-brand);
+  font-family: var(--ft-font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.about__badge-icon {
+  position: absolute;
+  font-size: 1.35rem;
+  color: var(--ft-brand);
 }
 
 /* ------------------------------------------------------------
@@ -251,6 +412,17 @@
   box-shadow: var(--ft-shadow-sm);
 }
 
+.contact__lead {
+  margin: 0 0 16px;
+  color: var(--ft-text-secondary);
+  line-height: 1.6;
+  max-width: 46ch;
+}
+
+.contact__cta {
+  margin-bottom: 16px;
+}
+
 .contact__line {
   margin: 6px 0;
   color: var(--ft-text-secondary);
@@ -262,6 +434,11 @@
   color: var(--ft-text);
 }
 
+.contact__hint {
+  color: var(--ft-text-muted);
+  font-size: 0.85rem;
+}
+
 .contact__logo {
   height: 52px;
 }
@@ -271,18 +448,24 @@
    ------------------------------------------------------------ */
 @media (max-width: 960px) {
   .hero__grid,
-  .about {
+  .about__grid {
     grid-template-columns: 1fr;
   }
 
-  .cards {
+  .about__figure {
+    max-width: 460px;
+  }
+
+  .cards,
+  .promises__grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (max-width: 680px) {
   .cards,
-  .tools__grid {
+  .tools__grid,
+  .promises__grid {
     grid-template-columns: 1fr;
   }
 

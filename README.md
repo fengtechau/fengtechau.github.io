@@ -1,20 +1,21 @@
-# FENG TECH — Website & Tools
+# FengTech — Company Website & Free Tools
 
-Company site and free web tools built with **Angular 22**:
+The FengTech (Sydney) company site plus three free web tools, built with
+**Angular 22**:
 
-- **Home** — company landing page (services, about, contact).
-- **IP Tools** — current public IP + location lookup (`/ip`).
-- **Case Converter** — text case conversion between 8 formats (`/texttools`).
-- **Metronome** — sample-accurate practice metronome (`/metronome`).
+- **Home** — who we are, what we do and how to get in touch (`/home`).
+- **IP Tools** — your current public IP address and location (`/ip`).
+- **Case Converter** — text conversion between 8 formats (`/texttools`).
+- **Metronome** — an accurate practice metronome for musicians (`/metronome`).
 
 ---
 
 ## Prerequisites
 
-| Tool      | Version          | Note                                        |
-| --------- | ---------------- | ------------------------------------------- |
-| Node.js   | >= 24.15 (or 26) | Required by Angular CLI 22                  |
-| npm       | >= 11            |                                             |
+| Tool    | Version                    | Note                          |
+| ------- | -------------------------- | ----------------------------- |
+| Node.js | 20.19+, 22.12+ or 24+      | Required by Angular CLI 22    |
+| npm     | 11+                        |                               |
 
 ## Getting started
 
@@ -25,14 +26,14 @@ npm start          # dev server at http://localhost:4200
 
 ## Scripts
 
-| Command            | Description                                  |
-| ------------------ | -------------------------------------------- |
-| `npm start`        | Dev server with live reload                  |
-| `npm run build`    | Production build → `dist/root/browser`       |
-| `npm test`         | Unit tests (Vitest, 56 tests)                |
-| `npm run lint`     | ESLint (angular-eslint, strict templates)    |
-| `npm run format`   | Prettier write                               |
-| `npm run format:check` | Prettier check (CI)                      |
+| Command           | Description                                |
+| ----------------- | ------------------------------------------ |
+| `npm start`       | Dev server with live reload                |
+| `npm run build`   | Production build → `dist/root/browser`     |
+| `npm test`        | Unit tests (Vitest, 61 tests)              |
+| `npm run lint`    | ESLint (angular-eslint, strict templates)  |
+| `npm run format`  | Prettier write                             |
+| `npm run format:check` | Prettier check (CI)                   |
 
 ## Deploy (GitHub Pages)
 
@@ -41,7 +42,7 @@ npm run build
 npx angular-cli-ghpages --dir=dist/root/browser
 ```
 
-> The site is served from the custom domain configured in `CNAME`
+> The site is served from the custom domain in `CNAME`
 > (`www.fengtech.com.au`), so asset paths are absolute (`/assets/...`).
 
 ---
@@ -54,7 +55,7 @@ src/app/
 ├── app.routes.ts            # Lazy-loaded feature routes
 ├── app.component.*          # App shell: header/nav/footer
 ├── core/
-│   └── services/            # Cross-cutting services (titles)
+│   └── services/            # Theme + document title services
 ├── features/
 │   ├── home/                # Landing page
 │   ├── ip/                  # IP lookup (component + service)
@@ -65,44 +66,30 @@ src/app/
 │       ├── metronome-audio.service.ts # Web Audio click synthesis
 │       ├── metronome-storage.service.ts # localStorage persistence
 │       ├── metronome.service.ts       # State + scheduling engine
-│       └── metronome.component.*      # UI (same color series as the site)
+│       └── metronome.component.*      # UI
 └── shared/
     └── ui/modal/            # Reusable accessible modal
 ```
 
 ### Conventions
 
-- **Standalone components** only; all features are lazy-loaded.
-- **Signals everywhere** (state, computed, effects); Angular 22's default
-  `OnPush` change detection.
-- **Strict TypeScript** (`strict`, `noImplicitOverride`,
-  `noPropertyAccessFromIndexSignature`, …) + strict template checks.
-- **ESLint** (angular-eslint) + **Prettier** enforced via `npm run lint`
-  and `npm run format:check`.
-- **Design tokens** in `src/styles.scss`: colors, spacing, radii,
-  shadows, focus rings, button system — no CSS framework dependency.
+- **Standalone components** only; all feature pages are lazy-loaded.
+- **Signals** for state (with `OnPush` change detection).
+- **Strict TypeScript** + strict template checks (`strictTemplates`).
+- **Global design tokens** in `src/styles.scss` — colours, spacing, radii,
+  shadows, focus rings and the shared button system. No CSS framework.
+- **Brand assets only**: the company logo variants (light/dark header,
+  contact) and the photos under `assets/images/About/` used on the home
+  page. The site adds its own background patterns and FontAwesome icons —
+  no stock imagery.
 
-### Color theme series
+### Colour theme
 
-A theme switcher in the site header offers three series — **Light**
-(default), **Dark** and **Auto** (follows the OS preference). The choice
-is persisted in `localStorage` (`fengtech.theme`) and applied to
-`<html data-theme="…">` before first paint, so there is no flash on
-reload. Every page — including the metronome — consumes only the global
-tokens, so switching restyles the whole site consistently.
-
-| Token group          | Light (default)           | Dark                    |
-| -------------------- | ------------------------- | ----------------------- |
-| Background / surface | `#f4f6fa` / `#ffffff`     | `#0d1420` / `#141d2e`   |
-| Text / muted         | `#0f172a` / `#7c8aa0`     | `#e8edf7` / `#8fa0b8`   |
-| Brand / hover        | `#2d6ae3` / `#1f55c7`     | `#5b8def` / `#7aa3f5`   |
-| Beat accent / danger | `#e8930c` / `#e5484d`     | `#f5a623` / `#ff6471`   |
-
-The metronome maps its semantic colors (`--m-bg`, `--m-surface`,
-`--m-accent`, `--m-beat`, `--m-downbeat`, …) onto those tokens, so its
-panel is visually identical in tone to the rest of the site in both
-series — primary controls in brand blue, the active beat in the amber
-accent, the downbeat in red.
+A switcher in the header offers **Light** (default), **Dark** and **Auto**
+(follows the OS preference). The choice is saved in `localStorage`
+(`fengtech.theme`) and applied to `<html data-theme="…">` before first paint,
+so there is no flash on reload. Every page — metronome included — consumes
+the same tokens.
 
 ### Metronome timing model
 
@@ -111,54 +98,31 @@ accent, the downbeat in red.
   is sample-accurate and immune to `setInterval` jitter.
 - Visual highlights are queued with their audio timestamps and flushed
   only when the clock reaches them — UI and sound stay in sync.
-- Every scheduled click belongs to a transport *generation*; stop,
-  restart, BPM/meter/subdivision changes bump the generation and
-  hard-cancel stale clips (no overlaps, no ghost notes).
+- Scheduled clicks belong to a transport *generation*; stop, restart and
+  BPM/meter/subdivision changes bump the generation and cancel stale clips
+  (no overlaps, no ghost notes).
 - Background-throttled tabs re-anchor silently instead of bursting
   missed clicks.
-- Mobile: optional **Wake Lock** keeps the screen on while practicing,
+- Mobile: optional **Wake Lock** keeps the screen on while practising,
   plus fullscreen mode.
 
 ### Metronome features
 
-| Area              | Details                                                                 |
-| ----------------- | ----------------------------------------------------------------------- |
-| BPM               | 20–300 via slider, ± buttons (long-press acceleration), direct input, tempo chips |
-| Tap tempo         | Button or `T` key; averages the last taps                               |
-| Time signatures   | 1/4 2/4 3/4 4/4 5/4 · 6/8 7/8 8/8 9/8 12/8                             |
-| Subdivisions      | Quarter, eighth, triplet, sixteenth (per-beat grid)                     |
-| Accents           | Downbeat + group accents (3+3, 3+3+2, 2+2+3, …) for x/8 meters          |
-| Sounds            | Classic, woodblock, beep, pulse + master volume                         |
-| Visual feedback   | Beat LEDs, per-cell flash, pulse animation on the play button           |
-| Patterns          | Save / overwrite / save-as / delete BPM+signature+grid presets          |
-| Keyboard          | `Space` play/pause · `↑/↓` ±1 BPM · `Shift+↑/↓` ±10 BPM · `T` tap       |
-| Practice timer    | Stopwatch with start / pause / reset                                    |
-
----
-
-## Key changes in this release
-
-- **Angular 21 → 22** (`@angular/*` 22.1, CLI 22.1.4, TypeScript 6.0,
-  zone.js 0.16); migrated the Karma test target to **Vitest**.
-- **Removed unused dependencies**: Angular Material, Angular CDK,
-  @angular/animations, Bootstrap, @popperjs/core (initial bundle dropped
-  from ~894 kB to ~443 kB raw, ~117 kB transferred).
-- **Restructured** into `core / features / shared` with standalone
-  components and `provideRouter` (no NgModules).
-- **Metronome rewrite**: drift-free Web Audio scheduling, overlap-safe
-  transport, background-throttle recovery, wake lock, fullscreen, tap
-  tempo, triplets, 10 time signatures, 4 click sounds, volume, saved
-  patterns, keyboard shortcuts.
-- **Unified design system**: global tokens (color/typography/spacing/
-  radius/shadow), app shell with header + footer, accessible modal,
-  loading/error/empty states, `prefers-reduced-motion` support.
-- **Quality gates**: ESLint + Prettier, 61 unit tests, strict templates.
-- **Color theme series (this release)**: the metronome panel now shares
-  the site-wide color series, and a header switcher offers Light / Dark /
-  Auto themes, persisted in `localStorage` and applied to every page.
+| Area            | Details                                                                 |
+| --------------- | ----------------------------------------------------------------------- |
+| BPM             | 20–300 via slider, ± buttons (long-press acceleration), direct input, tempo chips |
+| Tap tempo       | Button or `T` key; averages recent taps                                  |
+| Time signatures | 1/4 2/4 3/4 4/4 5/4 · 6/8 7/8 8/8 9/8 12/8                               |
+| Subdivisions    | Quarter, eighth, triplet, sixteenth (per-beat grid)                      |
+| Accents         | Downbeat + group accents (3+3, 3+3+2, 2+2+3, …) for x/8 meters           |
+| Sounds          | Classic, woodblock, beep, pulse + master volume                          |
+| Visual feedback | Beat LEDs, per-cell flash, pulse animation on the play button            |
+| Patterns        | Save / overwrite / save-as / delete BPM+signature+grid presets           |
+| Keyboard        | `Space` play/pause · `↑/↓` ±1 BPM · `Shift+↑/↓` ±10 BPM · `T` tap       |
+| Practice timer  | Stopwatch with start / pause / reset                                     |
 
 ## Verification
 
 See [docs/METRONOME-CHECKLIST.md](docs/METRONOME-CHECKLIST.md) for the
-metronome acceptance checklist (120 BPM / 5-minute stability test,
-rapid BPM/signature switching, mobile behavior).
+metronome acceptance checklist (120 BPM / 5-minute stability test, rapid
+BPM/signature switching, mobile behaviour).

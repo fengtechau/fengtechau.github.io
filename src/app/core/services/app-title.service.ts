@@ -12,10 +12,6 @@ const SITE_NAME = 'FENG TECH';
 export class AppTitleService {
   private readonly title = inject(Title);
 
-  getTitle(): string {
-    return this.title.getTitle();
-  }
-
   setTitle(pageTitle: string): void {
     this.title.setTitle(`${pageTitle} · ${SITE_NAME}`);
   }

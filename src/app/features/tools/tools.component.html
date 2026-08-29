@@ -1,8 +1,13 @@
 <div class="ft-page">
   <div class="ft-container">
     <header class="tools__header">
-      <h1 class="tools__title">Case Converter</h1>
-      <p class="tools__subtitle">Paste text, pick a case, copy the result.</p>
+      <span class="tools__header-icon"
+        ><fa-icon [icon]="icons.faFont" aria-hidden="true"
+      /></span>
+      <div>
+        <h1 class="tools__title">Case Converter</h1>
+        <p class="tools__subtitle">Paste text, pick a case, copy the result.</p>
+      </div>
     </header>
 
     <div class="tools__panel">
@@ -41,7 +46,7 @@
             [disabled]="!inputText().trim()"
           >
             <fa-icon [icon]="icons.faArrowsRotate" aria-hidden="true" />
-            Transform
+            Convert
           </button>
           <button type="button" class="ft-btn ft-btn--secondary" (click)="clearText()">
             <fa-icon [icon]="icons.faEraser" aria-hidden="true" />
@@ -72,7 +77,7 @@
             [icon]="copied() ? icons.faCheck : icons.faCopy"
             aria-hidden="true"
           />
-          {{ copied() ? 'Copied!' : 'Copy to Clipboard' }}
+          {{ copied() ? 'Copied!' : 'Copy' }}
         </button>
       </div>
     </div>

@@ -323,17 +323,32 @@ export class MetronomeService {
   /** Applies a saved pattern; keeps the transport position if running. */
   applyPattern(pattern: SavedPattern): void {
     const wasRunning = this.getState().isRunning;
+    const { beatsPerBar, denominator } = parseTimeSignature(pattern.timeSignature);
+    // Defensive: a stored subdivision can never be invalid here, but never
+    // let a bad value produce an empty grid.
+    const subdivision = isValidSubdivision(pattern.subdivision, denominator)
+      ? pattern.subdivision
+      : denominator === 4
+        ? 'quarter'
+        : 'eighth';
+    const levelsPerBeat = this.levelsPerBeatFor(subdivision, denominator);
 
-    this.setTimeSignature(pattern.timeSignature);
-    this.setSubdivision(pattern.subdivision);
-    this.setBpm(pattern.bpm);
-    this.setAccentFirstBeat(pattern.accentFirstBeat);
-    this.setGrouping(pattern.groupingPreset);
-    this.setClickSound(pattern.clickSound);
-
-    const st = this.getState();
-    this.pattern = normalizePattern(pattern.pattern, st.beatsPerBar, st.levelsPerBeat);
+    this.pattern = normalizePattern(pattern.pattern, beatsPerBar, levelsPerBeat);
     this.patternSubject.next(this.pattern);
+
+    this.patchState({
+      bpm: clampBpm(pattern.bpm),
+      timeSignature: pattern.timeSignature,
+      beatsPerBar,
+      denominator,
+      subdivision,
+      levelsPerBeat,
+      accentFirstBeat: pattern.accentFirstBeat,
+      groupingPreset: pattern.groupingPreset,
+      accentBeats: computeAccentBeats(beatsPerBar, denominator, pattern.groupingPreset),
+      clickSound: pattern.clickSound,
+    });
+    this.persistSettings();
 
     if (wasRunning) {
       this.reanchorTransport();

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -37,6 +37,13 @@ export class AppComponent {
   protected readonly theme = inject(ThemeService);
 
   readonly currentYear = new Date().getFullYear();
+
+  /** Header logo: the dark variant is invisible on the dark header. */
+  protected readonly headerLogo = computed(() =>
+    this.theme.resolved() === 'dark'
+      ? '/assets/images/Logo/png/WhiteNoBg.png'
+      : '/assets/images/Logo/png/BlackNoBg.png',
+  );
 
   readonly navItems: NavItem[] = [
     { path: 'home', label: 'Home', icon: faHouse },

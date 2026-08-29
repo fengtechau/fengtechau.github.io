@@ -278,14 +278,6 @@ img {
   background: #127b46;
 }
 
-.ft-btn--danger {
-  background: var(--ft-danger);
-}
-
-.ft-btn--danger:hover {
-  background: var(--ft-danger-strong);
-}
-
 // ------------------------------------------------------------
 // Shared primitives
 // ------------------------------------------------------------
@@ -298,13 +290,6 @@ img {
 
 .ft-page {
   padding-block: var(--ft-space-6) var(--ft-space-8);
-}
-
-.ft-card {
-  background: var(--ft-surface);
-  border: 1px solid var(--ft-border);
-  border-radius: var(--ft-radius-lg);
-  box-shadow: var(--ft-shadow-sm);
 }
 
 .ft-spinner {
@@ -320,19 +305,6 @@ img {
   to {
     transform: rotate(360deg);
   }
-}
-
-.ft-empty {
-  display: grid;
-  place-items: center;
-  gap: var(--ft-space-2);
-  padding: var(--ft-space-7) var(--ft-space-4);
-  color: var(--ft-text-muted);
-  text-align: center;
-}
-
-.ft-muted {
-  color: var(--ft-text-muted);
 }
 
 .ft-mono {

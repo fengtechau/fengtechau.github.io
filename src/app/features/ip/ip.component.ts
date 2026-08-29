@@ -55,7 +55,9 @@ export class IpComponent implements OnInit {
         this.status.set('success');
       },
       error: () => {
-        this.errorMessage.set('Failed to load IP information.');
+        this.errorMessage.set(
+          "We couldn't load your IP details. Check your connection and try again.",
+        );
         this.status.set('error');
       },
     });
