@@ -1,0 +1,164 @@
+/* About page — company story with a rotating badge + FAQ. */
+
+:host {
+  display: block;
+}
+
+/* ------------------------------------------------------------
+   About — text on the left, photo + rotating badge on the right
+   ------------------------------------------------------------ */
+.about__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.about__text p {
+  color: var(--ft-text-secondary);
+  line-height: 1.7;
+}
+
+.about__text p + p {
+  margin-top: 12px;
+}
+
+.about__note {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 20px 24px;
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-left: 4px solid var(--ft-brand);
+  border-radius: var(--ft-radius-md);
+  box-shadow: var(--ft-shadow-sm);
+  color: var(--ft-brand);
+}
+
+.about__note fa-icon {
+  font-size: 1.25rem;
+}
+
+.about__note blockquote {
+  margin: 0;
+  color: var(--ft-text);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.about__figure {
+  position: relative;
+  margin: 0 10px 10px 0;
+}
+
+.about__figure-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--ft-radius-lg);
+  box-shadow: var(--ft-shadow-md);
+}
+
+.about__badge {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
+  display: grid;
+  place-items: center;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  box-shadow: var(--ft-shadow-md);
+}
+
+.about__badge-ring {
+  position: absolute;
+  inset: 2px;
+}
+
+.about__badge-spin {
+  /* Rotation is driven by the Web Animations API in the component. */
+}
+
+.about__badge-text {
+  fill: var(--ft-brand);
+  font-family: var(--ft-font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.about__badge-icon {
+  position: absolute;
+  font-size: 1.35rem;
+  color: var(--ft-brand);
+}
+
+/* ------------------------------------------------------------
+   FAQ
+   ------------------------------------------------------------ */
+.faq {
+  max-width: 820px;
+}
+
+.faq__list {
+  display: grid;
+  gap: 10px;
+}
+
+.faq__item {
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-md);
+  box-shadow: var(--ft-shadow-sm);
+  overflow: hidden;
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  cursor: pointer;
+  font-weight: 700;
+  list-style: none;
+}
+
+.faq__question::-webkit-details-marker {
+  display: none;
+}
+
+.faq__chevron {
+  flex: 0 0 auto;
+  color: var(--ft-brand);
+  transition: transform 180ms ease;
+}
+
+.faq__item[open] .faq__chevron {
+  transform: rotate(180deg);
+}
+
+.faq__answer {
+  margin: 0;
+  padding: 0 20px 18px;
+  color: var(--ft-text-secondary);
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+@media (max-width: 960px) {
+  .about__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about__figure {
+    max-width: 460px;
+  }
+}

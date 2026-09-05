@@ -1,0 +1,68 @@
+<section class="ft-section" aria-labelledby="about-title">
+  <div class="ft-container about__grid">
+    <div class="about__text">
+      <h1 id="about-title" class="ft-section__title">
+        {{ 'HOME.ABOUT_TITLE' | translate }}
+      </h1>
+      <p>{{ 'HOME.ABOUT_P1' | translate }}</p>
+      <p>{{ 'HOME.ABOUT_P2' | translate }}</p>
+      <div class="about__note">
+        <fa-icon [icon]="icons.faQuoteLeft" aria-hidden="true" />
+        <blockquote>“{{ 'HOME.ABOUT_QUOTE' | translate }}”</blockquote>
+      </div>
+    </div>
+
+    <figure class="about__figure">
+      <img
+        class="about__figure-img"
+        src="/assets/images/About/about-fengtech.jpg"
+        alt="FengTech consultant helping a client"
+        loading="lazy"
+      />
+      <div class="about__badge" aria-hidden="true">
+        <svg class="about__badge-ring" width="106" height="106" viewBox="0 0 140 140">
+          <defs>
+            <path
+              id="about-ring"
+              d="M70 70 m -50 0 a 50 50 0 1 1 100 0 a 50 50 0 1 1 -100 0"
+            />
+          </defs>
+          <g class="about__badge-spin" #badgeRing>
+            <text class="about__badge-text">
+              <textPath
+                href="#about-ring"
+                textLength="314"
+                lengthAdjust="spacingAndGlyphs"
+              >
+                FAST · AI-DRIVEN · LOW COST · FIXED RIGHT ·
+              </textPath>
+            </text>
+          </g>
+        </svg>
+        <fa-icon class="about__badge-icon" [icon]="icons.faBolt" />
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section class="ft-section ft-section--alt" aria-labelledby="faq-title">
+  <div class="ft-container faq">
+    <h2 id="faq-title" class="ft-section__title">{{ 'HOME.FAQ_TITLE' | translate }}</h2>
+
+    <div class="faq__list">
+      @for (faq of faqs; track faq.qKey) {
+        <details class="faq__item">
+          <summary class="faq__question">
+            <span>{{ faq.qKey | translate }}</span>
+            <fa-icon
+              class="faq__chevron"
+              [icon]="icons.faChevronDown"
+              aria-hidden="true"
+            />
+          </summary>
+          <p class="faq__answer">{{ faq.aKey | translate }}</p>
+        </details>
+      }
+    </div>
+  </div>
+</section>

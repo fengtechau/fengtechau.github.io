@@ -2,7 +2,10 @@ import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
+  faBriefcase,
+  faCircleInfo,
   faDisplay,
+  faEnvelope,
   faFont,
   faHouse,
   faMoon,
@@ -11,30 +14,41 @@ import {
   faSun,
   type IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe } from '@ngx-translate/core';
 
+import { EmbeddedService } from './core/services/embedded.service';
+import { LocaleService } from './core/services/locale.service';
 import { ThemeMode, ThemeService } from './core/services/theme.service';
 
 interface NavItem {
   path: string;
-  label: string;
+  labelKey: string;
   icon: IconDefinition;
 }
 
 interface ThemeOption {
   mode: ThemeMode;
-  label: string;
+  labelKey: string;
   icon: IconDefinition;
 }
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, FontAwesomeModule],
+  imports: [
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    FontAwesomeModule,
+    TranslatePipe,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   protected readonly theme = inject(ThemeService);
+  protected readonly locale = inject(LocaleService);
+  protected readonly embedded = inject(EmbeddedService);
 
   readonly currentYear = new Date().getFullYear();
 
@@ -46,19 +60,26 @@ export class AppComponent {
   );
 
   readonly navItems: NavItem[] = [
-    { path: 'home', label: 'Home', icon: faHouse },
-    { path: 'ip', label: 'IP Tools', icon: faNetworkWired },
-    { path: 'texttools', label: 'Case Converter', icon: faFont },
-    { path: 'metronome', label: 'Metronome', icon: faMusic },
+    { path: 'home', labelKey: 'SHELL.NAV_HOME', icon: faHouse },
+    { path: 'services', labelKey: 'SHELL.NAV_SERVICES', icon: faBriefcase },
+    { path: 'about', labelKey: 'SHELL.NAV_ABOUT', icon: faCircleInfo },
+    { path: 'contact', labelKey: 'SHELL.NAV_CONTACT', icon: faEnvelope },
+    { path: 'ip', labelKey: 'SHELL.NAV_IP', icon: faNetworkWired },
+    { path: 'texttools', labelKey: 'SHELL.NAV_CASE', icon: faFont },
+    { path: 'metronome', labelKey: 'SHELL.NAV_METRONOME', icon: faMusic },
   ];
 
   readonly themeOptions: ThemeOption[] = [
-    { mode: 'light', label: 'Light theme', icon: faSun },
-    { mode: 'dark', label: 'Dark theme', icon: faMoon },
-    { mode: 'auto', label: 'Follow system theme', icon: faDisplay },
+    { mode: 'light', labelKey: 'SHELL.THEME_LIGHT', icon: faSun },
+    { mode: 'dark', labelKey: 'SHELL.THEME_DARK', icon: faMoon },
+    { mode: 'auto', labelKey: 'SHELL.THEME_AUTO', icon: faDisplay },
   ];
 
   setTheme(mode: ThemeMode): void {
     this.theme.setMode(mode);
+  }
+
+  setLang(lang: 'en' | 'zh'): void {
+    this.locale.set(lang);
   }
 }

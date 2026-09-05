@@ -7,6 +7,7 @@ import {
   faNetworkWired,
   faCheck,
 } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppTitleService } from '../../core/services/app-title.service';
 import { IpInfo, IpService } from './ip.service';
@@ -16,13 +17,14 @@ type IpStatus = 'loading' | 'success' | 'error';
 @Component({
   selector: 'app-ip',
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, TranslatePipe],
   templateUrl: './ip.component.html',
   styleUrls: ['./ip.component.scss'],
 })
 export class IpComponent implements OnInit {
   private readonly ipService = inject(IpService);
   private readonly appTitleService = inject(AppTitleService);
+  private readonly i18n = inject(TranslateService);
 
   protected readonly icons = {
     faCopy,
@@ -40,7 +42,7 @@ export class IpComponent implements OnInit {
   private copiedTimer: number | undefined;
 
   ngOnInit(): void {
-    this.appTitleService.setTitle('Get Current IP Address');
+    this.appTitleService.setTitle(this.i18n.instant('IP.TITLE'));
     this.loadIpDetails();
   }
 
@@ -55,9 +57,7 @@ export class IpComponent implements OnInit {
         this.status.set('success');
       },
       error: () => {
-        this.errorMessage.set(
-          "We couldn't load your IP details. Check your connection and try again.",
-        );
+        this.errorMessage.set('IP.ERROR');
         this.status.set('error');
       },
     });

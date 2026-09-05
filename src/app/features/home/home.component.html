@@ -1,277 +1,97 @@
 <section class="hero" aria-labelledby="hero-title">
   <div class="ft-container hero__grid">
     <div class="hero__image-wrap">
-      <img
-        class="hero__image"
-        src="/assets/images/About/banner.png"
-        alt="FengTech — reliable IT solutions banner"
-      />
+      <img class="hero__image" src="/assets/images/About/banner.png" [attr.alt]="'HOME.HERO_IMAGE_ALT' | translate" />
     </div>
     <div class="hero__copy">
-      <p class="hero__eyebrow">Sydney · Same-day response</p>
-      <h1 id="hero-title" class="hero__title">
-        IT problems solved — fast, and for less.
-      </h1>
-      <p class="hero__subtitle">
-        AI-powered efficiency, a small team and no advertising spend — that's how we fix
-        computers, networks and websites faster, and for less than the big providers.
-        Homes, offices and businesses of every size across Sydney.
-      </p>
+      <p class="hero__eyebrow">{{ 'HOME.HERO_EYEBROW' | translate }}</p>
+      <h1 id="hero-title" class="hero__title">{{ 'HOME.HERO_TITLE' | translate }}</h1>
+      <p class="hero__subtitle">{{ 'HOME.HERO_SUBTITLE' | translate }}</p>
       <div class="hero__actions">
         <a class="ft-btn ft-btn--primary" href="mailto:info@fengtech.com.au">
           <fa-icon [icon]="icons.faEnvelope" aria-hidden="true" />
-          Email us
+          {{ 'HOME.HERO_CTA_EMAIL' | translate }}
         </a>
-        <a class="ft-btn ft-btn--secondary" href="#services">See what we do</a>
+        <a class="ft-btn ft-btn--secondary" routerLink="/services">
+          {{ 'HOME.HERO_CTA_SERVICES' | translate }}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ft-container hero__stats">
+    <dl class="stats">
+      @for (stat of stats; track stat.valueKey) {
+      <div class="stat">
+        <dt class="stat__value">{{ stat.valueKey | translate }}</dt>
+        <dd class="stat__label">{{ stat.labelKey | translate }}</dd>
+      </div>
+      }
+    </dl>
+  </div>
+</section>
+
+<section class="ft-section" aria-labelledby="why-title">
+  <div class="ft-container">
+    <div class="why">
+      <div class="why__intro">
+        <h2 id="why-title" class="ft-section__title">
+          {{ 'HOME.WHY_TITLE' | translate }}
+        </h2>
+        <p class="ft-section__lead">{{ 'HOME.WHY_LEAD' | translate }}</p>
+        <img class="why__image" src="/assets/images/meetings.jpg" [attr.alt]="'HOME.WHY_IMG_ALT' | translate"
+          loading="lazy" />
+      </div>
+
+      <div class="why__grid">
+        @for (item of whyUs; track item.titleKey) {
+        <div class="promise">
+          <span class="ft-icon-chip ft-icon-chip--{{ item.tone }} promise__icon">
+            <fa-icon [icon]="item.icon" aria-hidden="true" />
+          </span>
+          <h3 class="promise__title">{{ item.titleKey | translate }}</h3>
+          <p class="promise__text">{{ item.textKey | translate }}</p>
+        </div>
+        }
       </div>
     </div>
   </div>
 </section>
 
-<section class="promises" aria-label="Why choose FengTech">
-  <div class="ft-container promises__grid">
-    <div class="promise">
-      <span class="promise__icon promise__icon--blue"
-        ><fa-icon [icon]="icons.faScrewdriverWrench" aria-hidden="true"
-      /></span>
-      <h2 class="promise__title">We solve it</h2>
-      <p class="promise__text">
-        AI-assisted diagnosis and experienced technicians — and fixes that stay fixed,
-        with no lingering problems afterwards.
-      </p>
-    </div>
-    <div class="promise">
-      <span class="promise__icon promise__icon--green"
-        ><fa-icon [icon]="icons.faDollarSign" aria-hidden="true"
-      /></span>
-      <h2 class="promise__title">Less than the big providers</h2>
-      <p class="promise__text">
-        A small team and no advertising budget — the savings go straight into lower
-        prices for you.
-      </p>
-    </div>
-    <div class="promise">
-      <span class="promise__icon promise__icon--orange"
-        ><fa-icon [icon]="icons.faBolt" aria-hidden="true"
-      /></span>
-      <h2 class="promise__title">Fast turnaround</h2>
-      <p class="promise__text">
-        Same-day response and quick jobs. Most problems are fixed within a day or two.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="section tools" aria-labelledby="tools-title">
+<section class="ft-section ft-section--alt" aria-labelledby="tools-title">
   <div class="ft-container">
-    <h2 id="tools-title" class="section__title">Free tools</h2>
-    <p class="section__lead">
-      Three small tools we built for ourselves. No sign-up, no catch.
-    </p>
+    <h2 id="tools-title" class="ft-section__title">
+      {{ 'HOME.TOOLS_TITLE' | translate }}
+    </h2>
+    <p class="ft-section__lead">{{ 'HOME.TOOLS_LEAD' | translate }}</p>
 
     <div class="tools__grid">
-      <a
-        class="tool"
-        routerLink="/ip"
-        aria-label="IP Tools — find your current IP address"
-      >
-        <span class="tool__icon tool__icon--blue"
-          ><fa-icon [icon]="icons.faNetworkWired" aria-hidden="true"
-        /></span>
-        <span class="tool__label">IP Address Lookup</span>
-        <span class="tool__desc"
-          >See your public IP address and where it's registered.</span
-        >
+      @for (tool of tools; track tool.path) {
+      <a class="tool" [routerLink]="[tool.path]" [attr.aria-label]="tool.ariaKey | translate">
+        <span class="ft-icon-chip ft-icon-chip--{{ tool.tone }} tool__icon">
+          <fa-icon [icon]="tool.icon" aria-hidden="true" />
+        </span>
+        <span class="tool__label">{{ tool.labelKey | translate }}</span>
+        <span class="tool__desc">{{ tool.descKey | translate }}</span>
       </a>
-      <a
-        class="tool"
-        routerLink="/texttools"
-        aria-label="Case Converter — change text between cases"
-      >
-        <span class="tool__icon tool__icon--green"
-          ><fa-icon [icon]="icons.faFont" aria-hidden="true"
-        /></span>
-        <span class="tool__label">Case Converter</span>
-        <span class="tool__desc"
-          >Change text between camelCase, snake_case, title case and more.</span
-        >
-      </a>
-      <a
-        class="tool"
-        routerLink="/metronome"
-        aria-label="Metronome — a steady click for music practice"
-      >
-        <span class="tool__icon tool__icon--orange"
-          ><fa-icon [icon]="icons.faMusic" aria-hidden="true"
-        /></span>
-        <span class="tool__label">Metronome</span>
-        <span class="tool__desc"
-          >A steady, accurate click for practice — tap along to set the speed.</span
-        >
-      </a>
+      }
     </div>
   </div>
 </section>
 
-<section id="services" class="section" aria-labelledby="services-title">
+<section class="ft-section" aria-labelledby="cta-title">
   <div class="ft-container">
-    <h2 id="services-title" class="section__title">What we help you with</h2>
-    <p class="section__lead">
-      From a single home office to a whole company — here's where we're most useful.
-    </p>
-
-    <div class="cards">
-      <article class="card">
-        <img
-          class="card__image"
-          src="/assets/images/About/about1.jpg"
-          alt="Website on a laptop"
-          loading="lazy"
-        />
-        <div class="card__body">
-          <h3 class="card__title">
-            <span class="card__icon card__icon--blue"
-              ><fa-icon [icon]="icons.faGlobe" aria-hidden="true"
-            /></span>
-            Websites
-          </h3>
-          <p class="card__text">
-            Fast, mobile-friendly websites that work — designed, built and looked after
-            by us. Tell us what you need it to do and we'll take care of the rest.
-          </p>
-        </div>
-      </article>
-
-      <article class="card">
-        <img
-          class="card__image"
-          src="/assets/images/About/about2.jpg"
-          alt="Computer maintenance"
-          loading="lazy"
-        />
-        <div class="card__body">
-          <h3 class="card__title">
-            <span class="card__icon card__icon--green"
-              ><fa-icon [icon]="icons.faScrewdriverWrench" aria-hidden="true"
-            /></span>
-            Computers &amp; networks
-          </h3>
-          <p class="card__text">
-            Slow computer, broken laptop, patchy Wi-Fi, internet down? We diagnose and
-            fix most problems the same day — for less than the big chains.
-          </p>
-        </div>
-      </article>
-
-      <article class="card">
-        <img
-          class="card__image"
-          src="/assets/images/About/about3.jpg"
-          alt="Friendly IT expert"
-          loading="lazy"
-        />
-        <div class="card__body">
-          <h3 class="card__title">
-            <span class="card__icon card__icon--orange"
-              ><fa-icon [icon]="icons.faComments" aria-hidden="true"
-            /></span>
-            Straight answers
-          </h3>
-          <p class="card__text">
-            Honest advice and clear pricing. We tell you what needs fixing and what
-            doesn't — then we fix it and charge what we quoted.
-          </p>
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section id="about" class="section section--alt about" aria-labelledby="about-title">
-  <div class="ft-container about__grid">
-    <div class="about__text">
-      <h2 id="about-title" class="section__title">About FengTech</h2>
-      <p>
-        FengTech is a Sydney IT team that works smarter, not bigger. We combine
-        experienced technicians with the latest AI tools, keep the team small and skip
-        the advertising budgets — and pass the savings on to you.
-      </p>
-      <p>
-        Take this website as an example: it was built with AI assistance, runs with zero
-        ongoing costs, and the copyright is fully ours. That's how we keep everything
-        cheap, fast and perfect — with nothing left to fix afterwards.
-      </p>
-      <div class="about__note">
-        <fa-icon [icon]="icons.faQuoteLeft" aria-hidden="true" />
-        <blockquote>“Faster, cheaper, and fixed right the first time.”</blockquote>
-      </div>
-    </div>
-
-    <figure class="about__figure">
-      <img
-        class="about__figure-img"
-        src="/assets/images/About/about-fengtech.jpg"
-        alt="FengTech consultant helping a client"
-        loading="lazy"
-      />
-      <div class="about__badge" aria-hidden="true">
-        <svg class="about__badge-ring" width="106" height="106" viewBox="0 0 140 140">
-          <defs>
-            <path
-              id="about-ring"
-              d="M70 70 m -50 0 a 50 50 0 1 1 100 0 a 50 50 0 1 1 -100 0"
-            />
-          </defs>
-          <g class="about__badge-spin" #badgeRing>
-            <text class="about__badge-text">
-              <textPath
-                href="#about-ring"
-                textLength="314"
-                lengthAdjust="spacingAndGlyphs"
-              >
-                FAST · AI-DRIVEN · LOW COST · FIXED RIGHT ·
-              </textPath>
-            </text>
-          </g>
-        </svg>
-        <fa-icon class="about__badge-icon" [icon]="icons.faBolt" />
-      </div>
-    </figure>
-  </div>
-</section>
-
-<section id="contact" class="section" aria-labelledby="contact-title">
-  <div class="ft-container">
-    <div class="contact">
-      <div class="contact__info">
-        <h2 id="contact-title" class="section__title">Get in touch</h2>
-        <p class="contact__lead">
-          Email is the fastest way to reach us. Tell us what's going on and we'll reply
-          the same day.
-        </p>
-        <a
-          class="ft-btn ft-btn--primary contact__cta"
-          href="mailto:info@fengtech.com.au"
-        >
-          <fa-icon [icon]="icons.faEnvelope" aria-hidden="true" />
-          Email FengTech
+    <div class="cta">
+      <h2 id="cta-title" class="cta__title">{{ 'HOME.CTA_READY' | translate }}</h2>
+      <div class="cta__actions">
+        <a class="ft-btn ft-btn--primary" routerLink="/contact">
+          {{ 'HOME.CTA_CONTACT' | translate }}
         </a>
-        <p class="contact__line">
-          <strong>Email:</strong>
-          <a href="mailto:info@fengtech.com.au">info@fengtech.com.au</a>
-        </p>
-        <p class="contact__line">
-          <strong>Phone:</strong>
-          <a href="tel:+61411758128">0411 758 128</a>
-          <span class="contact__hint">(for urgent issues)</span>
-        </p>
+        <a class="ft-btn ft-btn--secondary" href="mailto:info@fengtech.com.au">
+          <fa-icon [icon]="icons.faEnvelope" aria-hidden="true" />
+          {{ 'HOME.HERO_CTA_EMAIL' | translate }}
+        </a>
       </div>
-      <img
-        class="contact__logo"
-        src="/assets/images/Logo/png/ColorNoBg.png"
-        alt="FengTech logo"
-        loading="lazy"
-      />
     </div>
   </div>
 </section>

@@ -7,6 +7,7 @@ import {
   faEraser,
   faFont,
 } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppTitleService } from '../../core/services/app-title.service';
 import {
@@ -21,12 +22,13 @@ const LS_SELECTED_CASE = 'fengtech.tools.selectedCase';
 @Component({
   selector: 'app-tools',
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, TranslatePipe],
   templateUrl: './tools.component.html',
   styleUrl: './tools.component.scss',
 })
 export class ToolsComponent implements OnInit {
   private readonly appTitleService = inject(AppTitleService);
+  private readonly i18n = inject(TranslateService);
 
   protected readonly icons = {
     faArrowsRotate,
@@ -47,7 +49,7 @@ export class ToolsComponent implements OnInit {
   private copiedTimer: number | undefined;
 
   ngOnInit(): void {
-    this.appTitleService.setTitle('Case Converter');
+    this.appTitleService.setTitle(this.i18n.instant('TOOLS.TITLE'));
     this.selectedCase.set(this.readSavedCase());
   }
 

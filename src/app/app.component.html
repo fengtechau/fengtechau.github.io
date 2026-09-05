@@ -1,64 +1,97 @@
-<div class="site-shell">
+<div class="site-shell" [class.is-embedded]="embedded.isEmbedded()">
   <a
     class="ft-sr-only skip-link"
     routerLink="/"
     fragment="main-content"
     skipLocationChange
-    >Skip to main content</a
+    >{{ 'SHELL.SKIP_LINK' | translate }}</a
   >
 
-  <header class="site-header">
-    <div class="ft-container site-header__inner">
-      <a class="brand" routerLink="/home" aria-label="FengTech — home">
-        <img class="brand__logo" [src]="headerLogo()" alt="FengTech — FENG TECH" />
-      </a>
+  @if (!embedded.isEmbedded()) {
+    <header class="site-header">
+      <div class="ft-container site-header__inner">
+        <a class="brand" routerLink="/home" aria-label="FengTech — home">
+          <img class="brand__logo" [src]="headerLogo()" alt="FengTech — FENG TECH" />
+        </a>
 
-      <nav class="site-nav" aria-label="Main navigation">
-        @for (item of navItems; track item.path) {
-          <a
-            class="site-nav__link"
-            [routerLink]="[item.path]"
-            routerLinkActive="is-active"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <fa-icon [icon]="item.icon" aria-hidden="true" />
-            <span>{{ item.label }}</span>
-          </a>
-        }
-      </nav>
+        <nav class="site-nav" aria-label="Main navigation">
+          @for (item of navItems; track item.path) {
+            <a
+              class="site-nav__link"
+              [routerLink]="[item.path]"
+              routerLinkActive="is-active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              <fa-icon [icon]="item.icon" aria-hidden="true" />
+              <span>{{ item.labelKey | translate }}</span>
+            </a>
+          }
+        </nav>
 
-      <div class="site-theme" role="group" aria-label="Color theme">
-        @for (option of themeOptions; track option.mode) {
-          <button
-            type="button"
-            class="site-theme__btn"
-            [class.is-active]="theme.mode() === option.mode"
-            [attr.aria-pressed]="theme.mode() === option.mode"
-            [attr.aria-label]="option.label"
-            [title]="option.label"
-            (click)="setTheme(option.mode)"
+        <div class="site-header__actions">
+          <div
+            class="site-lang"
+            role="group"
+            [attr.aria-label]="'SHELL.LANG_GROUP' | translate"
           >
-            <fa-icon [icon]="option.icon" aria-hidden="true" />
-          </button>
-        }
+            <button
+              type="button"
+              class="site-lang__btn"
+              [class.is-active]="locale.current() !== 'zh'"
+              (click)="setLang('en')"
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              class="site-lang__btn"
+              [class.is-active]="locale.current() === 'zh'"
+              (click)="setLang('zh')"
+            >
+              中文
+            </button>
+          </div>
+
+          <div
+            class="site-theme"
+            role="group"
+            [attr.aria-label]="'SHELL.THEME_GROUP' | translate"
+          >
+            @for (option of themeOptions; track option.mode) {
+              <button
+                type="button"
+                class="site-theme__btn"
+                [class.is-active]="theme.mode() === option.mode"
+                [attr.aria-pressed]="theme.mode() === option.mode"
+                [attr.aria-label]="option.labelKey | translate"
+                [title]="option.labelKey | translate"
+                (click)="setTheme(option.mode)"
+              >
+                <fa-icon [icon]="option.icon" aria-hidden="true" />
+              </button>
+            }
+          </div>
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
+  }
 
   <main id="main-content" class="site-main" tabindex="-1">
     <router-outlet />
   </main>
 
-  <footer class="site-footer">
-    <div class="ft-container site-footer__inner">
-      <p class="site-footer__brand">
-        © {{ currentYear }} FengTech Pty Ltd · Sydney, Australia
-      </p>
-      <div class="site-footer__links">
-        <a href="mailto:info@fengtech.com.au">info@fengtech.com.au</a>
-        <span aria-hidden="true">·</span>
-        <a href="tel:+61411758128">0411 758 128</a>
+  @if (!embedded.isEmbedded()) {
+    <footer class="site-footer">
+      <div class="ft-container site-footer__inner">
+        <p class="site-footer__brand">
+          {{ 'SHELL.FOOTER_BRAND' | translate: { year: currentYear } }}
+        </p>
+        <div class="site-footer__links">
+          <a href="mailto:info@fengtech.com.au">info@fengtech.com.au</a>
+          <span aria-hidden="true">·</span>
+          <a href="tel:+61411758128">0411 758 128</a>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
+  }
 </div>

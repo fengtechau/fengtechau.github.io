@@ -1,0 +1,183 @@
+/* Services page — six offerings with images + the four-step process. */
+
+:host {
+  display: block;
+}
+
+/* ------------------------------------------------------------
+   Services grid
+   ------------------------------------------------------------ */
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.service {
+  display: flex;
+  flex-direction: column;
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--ft-shadow-sm);
+  transition:
+    transform var(--ft-transition),
+    box-shadow var(--ft-transition);
+}
+
+.service:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ft-shadow-md);
+}
+
+.service__image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.service__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 22px;
+  flex: 1;
+}
+
+.service__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.service__icon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+}
+
+.service__title {
+  margin: 0;
+  font-size: 1.06rem;
+}
+
+.service__text {
+  margin: 0;
+  color: var(--ft-text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.service__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service__tag {
+  padding: 3px 10px;
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-full);
+  background: var(--ft-surface-alt);
+  color: var(--ft-text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------
+   Process (image beside the four steps)
+   ------------------------------------------------------------ */
+.process {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.process__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: var(--ft-radius-lg);
+  box-shadow: var(--ft-shadow-md);
+}
+
+.process__steps {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.process__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  padding: 16px 18px;
+  background: var(--ft-surface);
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-md);
+  box-shadow: var(--ft-shadow-sm);
+}
+
+.process__num {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--ft-border-strong);
+  letter-spacing: -0.02em;
+}
+
+.process__icon {
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+}
+
+.process__title {
+  margin: 0 0 4px;
+  font-size: 1rem;
+}
+
+.process__text {
+  margin: 0;
+  color: var(--ft-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+@media (max-width: 960px) {
+  .services__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .process {
+    grid-template-columns: 1fr;
+  }
+
+  .process__image {
+    aspect-ratio: 16 / 9;
+    max-height: 320px;
+  }
+}
+
+@media (max-width: 680px) {
+  .services__grid {
+    grid-template-columns: 1fr;
+  }
+}

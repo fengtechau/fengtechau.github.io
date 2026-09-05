@@ -3,7 +3,12 @@
 The FengTech (Sydney) company site plus three free web tools, built with
 **Angular 22**:
 
-- **Home** — who we are, what we do and how to get in touch (`/home`).
+- **Home** — landing page: hero + stats, "why choose us", free tools and a
+  contact call-to-action (`/home`).
+- **Services** — six offerings (web, AI, data, cloud, computers, support)
+  with imagery + the four-step "how we work" (`/services`).
+- **About** — company story and FAQs (`/about`).
+- **Contact** — email, phone and how to reach us (`/contact`).
 - **IP Tools** — your current public IP address and location (`/ip`).
 - **Case Converter** — text conversion between 8 formats (`/texttools`).
 - **Metronome** — an accurate practice metronome for musicians (`/metronome`).
@@ -30,7 +35,7 @@ npm start          # dev server at http://localhost:4200
 | ----------------- | ------------------------------------------ |
 | `npm start`       | Dev server with live reload                |
 | `npm run build`   | Production build → `dist/root/browser`     |
-| `npm test`        | Unit tests (Vitest, 61 tests)              |
+| `npm test`        | Unit tests (Vitest, 80 tests)              |
 | `npm run lint`    | ESLint (angular-eslint, strict templates)  |
 | `npm run format`  | Prettier write                             |
 | `npm run format:check` | Prettier check (CI)                   |
@@ -57,7 +62,10 @@ src/app/
 ├── core/
 │   └── services/            # Theme + document title services
 ├── features/
-│   ├── home/                # Landing page
+│   ├── home/                # Landing page (hero, why, tools, CTA)
+│   ├── services/            # Six services + how-we-work
+│   ├── about/               # Company story + FAQ
+│   ├── contact/             # Contact details
 │   ├── ip/                  # IP lookup (component + service)
 │   ├── tools/               # Case converter (component + pure util)
 │   └── metronome/           # Metronome feature
@@ -78,18 +86,39 @@ src/app/
 - **Strict TypeScript** + strict template checks (`strictTemplates`).
 - **Global design tokens** in `src/styles.scss` — colours, spacing, radii,
   shadows, focus rings and the shared button system. No CSS framework.
-- **Brand assets only**: the company logo variants (light/dark header,
-  contact) and the photos under `assets/images/About/` used on the home
-  page. The site adds its own background patterns and FontAwesome icons —
-  no stock imagery.
+- **Brand assets + free stock imagery**: the company logo variants
+  (light/dark header, contact) and the photos under `assets/images/About/`
+  are local; the service / "why us" / "how we work" sections use free
+  [Pexels](https://www.pexels.com) photos hot-linked from `images.pexels.com`
+  (free for commercial use, no attribution required).
 
 ### Colour theme
 
-A switcher in the header offers **Light** (default), **Dark** and **Auto**
-(follows the OS preference). The choice is saved in `localStorage`
-(`fengtech.theme`) and applied to `<html data-theme="…">` before first paint,
-so there is no flash on reload. Every page — metronome included — consumes
-the same tokens.
+A switcher in the header offers **Light** (default), **Dark** and **Auto**.
+**Auto** follows the day/night cycle in the *browser's time zone* (06:00–18:00
+light, otherwise dark) instead of the OS preference, and falls back to
+`prefers-color-scheme` when the local hour can't be resolved. The choice is
+saved in `localStorage` (`fengtech.theme`) and applied to
+`<html data-theme="…">` before first paint, so there is no flash on reload.
+An open tab re-checks the time every minute (and on tab focus) so it flips at
+dawn/dusk. Every page — metronome included — consumes the same tokens.
+
+### Language
+
+The default UI language follows the browser's language preference
+(`navigator.languages`): Chinese-prefixed browsers get **中文**, everything
+else gets English. A language switcher (EN / 中文) in the header overrides it
+and is persisted to `localStorage` (`fengtech.lang`). The whole site —
+shell, home, IP tools, case converter and metronome — is bilingual, and
+`<html lang="…">` stays in sync. Translations are loaded before first paint
+(via an `APP_INITIALIZER`) so no raw keys ever flash.
+
+### Embedded mode
+
+FengTech is embedded as a live preview on sethfengli.com. When the app detects
+it is running inside an `<iframe>`, the shell hides its header and footer so
+the content reads as a clean panel rather than a "site inside a site". The
+day/night theme and language still resolve independently inside the frame.
 
 ### Metronome timing model
 

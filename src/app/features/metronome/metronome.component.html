@@ -14,7 +14,7 @@
         <button
           type="button"
           class="metro__lang-btn"
-          [class.is-active]="i18n.currentLang() !== 'zh'"
+          [class.is-active]="locale.current() !== 'zh'"
           (click)="setLang('en')"
         >
           EN
@@ -22,7 +22,7 @@
         <button
           type="button"
           class="metro__lang-btn"
-          [class.is-active]="i18n.currentLang() === 'zh'"
+          [class.is-active]="locale.current() === 'zh'"
           (click)="setLang('zh')"
         >
           中文

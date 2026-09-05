@@ -1,0 +1,59 @@
+<section class="ft-section" aria-labelledby="services-title">
+  <div class="ft-container">
+    <h1 id="services-title" class="ft-section__title">
+      {{ 'HOME.SERVICES_TITLE' | translate }}
+    </h1>
+    <p class="ft-section__lead">{{ 'HOME.SERVICES_LEAD' | translate }}</p>
+
+    <div class="services__grid">
+      @for (service of services; track service.titleKey) {
+      <article class="service">
+        <img class="service__image" [src]="service.image" [attr.alt]="service.altKey | translate" loading="lazy" />
+        <div class="service__body">
+          <div class="service__header">
+            <span class="ft-icon-chip ft-icon-chip--{{ service.tone }} service__icon">
+              <fa-icon [icon]="service.icon" aria-hidden="true" />
+            </span>
+            <h2 class="service__title">{{ service.titleKey | translate }}</h2>
+          </div>
+          <p class="service__text">{{ service.textKey | translate }}</p>
+          <ul class="service__tags">
+            @for (tag of service.tags; track tag) {
+            <li class="service__tag">{{ tag | translate }}</li>
+            }
+          </ul>
+        </div>
+      </article>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="ft-section ft-section--alt" aria-labelledby="process-title">
+  <div class="ft-container">
+    <h2 id="process-title" class="ft-section__title">
+      {{ 'HOME.PROCESS_TITLE' | translate }}
+    </h2>
+    <p class="ft-section__lead">{{ 'HOME.PROCESS_LEAD' | translate }}</p>
+
+    <div class="process">
+      <img class="process__image" src="/assets/images/screens.avif" [attr.alt]="'HOME.PROCESS_IMG_ALT' | translate"
+        loading="lazy" />
+
+      <ol class="process__steps">
+        @for (step of processSteps; track step.titleKey; let i = $index) {
+        <li class="process__step">
+          <span class="process__num" aria-hidden="true">{{ i + 1 }}</span>
+          <span class="ft-icon-chip ft-icon-chip--blue process__icon">
+            <fa-icon [icon]="step.icon" aria-hidden="true" />
+          </span>
+          <div class="process__body">
+            <h3 class="process__title">{{ step.titleKey | translate }}</h3>
+            <p class="process__text">{{ step.textKey | translate }}</p>
+          </div>
+        </li>
+        }
+      </ol>
+    </div>
+  </div>
+</section>

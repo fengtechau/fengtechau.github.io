@@ -5,19 +5,21 @@
         ><fa-icon [icon]="icons.faFont" aria-hidden="true"
       /></span>
       <div>
-        <h1 class="tools__title">Case Converter</h1>
-        <p class="tools__subtitle">Paste text, pick a case, copy the result.</p>
+        <h1 class="tools__title">{{ 'TOOLS.TITLE' | translate }}</h1>
+        <p class="tools__subtitle">{{ 'TOOLS.SUBTITLE' | translate }}</p>
       </div>
     </header>
 
     <div class="tools__panel">
       <div class="tools__field">
-        <label class="tools__label" for="input-text">Input Text</label>
+        <label class="tools__label" for="input-text">{{
+          'TOOLS.INPUT_LABEL' | translate
+        }}</label>
         <textarea
           id="input-text"
           class="tools__textarea"
           rows="10"
-          placeholder="Enter text…"
+          [placeholder]="'TOOLS.INPUT_PLACEHOLDER' | translate"
           [value]="inputText()"
           (input)="inputText.set($any($event.target).value)"
         ></textarea>
@@ -25,7 +27,9 @@
 
       <div class="tools__toolbar">
         <div class="tools__select-wrap">
-          <label class="tools__label" for="case-select">Case</label>
+          <label class="tools__label" for="case-select">{{
+            'TOOLS.CASE_LABEL' | translate
+          }}</label>
           <select
             id="case-select"
             class="tools__select"
@@ -46,17 +50,19 @@
             [disabled]="!inputText().trim()"
           >
             <fa-icon [icon]="icons.faArrowsRotate" aria-hidden="true" />
-            Convert
+            {{ 'TOOLS.CONVERT' | translate }}
           </button>
           <button type="button" class="ft-btn ft-btn--secondary" (click)="clearText()">
             <fa-icon [icon]="icons.faEraser" aria-hidden="true" />
-            Clear
+            {{ 'TOOLS.CLEAR' | translate }}
           </button>
         </div>
       </div>
 
       <div class="tools__field">
-        <label class="tools__label" for="output-text">Output Text</label>
+        <label class="tools__label" for="output-text">{{
+          'TOOLS.OUTPUT_LABEL' | translate
+        }}</label>
         <textarea
           id="output-text"
           class="tools__textarea"
@@ -77,7 +83,7 @@
             [icon]="copied() ? icons.faCheck : icons.faCopy"
             aria-hidden="true"
           />
-          {{ copied() ? 'Copied!' : 'Copy' }}
+          {{ (copied() ? 'TOOLS.COPIED' : 'TOOLS.COPY') | translate }}
         </button>
       </div>
     </div>

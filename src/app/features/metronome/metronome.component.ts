@@ -33,6 +33,7 @@ import {
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppTitleService } from '../../core/services/app-title.service';
+import { LocaleService } from '../../core/services/locale.service';
 import { ModalComponent } from '../../shared/ui/modal/modal.component';
 import { MetronomeService } from './metronome.service';
 import {
@@ -53,8 +54,6 @@ import {
   TapTempoTracker,
 } from './metronome.utils';
 
-const LS_LANG = 'fengtech.lang';
-
 @Component({
   selector: 'app-metronome',
   standalone: true,
@@ -64,7 +63,8 @@ const LS_LANG = 'fengtech.lang';
 })
 export class MetronomeComponent implements OnDestroy {
   protected readonly metro = inject(MetronomeService);
-  protected readonly i18n = inject(TranslateService);
+  protected readonly locale = inject(LocaleService);
+  private readonly i18n = inject(TranslateService);
   private readonly appTitleService = inject(AppTitleService);
 
   readonly state = toSignal(this.metro.state$, {
@@ -135,10 +135,7 @@ export class MetronomeComponent implements OnDestroy {
   private flashTimer: number | undefined;
 
   constructor() {
-    this.appTitleService.setTitle('Metronome');
-
-    const savedLang = this.readLanguage();
-    this.i18n.use(savedLang).subscribe();
+    this.appTitleService.setTitle(this.i18n.instant('METRONOME.TITLE'));
 
     this.refreshPatterns();
 
@@ -433,8 +430,7 @@ export class MetronomeComponent implements OnDestroy {
   // ============================================================
 
   setLang(lang: 'en' | 'zh'): void {
-    this.i18n.use(lang).subscribe();
-    this.writeLanguage(lang);
+    this.locale.set(lang);
   }
 
   formatElapsed(ms: number): string {
@@ -520,20 +516,4 @@ export class MetronomeComponent implements OnDestroy {
   private readonly onFullscreenChange = (): void => {
     this.isFullscreen.set(!!document.fullscreenElement);
   };
-
-  private readLanguage(): 'en' | 'zh' {
-    try {
-      return localStorage.getItem(LS_LANG) === 'zh' ? 'zh' : 'en';
-    } catch {
-      return 'en';
-    }
-  }
-
-  private writeLanguage(lang: 'en' | 'zh'): void {
-    try {
-      localStorage.setItem(LS_LANG, lang);
-    } catch {
-      // Private mode — in-memory language still applies.
-    }
-  }
 }

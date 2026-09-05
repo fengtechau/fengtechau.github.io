@@ -97,6 +97,51 @@
 }
 
 // ------------------------------------------------------------
+// Header actions (language + theme)
+// ------------------------------------------------------------
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.site-lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--ft-border);
+  border-radius: var(--ft-radius-full);
+  background: var(--ft-surface);
+  flex: 0 0 auto;
+}
+
+.site-lang__btn {
+  border: none;
+  padding: 4px 10px;
+  border-radius: var(--ft-radius-full);
+  background: transparent;
+  color: var(--ft-text-muted);
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background var(--ft-transition),
+    color var(--ft-transition);
+}
+
+.site-lang__btn:hover {
+  color: var(--ft-text);
+}
+
+.site-lang__btn.is-active {
+  background: var(--ft-brand-soft);
+  color: var(--ft-brand);
+}
+
+// ------------------------------------------------------------
 // Theme switcher
 // ------------------------------------------------------------
 .site-theme {
@@ -186,6 +231,11 @@
   color: var(--ft-brand);
 }
 
+// When embedded, the parent page supplies its own chrome.
+.site-shell.is-embedded .site-main {
+  padding-block-start: 0;
+}
+
 @media (max-width: 640px) {
   .site-header__inner {
     position: relative;
@@ -193,12 +243,12 @@
     align-items: flex-start;
     gap: 4px;
     padding-block: 8px;
-    padding-right: 60px;
+    padding-right: 150px;
   }
 
-  .site-theme {
+  .site-header__actions {
     position: absolute;
-    top: 14px;
+    top: 12px;
     right: 20px;
   }
 

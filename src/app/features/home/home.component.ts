@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -7,61 +7,115 @@ import {
   faDollarSign,
   faEnvelope,
   faFont,
-  faGlobe,
   faMusic,
   faNetworkWired,
-  faQuoteLeft,
   faScrewdriverWrench,
+  type IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppTitleService } from '../../core/services/app-title.service';
 
-/** One full rotation of the About ring badge. */
-const BADGE_SPIN_MS = 16000;
+type Tone = 'blue' | 'green' | 'orange';
+
+interface StatItem {
+  valueKey: string;
+  labelKey: string;
+}
+
+interface WhyItem {
+  icon: IconDefinition;
+  tone: Tone;
+  titleKey: string;
+  textKey: string;
+}
+
+interface ToolItem {
+  icon: IconDefinition;
+  tone: Tone;
+  path: string;
+  labelKey: string;
+  descKey: string;
+  ariaKey: string;
+}
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, FontAwesomeModule],
+  imports: [RouterLink, FontAwesomeModule, TranslatePipe],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent {
   private readonly appTitleService = inject(AppTitleService);
-
-  private readonly badgeRing = viewChild<ElementRef<SVGGElement>>('badgeRing');
+  private readonly i18n = inject(TranslateService);
 
   protected readonly icons = {
     faEnvelope,
-    faFont,
-    faMusic,
-    faNetworkWired,
-    faGlobe,
-    faScrewdriverWrench,
-    faComments,
-    faQuoteLeft,
-    faDollarSign,
-    faBolt,
   };
 
-  constructor() {
-    this.appTitleService.setTitle('Welcome');
-  }
+  protected readonly stats: StatItem[] = [
+    { valueKey: 'HOME.STAT1_VALUE', labelKey: 'HOME.STAT1_LABEL' },
+    { valueKey: 'HOME.STAT2_VALUE', labelKey: 'HOME.STAT2_LABEL' },
+    { valueKey: 'HOME.STAT3_VALUE', labelKey: 'HOME.STAT3_LABEL' },
+    { valueKey: 'HOME.STAT4_VALUE', labelKey: 'HOME.STAT4_LABEL' },
+  ];
 
-  ngAfterViewInit(): void {
-    // Spin the ring badge with the Web Animations API. CSS animations are
-    // suppressed by the site's `prefers-reduced-motion` rule on systems that
-    // disable animations, but this badge is a deliberate, slow decorative
-    // rotation — so it always runs.
-    const ring = this.badgeRing()?.nativeElement;
-    if (!ring) {
-      return;
-    }
-    ring.style.transformOrigin = '70px 70px';
-    ring.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], {
-      duration: BADGE_SPIN_MS,
-      iterations: Infinity,
-      easing: 'linear',
-    });
+  protected readonly whyUs: WhyItem[] = [
+    {
+      icon: faScrewdriverWrench,
+      tone: 'blue',
+      titleKey: 'HOME.WHY1_TITLE',
+      textKey: 'HOME.WHY1_TEXT',
+    },
+    {
+      icon: faDollarSign,
+      tone: 'green',
+      titleKey: 'HOME.WHY2_TITLE',
+      textKey: 'HOME.WHY2_TEXT',
+    },
+    {
+      icon: faBolt,
+      tone: 'orange',
+      titleKey: 'HOME.WHY3_TITLE',
+      textKey: 'HOME.WHY3_TEXT',
+    },
+    {
+      icon: faComments,
+      tone: 'blue',
+      titleKey: 'HOME.WHY4_TITLE',
+      textKey: 'HOME.WHY4_TEXT',
+    },
+  ];
+
+  protected readonly tools: ToolItem[] = [
+    {
+      icon: faNetworkWired,
+      tone: 'blue',
+      path: '/ip',
+      labelKey: 'HOME.TOOL_IP_LABEL',
+      descKey: 'HOME.TOOL_IP_DESC',
+      ariaKey: 'HOME.TOOL_IP_ARIA',
+    },
+    {
+      icon: faFont,
+      tone: 'green',
+      path: '/texttools',
+      labelKey: 'HOME.TOOL_CASE_LABEL',
+      descKey: 'HOME.TOOL_CASE_DESC',
+      ariaKey: 'HOME.TOOL_CASE_ARIA',
+    },
+    {
+      icon: faMusic,
+      tone: 'orange',
+      path: '/metronome',
+      labelKey: 'HOME.TOOL_METRO_LABEL',
+      descKey: 'HOME.TOOL_METRO_DESC',
+      ariaKey: 'HOME.TOOL_METRO_ARIA',
+    },
+  ];
+
+  constructor() {
+    this.appTitleService.setTitle(this.i18n.instant('HOME.PAGE_TITLE'));
   }
 }

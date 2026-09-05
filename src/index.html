@@ -2,12 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>FengTech — IT support & free tools, Sydney</title>
+    <title>FengTech — Sydney IT services, web & AI solutions</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="FengTech — Sydney IT services: AI-assisted, fast fixes for computers, networks and websites, at prices below the big providers. Plus free tools: IP lookup, a case converter and a practice metronome."
+      content="FengTech — Sydney IT services: websites and web apps, AI and automation, databases, cloud and fast same-day computer & network support, at prices below the big providers. Plus free tools: IP lookup, a case converter and a practice metronome."
     />
     <meta name="theme-color" content="#2d6ae3" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -18,17 +18,66 @@
       rel="stylesheet"
     />
     <script>
-      // Apply the saved color theme before first paint to avoid a flash.
+      // Apply the saved theme + language before first paint to avoid a flash.
       (function () {
+        function hourInBrowserZone() {
+          try {
+            var fmt = new Intl.DateTimeFormat('en-US', {
+              hour: '2-digit',
+              hourCycle: 'h23',
+            });
+            return parseInt(fmt.format(new Date()), 10);
+          } catch (e) {
+            return null;
+          }
+        }
+
+        // Colour theme: saved choice wins; otherwise follow the day/night
+        // cycle in the browser's time zone (06:00–18:00 light), falling back
+        // to the OS colour scheme when the local hour can't be computed.
+        var dark;
         try {
           var mode = localStorage.getItem('fengtech.theme');
-          var dark =
-            mode === 'dark' ||
-            ((!mode || mode === 'auto') &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (mode === 'dark') {
+            dark = true;
+          } else if (mode === 'light') {
+            dark = false;
+          } else {
+            var hour = hourInBrowserZone();
+            dark =
+              hour === null
+                ? window.matchMedia('(prefers-color-scheme: dark)').matches
+                : hour < 6 || hour >= 18;
+          }
           document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
         } catch (e) {
           document.documentElement.setAttribute('data-theme', 'light');
+        }
+
+        // Language: saved choice, then the browser's language preference.
+        try {
+          var lang = localStorage.getItem('fengtech.lang');
+          if (lang !== 'zh' && lang !== 'en') {
+            var langs =
+              navigator.languages && navigator.languages.length
+                ? navigator.languages
+                : [navigator.language];
+            lang = 'en';
+            for (var i = 0; i < langs.length; i++) {
+              var l = String(langs[i] || '').toLowerCase();
+              if (l.indexOf('zh') === 0) {
+                lang = 'zh';
+                break;
+              }
+              if (l.indexOf('en') === 0) {
+                lang = 'en';
+                break;
+              }
+            }
+          }
+          document.documentElement.lang = lang;
+        } catch (e) {
+          // Leave the default lang attribute.
         }
       })();
     </script>
