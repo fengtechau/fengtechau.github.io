@@ -37,8 +37,8 @@
     <p class="ft-section__lead">{{ 'HOME.PROCESS_LEAD' | translate }}</p>
 
     <div class="process">
-      <img class="process__image" src="/assets/images/screens.avif" [attr.alt]="'HOME.PROCESS_IMG_ALT' | translate"
-        loading="lazy" />
+      <img class="process__image" src="/assets/images/screens.jpg?auto=compress&cs=tinysrgb&w=1200"
+        [attr.alt]="'HOME.PROCESS_IMG_ALT' | translate" loading="lazy" />
 
       <ol class="process__steps">
         @for (step of processSteps; track step.titleKey; let i = $index) {

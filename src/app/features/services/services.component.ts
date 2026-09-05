@@ -63,7 +63,7 @@ export class ServicesComponent {
     {
       icon: faRobot,
       tone: 'green',
-      image: '/assets/images/robot.avif?auto=compress&cs=tinysrgb&w=1200',
+      image: '/assets/images/robot.jpg?auto=compress&cs=tinysrgb&w=1200',
       altKey: 'HOME.SERVICE_AI_ALT',
       titleKey: 'HOME.SERVICE_AI_TITLE',
       textKey: 'HOME.SERVICE_AI_TEXT',
@@ -77,7 +77,7 @@ export class ServicesComponent {
     {
       icon: faDatabase,
       tone: 'orange',
-      image: '/assets/images/servers.avif?auto=compress&cs=tinysrgb&w=1200',
+      image: '/assets/images/servers.jpg?auto=compress&cs=tinysrgb&w=1200',
       altKey: 'HOME.SERVICE_DB_ALT',
       titleKey: 'HOME.SERVICE_DB_TITLE',
       textKey: 'HOME.SERVICE_DB_TEXT',
@@ -91,7 +91,7 @@ export class ServicesComponent {
     {
       icon: faCloud,
       tone: 'blue',
-      image: '/assets/images/routers.avif?auto=compress&cs=tinysrgb&w=1200',
+      image: '/assets/images/routers.jpg?auto=compress&cs=tinysrgb&w=1200',
       altKey: 'HOME.SERVICE_CLOUD_ALT',
       titleKey: 'HOME.SERVICE_CLOUD_TITLE',
       textKey: 'HOME.SERVICE_CLOUD_TEXT',
