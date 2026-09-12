@@ -10,13 +10,19 @@
     </div>
 
     <div class="metro__header-actions">
-      <button type="button" class="metro__icon-btn" (click)="toggleFullscreen()" [attr.aria-label]="
+      <button
+        type="button"
+        class="metro__icon-btn"
+        (click)="toggleFullscreen()"
+        [attr.aria-label]="
           (isFullscreen() ? 'METRONOME.EXIT_FULLSCREEN' : 'METRONOME.FULLSCREEN')
             | translate
-        " [title]="
+        "
+        [title]="
           (isFullscreen() ? 'METRONOME.EXIT_FULLSCREEN' : 'METRONOME.FULLSCREEN')
             | translate
-        ">
+        "
+      >
         <fa-icon [icon]="isFullscreen() ? icons.faCompress : icons.faExpand" />
       </button>
     </div>
@@ -25,7 +31,10 @@
   <!-- ================= Body ================= -->
   <div class="metro__layout">
     <!-- ---------- Controls column ---------- -->
-    <section class="metro__controls" aria-label="{{ 'METRONOME.CONTROLS' | translate }}">
+    <section
+      class="metro__controls"
+      aria-label="{{ 'METRONOME.CONTROLS' | translate }}"
+    >
       <!-- Tempo -->
       <div class="metro__card">
         <div class="metro__tempo-row">
@@ -33,51 +42,100 @@
             {{ 'METRONOME.BPM' | translate }}
           </label>
           <div class="metro__bpm-wrap">
-            <button type="button" class="metro__step-btn" [attr.aria-label]="'METRONOME.DECREASE_BPM' | translate"
-              (pointerdown)="startBpmHold(-1, $event)" (pointerup)="stopBpmHold()" (pointercancel)="stopBpmHold()"
-              (pointerleave)="stopBpmHold()">
+            <button
+              type="button"
+              class="metro__step-btn"
+              [attr.aria-label]="'METRONOME.DECREASE_BPM' | translate"
+              (pointerdown)="startBpmHold(-1, $event)"
+              (pointerup)="stopBpmHold()"
+              (pointercancel)="stopBpmHold()"
+              (pointerleave)="stopBpmHold()"
+            >
               <fa-icon [icon]="icons.faMinus" />
             </button>
-            <input id="bpm-input" class="metro__bpm-input" type="text" inputmode="numeric" [value]="bpmDraft()"
-              [attr.aria-label]="'METRONOME.BPM' | translate" (focus)="onBpmFocus()" (blur)="onBpmBlur()"
-              (input)="onBpmInput($any($event.target).value)" />
-            <button type="button" class="metro__step-btn" [attr.aria-label]="'METRONOME.INCREASE_BPM' | translate"
-              (pointerdown)="startBpmHold(1, $event)" (pointerup)="stopBpmHold()" (pointercancel)="stopBpmHold()"
-              (pointerleave)="stopBpmHold()">
+            <input
+              id="bpm-input"
+              class="metro__bpm-input"
+              type="text"
+              inputmode="numeric"
+              [value]="bpmDraft()"
+              [attr.aria-label]="'METRONOME.BPM' | translate"
+              (focus)="onBpmFocus()"
+              (blur)="onBpmBlur()"
+              (input)="onBpmInput($any($event.target).value)"
+            />
+            <button
+              type="button"
+              class="metro__step-btn"
+              [attr.aria-label]="'METRONOME.INCREASE_BPM' | translate"
+              (pointerdown)="startBpmHold(1, $event)"
+              (pointerup)="stopBpmHold()"
+              (pointercancel)="stopBpmHold()"
+              (pointerleave)="stopBpmHold()"
+            >
               <fa-icon [icon]="icons.faPlus" />
             </button>
           </div>
         </div>
 
-        <input class="metro__slider" type="range" min="20" max="300" step="1" [value]="state().bpm"
-          [style.--m-progress]="sliderPercent(state().bpm, 20, 300)" [attr.aria-label]="'METRONOME.BPM' | translate"
-          (input)="onBpmSlider($event)" />
+        <input
+          class="metro__slider"
+          type="range"
+          min="20"
+          max="300"
+          step="1"
+          [value]="state().bpm"
+          [style.--m-progress]="sliderPercent(state().bpm, 20, 300)"
+          [attr.aria-label]="'METRONOME.BPM' | translate"
+          (input)="onBpmSlider($event)"
+        />
 
         <div class="metro__tempo-chips">
           @for (preset of tempoPresets; track preset.bpm) {
-          <button type="button" class="metro__chip" [class.is-active]="state().bpm === preset.bpm"
-            (click)="metro.setBpm(preset.bpm)">
-            <span class="metro__chip-bpm">{{ preset.bpm }}</span>
-            <span class="metro__chip-label">{{ preset.label }}</span>
-          </button>
+            <button
+              type="button"
+              class="metro__chip"
+              [class.is-active]="state().bpm === preset.bpm"
+              (click)="metro.setBpm(preset.bpm)"
+            >
+              <span class="metro__chip-bpm">{{ preset.bpm }}</span>
+              <span class="metro__chip-label">{{ preset.label }}</span>
+            </button>
           }
         </div>
       </div>
 
       <!-- Transport -->
       <div class="metro__transport">
-        <button type="button" class="metro__play" [class.is-running]="state().isRunning" [attr.aria-label]="
+        <button
+          type="button"
+          class="metro__play"
+          [class.is-running]="state().isRunning"
+          [attr.aria-label]="
             (state().isRunning ? 'METRONOME.PAUSE' : 'METRONOME.PLAY') | translate
-          " [attr.aria-pressed]="state().isRunning" (click)="toggle()">
+          "
+          [attr.aria-pressed]="state().isRunning"
+          (click)="toggle()"
+        >
           <fa-icon [icon]="state().isRunning ? icons.faPause : icons.faPlay" />
         </button>
 
-        <button type="button" class="metro__tap" [class.is-pulsing]="tapPulse()" (click)="tapTempo()">
+        <button
+          type="button"
+          class="metro__tap"
+          [class.is-pulsing]="tapPulse()"
+          (click)="tapTempo()"
+        >
           <fa-icon [icon]="icons.faHandPointer" />
           <span>{{ 'METRONOME.TAP' | translate }}</span>
         </button>
 
-        <button type="button" class="metro__stop" [disabled]="!state().isRunning" (click)="stop()">
+        <button
+          type="button"
+          class="metro__stop"
+          [disabled]="!state().isRunning"
+          (click)="stop()"
+        >
           <fa-icon [icon]="icons.faStop" />
           <span>{{ 'METRONOME.STOP' | translate }}</span>
         </button>
@@ -88,9 +146,14 @@
         <label class="metro__label" for="sig-select">
           {{ 'METRONOME.TIME_SIGNATURE' | translate }}
         </label>
-        <select id="sig-select" class="metro__select" [value]="state().timeSignature" (change)="onSigChange($event)">
+        <select
+          id="sig-select"
+          class="metro__select"
+          [value]="state().timeSignature"
+          (change)="onSigChange($event)"
+        >
           @for (sig of timeSignatures; track sig.value) {
-          <option [value]="sig.value">{{ sig.value }}</option>
+            <option [value]="sig.value">{{ sig.value }}</option>
           }
         </select>
       </div>
@@ -98,16 +161,25 @@
       <!-- Subdivision -->
       <div class="metro__card">
         <span class="metro__label">{{ 'METRONOME.SUBDIVISION' | translate }}</span>
-        <div class="metro__segmented" [class.metro__segmented--2]="subdivisions().length === 2" role="group"
-          [attr.aria-label]="'METRONOME.SUBDIVISION' | translate">
+        <div
+          class="metro__segmented"
+          [class.metro__segmented--2]="subdivisions().length === 2"
+          role="group"
+          [attr.aria-label]="'METRONOME.SUBDIVISION' | translate"
+        >
           @for (sub of subdivisions(); track sub.id) {
-          <button type="button" class="metro__segmented-btn" [class.is-active]="state().subdivision === sub.id"
-            [attr.aria-pressed]="state().subdivision === sub.id" (click)="onSubdivisionChange(sub.id)">
-            <span class="metro__segmented-symbol" aria-hidden="true">{{
-              sub.symbol
+            <button
+              type="button"
+              class="metro__segmented-btn"
+              [class.is-active]="state().subdivision === sub.id"
+              [attr.aria-pressed]="state().subdivision === sub.id"
+              (click)="onSubdivisionChange(sub.id)"
+            >
+              <span class="metro__segmented-symbol" aria-hidden="true">{{
+                sub.symbol
               }}</span>
-            <span>{{ 'METRONOME.SUB_' + (sub.id | uppercase) | translate }}</span>
-          </button>
+              <span>{{ 'METRONOME.SUB_' + (sub.id | uppercase) | translate }}</span>
+            </button>
           }
         </div>
       </div>
@@ -115,20 +187,28 @@
       <!-- Accent + grouping -->
       <div class="metro__card metro__card--row">
         <label class="metro__switch">
-          <input type="checkbox" [checked]="state().accentFirstBeat" (change)="onAccentChange($event)" />
+          <input
+            type="checkbox"
+            [checked]="state().accentFirstBeat"
+            (change)="onAccentChange($event)"
+          />
           <span class="metro__switch-track" aria-hidden="true"></span>
           <span class="metro__switch-label">{{
             'METRONOME.ACCENT_FIRST' | translate
-            }}</span>
+          }}</span>
         </label>
 
         @if (state().denominator === 8) {
-        <select class="metro__select metro__select--inline" [value]="state().groupingPreset"
-          [attr.aria-label]="'METRONOME.GROUPING' | translate" (change)="onGroupingChange($event)">
-          @for (group of groupings(); track group) {
-          <option [value]="group">{{ group }}</option>
-          }
-        </select>
+          <select
+            class="metro__select metro__select--inline"
+            [value]="state().groupingPreset"
+            [attr.aria-label]="'METRONOME.GROUPING' | translate"
+            (change)="onGroupingChange($event)"
+          >
+            @for (group of groupings(); track group) {
+              <option [value]="group">{{ group }}</option>
+            }
+          </select>
         }
       </div>
 
@@ -138,11 +218,16 @@
           <label class="metro__label" for="sound-select">
             {{ 'METRONOME.SOUND' | translate }}
           </label>
-          <select id="sound-select" class="metro__select" [value]="state().clickSound" (change)="onSoundChange($event)">
+          <select
+            id="sound-select"
+            class="metro__select"
+            [value]="state().clickSound"
+            (change)="onSoundChange($event)"
+          >
             @for (sound of clickSounds; track sound) {
-            <option [value]="sound">
-              {{ 'METRONOME.SOUND_' + (sound | uppercase) | translate }}
-            </option>
+              <option [value]="sound">
+                {{ 'METRONOME.SOUND_' + (sound | uppercase) | translate }}
+              </option>
             }
           </select>
         </div>
@@ -151,19 +236,34 @@
           <label class="metro__label" for="volume-input">
             {{ 'METRONOME.VOLUME' | translate }}
           </label>
-          <input id="volume-input" class="metro__slider" type="range" min="0" max="1" step="0.01"
-            [value]="state().volume" [style.--m-progress]="sliderPercent(state().volume, 0, 1)"
-            (input)="onVolumeInput($event)" />
+          <input
+            id="volume-input"
+            class="metro__slider"
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            [value]="state().volume"
+            [style.--m-progress]="sliderPercent(state().volume, 0, 1)"
+            (input)="onVolumeInput($event)"
+          />
         </div>
       </div>
 
       <!-- Mobile helpers -->
       <div class="metro__card metro__card--row">
         <label class="metro__switch">
-          <input type="checkbox" [checked]="state().keepAwake" (change)="onKeepAwakeChange($event)" />
+          <input
+            type="checkbox"
+            [checked]="state().keepAwake"
+            (change)="onKeepAwakeChange($event)"
+          />
           <span class="metro__switch-track" aria-hidden="true"></span>
           <span class="metro__switch-label">
-            <fa-icon [icon]="state().keepAwake ? icons.faLightbulb : icons.faMoon" class="metro__switch-icon" />
+            <fa-icon
+              [icon]="state().keepAwake ? icons.faLightbulb : icons.faMoon"
+              class="metro__switch-icon"
+            />
             {{ 'METRONOME.KEEP_AWAKE' | translate }}
           </span>
         </label>
@@ -175,7 +275,7 @@
       <!-- Beat LEDs -->
       <div class="metro__leds" aria-hidden="true">
         @for (beat of beats(); track beat) {
-        <span class="metro__led" [ngClass]="ledClasses(beat)"></span>
+          <span class="metro__led" [ngClass]="ledClasses(beat)"></span>
         }
       </div>
 
@@ -183,15 +283,22 @@
       <div class="metro__grid-wrap">
         <div class="metro__grid" [class.grid-beats-1]="state().beatsPerBar === 1">
           @for (beat of beats(); track beat) {
-          <div class="metro__beat-col" [ngClass]="beatColClasses(beat)">
-            @for (level of pattern()[beat] ?? []; track $index; let i = $index) {
-            <button type="button" class="metro__cell" [ngClass]="cellClasses(beat, i)" [attr.data-beat]="beat"
-              [attr.data-level]="i" [attr.aria-pressed]="cellEnabled(beat, i)"
-              [attr.aria-label]="cellAriaLabel(beat, i)" (click)="toggleCell(beat, i)">
-              <span class="metro__cell-label">{{ cellText(beat, i) }}</span>
-            </button>
-            }
-          </div>
+            <div class="metro__beat-col" [ngClass]="beatColClasses(beat)">
+              @for (level of pattern()[beat] ?? []; track $index; let i = $index) {
+                <button
+                  type="button"
+                  class="metro__cell"
+                  [ngClass]="cellClasses(beat, i)"
+                  [attr.data-beat]="beat"
+                  [attr.data-level]="i"
+                  [attr.aria-pressed]="cellEnabled(beat, i)"
+                  [attr.aria-label]="cellAriaLabel(beat, i)"
+                  (click)="toggleCell(beat, i)"
+                >
+                  <span class="metro__cell-label">{{ cellText(beat, i) }}</span>
+                </button>
+              }
+            </div>
           }
         </div>
         <p class="metro__hint">{{ 'METRONOME.GRID_HINT' | translate }}</p>
@@ -203,11 +310,11 @@
           <span class="metro__timer-icon"><fa-icon [icon]="icons.faClock" /></span>
           <span class="metro__timer-value ft-mono">{{
             formatElapsed(state().elapsedMs)
-            }}</span>
+          }}</span>
           <button type="button" class="metro__mini-btn" (click)="toggleStopwatch()">
             {{
-            (state().stopwatchRunning ? 'METRONOME.PAUSE' : 'METRONOME.START')
-            | translate
+              (state().stopwatchRunning ? 'METRONOME.PAUSE' : 'METRONOME.START')
+                | translate
             }}
           </button>
           <button type="button" class="metro__mini-btn" (click)="resetStopwatch()">
@@ -220,28 +327,47 @@
             {{ 'METRONOME.PATTERNS' | translate }}
           </label>
           <div class="metro__patterns-row">
-            <select id="pattern-select" class="metro__select" [value]="activePatternId()"
-              (change)="onSelectPattern($any($event.target).value)">
+            <select
+              id="pattern-select"
+              class="metro__select"
+              [value]="activePatternId()"
+              (change)="onSelectPattern($any($event.target).value)"
+            >
               <option value="" disabled>
                 {{ 'METRONOME.PATTERN_PLACEHOLDER' | translate }}
               </option>
               @for (p of patterns(); track p.id) {
-              <option [value]="p.id">
-                {{ p.name }} · {{ p.timeSignature }} · {{ p.bpm }}
-              </option>
+                <option [value]="p.id">
+                  {{ p.name }} · {{ p.timeSignature }} · {{ p.bpm }}
+                </option>
               }
             </select>
-            <button type="button" class="metro__icon-btn" [attr.aria-label]="'METRONOME.SAVE' | translate"
-              [title]="'METRONOME.SAVE' | translate" (click)="savePatternOverwrite()">
+            <button
+              type="button"
+              class="metro__icon-btn"
+              [attr.aria-label]="'METRONOME.SAVE' | translate"
+              [title]="'METRONOME.SAVE' | translate"
+              (click)="savePatternOverwrite()"
+            >
               <fa-icon [icon]="icons.faSave" />
             </button>
-            <button type="button" class="metro__icon-btn" [attr.aria-label]="'METRONOME.SAVE_AS' | translate"
-              [title]="'METRONOME.SAVE_AS' | translate" (click)="openSaveAs()">
+            <button
+              type="button"
+              class="metro__icon-btn"
+              [attr.aria-label]="'METRONOME.SAVE_AS' | translate"
+              [title]="'METRONOME.SAVE_AS' | translate"
+              (click)="openSaveAs()"
+            >
               <fa-icon [icon]="icons.faFilePen" />
             </button>
-            <button type="button" class="metro__icon-btn metro__icon-btn--danger" [disabled]="!activePatternId()"
-              [attr.aria-label]="'METRONOME.DELETE' | translate" [title]="'METRONOME.DELETE' | translate"
-              (click)="openDelete()">
+            <button
+              type="button"
+              class="metro__icon-btn metro__icon-btn--danger"
+              [disabled]="!activePatternId()"
+              [attr.aria-label]="'METRONOME.DELETE' | translate"
+              [title]="'METRONOME.DELETE' | translate"
+              (click)="openDelete()"
+            >
               <fa-icon [icon]="icons.faTrashCan" />
             </button>
           </div>
@@ -252,38 +378,61 @@
       <div class="metro__shortcuts">
         <span class="metro__shortcuts-title">{{
           'METRONOME.SHORTCUTS' | translate
-          }}</span>
-        <span class="metro__shortcut"><kbd class="ft-kbd">Space</kbd> {{ 'METRONOME.KEY_SPACE' | translate }}</span>
-        <span class="metro__shortcut"><kbd class="ft-kbd">↑</kbd><kbd class="ft-kbd">↓</kbd>
-          {{ 'METRONOME.KEY_ARROWS' | translate }}</span>
-        <span class="metro__shortcut"><kbd class="ft-kbd">Shift</kbd>+<kbd class="ft-kbd">↑↓</kbd>
-          {{ 'METRONOME.KEY_SHIFT_ARROWS' | translate }}</span>
-        <span class="metro__shortcut"><kbd class="ft-kbd">T</kbd> {{ 'METRONOME.KEY_TAP' | translate }}</span>
+        }}</span>
+        <span class="metro__shortcut"
+          ><kbd class="ft-kbd">Space</kbd> {{ 'METRONOME.KEY_SPACE' | translate }}</span
+        >
+        <span class="metro__shortcut"
+          ><kbd class="ft-kbd">↑</kbd><kbd class="ft-kbd">↓</kbd>
+          {{ 'METRONOME.KEY_ARROWS' | translate }}</span
+        >
+        <span class="metro__shortcut"
+          ><kbd class="ft-kbd">Shift</kbd>+<kbd class="ft-kbd">↑↓</kbd>
+          {{ 'METRONOME.KEY_SHIFT_ARROWS' | translate }}</span
+        >
+        <span class="metro__shortcut"
+          ><kbd class="ft-kbd">T</kbd> {{ 'METRONOME.KEY_TAP' | translate }}</span
+        >
       </div>
     </section>
   </div>
 
   <!-- ================= Flash feedback ================= -->
   @if (flashMessage()) {
-  <div class="metro__flash" role="status">
-    <fa-icon [icon]="icons.faCircle" aria-hidden="true" />
-    {{ flashMessage()! | translate }}
-  </div>
+    <div class="metro__flash" role="status">
+      <fa-icon [icon]="icons.faCircle" aria-hidden="true" />
+      {{ flashMessage()! | translate }}
+    </div>
   }
 
   <!-- ================= Save-as modal ================= -->
-  <app-modal [open]="saveAsOpen()" [title]="'METRONOME.SAVE_AS' | translate" (closed)="saveAsOpen.set(false)">
+  <app-modal
+    [open]="saveAsOpen()"
+    [title]="'METRONOME.SAVE_AS' | translate"
+    (closed)="saveAsOpen.set(false)"
+  >
     <form class="metro__form" (submit)="onSaveAsSubmit($event)">
       <label class="metro__label" for="pattern-name">
         {{ 'METRONOME.PATTERN_NAME' | translate }}
       </label>
-      <input id="pattern-name" class="metro__text-input" type="text" maxlength="40" #patternNameInput
-        [value]="patternNameDraft()" (input)="patternNameDraft.set($any($event.target).value)" />
+      <input
+        id="pattern-name"
+        class="metro__text-input"
+        type="text"
+        maxlength="40"
+        #patternNameInput
+        [value]="patternNameDraft()"
+        (input)="patternNameDraft.set($any($event.target).value)"
+      />
       <div class="metro__form-actions">
         <button type="button" class="metro__btn" (click)="saveAsOpen.set(false)">
           {{ 'METRONOME.CANCEL' | translate }}
         </button>
-        <button type="submit" class="metro__btn metro__btn--primary" [disabled]="!patternNameDraft().trim()">
+        <button
+          type="submit"
+          class="metro__btn metro__btn--primary"
+          [disabled]="!patternNameDraft().trim()"
+        >
           {{ 'METRONOME.SAVE' | translate }}
         </button>
       </div>
@@ -291,16 +440,25 @@
   </app-modal>
 
   <!-- ================= Delete confirm modal ================= -->
-  <app-modal [open]="deleteOpen()" [title]="'METRONOME.DELETE' | translate" (closed)="deleteOpen.set(false)">
+  <app-modal
+    [open]="deleteOpen()"
+    [title]="'METRONOME.DELETE' | translate"
+    (closed)="deleteOpen.set(false)"
+  >
     <p class="metro__confirm-text">
       {{ 'METRONOME.DELETE_CONFIRM' | translate }}
-      <strong>{{ activePatternName() }}</strong>?
+      <strong>{{ activePatternName() }}</strong
+      >?
     </p>
     <div class="metro__form-actions">
       <button type="button" class="metro__btn" (click)="deleteOpen.set(false)">
         {{ 'METRONOME.CANCEL' | translate }}
       </button>
-      <button type="button" class="metro__btn metro__btn--danger" (click)="confirmDelete()">
+      <button
+        type="button"
+        class="metro__btn metro__btn--danger"
+        (click)="confirmDelete()"
+      >
         {{ 'METRONOME.DELETE' | translate }}
       </button>
     </div>

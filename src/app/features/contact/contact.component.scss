@@ -1,55 +1,888 @@
-/* Contact page. */
+/* Contact page — HUD hero, direct channels, enquiry form and coverage panel. */
 
 :host {
   display: block;
 }
 
-.contact {
+/* ------------------------------------------------------------
+   Shared band treatment
+   ------------------------------------------------------------ */
+.contact-hero {
+  position: relative;
+  padding: 64px 0 52px;
+  overflow: hidden;
+}
+
+.contact-hero__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.contact-hero__grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--ft-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ft-grid-line) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(110% 85% at 25% 0%, #000 15%, transparent 76%);
+  -webkit-mask-image: radial-gradient(110% 85% at 25% 0%, #000 15%, transparent 76%);
+}
+
+.contact-hero__halo {
+  width: 420px;
+  height: 420px;
+}
+
+.contact-hero__halo--a {
+  top: -170px;
+  right: -60px;
+  background: var(--ft-halo-anchor);
+  animation: ft-drift 17s ease-in-out infinite;
+}
+
+.contact-hero__halo--b {
+  bottom: -230px;
+  left: -120px;
+  background: var(--ft-halo-accent);
+  animation: ft-float 21s ease-in-out infinite;
+}
+
+.contact-hero__title {
+  margin: 18px 0 14px;
+  font-size: clamp(32px, 4.4vw, 52px);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  background: var(--ft-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.contact-hero__lead {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--ft-text-secondary);
+  font-size: clamp(15px, 1.7vw, 17.5px);
+  line-height: 1.65;
+}
+
+.contact-hero__badges {
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.contact-hero__badge {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 30px;
+  gap: 9px;
+  padding: 8px 15px;
+  border-radius: var(--ft-radius-full);
+  color: var(--ft-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.contact-hero__badge fa-icon {
+  color: var(--ft-signal);
+  font-size: 0.82rem;
+}
+
+/* ------------------------------------------------------------
+   Body: channels + form
+   ------------------------------------------------------------ */
+.contact-body {
+  padding-top: 0;
+}
+
+.contact-body__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  align-items: start;
+}
+
+/* Right column: the enquiry form, the "not sure?" helper and the mini FAQ. */
+.contact-body__aside {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.channels__title {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+}
+
+.channels__lead {
+  margin: 0 0 20px;
+  color: var(--ft-text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  max-width: 48ch;
+}
+
+.channels__grid {
+  display: grid;
+  gap: 14px;
+}
+
+.channel {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: var(--ft-radius-lg);
+  box-shadow: var(--ft-shadow-sm);
+  transition:
+    transform var(--ft-transition),
+    border-color var(--ft-transition),
+    box-shadow var(--ft-transition);
+}
+
+.channel:hover {
+  transform: translateY(-3px);
+  border-color: var(--ft-frame-line);
+  box-shadow: var(--ft-shadow-md), var(--ft-glow-brand);
+}
+
+.channel__icon {
+  width: 46px;
+  height: 46px;
+  font-size: 1.05rem;
+}
+
+.channel__body {
+  min-width: 0;
+}
+
+.channel__label {
+  margin: 0 0 4px;
+  color: var(--ft-text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.channel__value {
+  margin: 0;
+  color: var(--ft-text);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.channel__hint {
+  margin: 4px 0 0;
+  color: var(--ft-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.channel__tools {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.channel__copy,
+.channel__link {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--ft-glass-border);
+  border-radius: var(--ft-radius-md);
   background: var(--ft-surface);
-  border: 1px solid var(--ft-border);
+  color: var(--ft-text-muted);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition:
+    border-color var(--ft-transition),
+    color var(--ft-transition),
+    background var(--ft-transition);
+}
+
+.channel__copy:hover,
+.channel__link:hover {
+  border-color: var(--ft-frame-line);
+  background: var(--ft-brand-soft);
+  color: var(--ft-brand);
+}
+
+/* "Not sure what to ask?" helper panel */
+.prefer {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  padding: 22px;
   border-radius: var(--ft-radius-lg);
   box-shadow: var(--ft-shadow-sm);
 }
 
-.contact__lead {
-  margin: 0 0 16px;
+.prefer__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--ft-radius-md);
+  background: var(--ft-accent-soft);
+  color: var(--ft-accent-strong);
+  font-size: 1rem;
+}
+
+.prefer__title {
+  margin: 0 0 6px;
+  font-size: 1.02rem;
+}
+
+.prefer__text {
+  margin: 0 0 12px;
   color: var(--ft-text-secondary);
-  line-height: 1.6;
-  max-width: 46ch;
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
-.contact__cta {
-  margin-bottom: 16px;
+.prefer__list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.contact__line {
-  margin: 6px 0;
+.prefer__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
   color: var(--ft-text-secondary);
+  font-size: 0.87rem;
+  line-height: 1.45;
 }
 
-.contact__line strong {
-  display: inline-block;
-  min-width: 64px;
+.prefer__item fa-icon {
+  margin-top: 3px;
+  color: var(--ft-signal);
+  font-size: 0.78rem;
+}
+
+/* ------------------------------------------------------------
+   Compact FAQ
+   ------------------------------------------------------------ */
+.mini-faq {
+  padding: 10px 22px 18px;
+  border-radius: var(--ft-radius-lg);
+  box-shadow: var(--ft-shadow-sm);
+}
+
+.mini-faq__title {
+  margin: 12px 0 6px;
+  font-size: 1.02rem;
+}
+
+.mini-faq__item {
+  border-top: 1px solid var(--ft-glass-border);
+}
+
+.mini-faq__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
   color: var(--ft-text);
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  list-style: none;
 }
 
-.contact__hint {
+.mini-faq__q::-webkit-details-marker {
+  display: none;
+}
+
+.mini-faq__q fa-icon {
+  flex: 0 0 auto;
   color: var(--ft-text-muted);
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+  transition:
+    transform var(--ft-transition),
+    color var(--ft-transition);
 }
 
-.contact__logo {
-  height: 52px;
+.mini-faq__item[open] .mini-faq__q fa-icon {
+  transform: rotate(180deg);
+  color: var(--ft-brand);
+}
+
+.mini-faq__q:hover {
+  color: var(--ft-brand);
+}
+
+.mini-faq__a {
+  margin: 0;
+  padding: 0 0 16px;
+  color: var(--ft-text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------
+   Enquiry form
+   ------------------------------------------------------------ */
+.enquiry {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  padding: 28px;
+  border-radius: 22px;
+  box-shadow: var(--ft-shadow-lg);
+}
+
+.enquiry__head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: center;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--ft-glass-border);
+}
+
+.enquiry__icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--ft-radius-md);
+  background: var(--ft-gradient-brand);
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: var(--ft-glow-brand);
+}
+
+.enquiry__title {
+  margin: 0 0 4px;
+  font-size: 1.15rem;
+}
+
+.enquiry__subtitle {
+  margin: 0;
+  color: var(--ft-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.enquiry__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.field__label {
+  color: var(--ft-text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.field__input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--ft-glass-border);
+  border-radius: var(--ft-radius-md);
+  background: var(--ft-surface);
+  color: var(--ft-text);
+  font-family: inherit;
+  font-size: 0.94rem;
+  line-height: 1.5;
+  transition:
+    border-color var(--ft-transition),
+    box-shadow var(--ft-transition),
+    background var(--ft-transition);
+}
+
+.field__input::placeholder {
+  color: var(--ft-text-muted);
+  opacity: 0.75;
+}
+
+.field__input:hover {
+  border-color: var(--ft-border-strong);
+}
+
+.field__input:focus {
+  outline: none;
+  border-color: var(--ft-brand);
+  box-shadow: var(--ft-focus-ring);
+}
+
+.field__input--select {
+  appearance: none;
+  padding-right: 38px;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ft-text-muted) 50%),
+    linear-gradient(135deg, var(--ft-text-muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 19px) calc(50% - 2px),
+    calc(100% - 14px) calc(50% - 2px);
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+
+.field__input--area {
+  resize: vertical;
+  min-height: 116px;
+}
+
+/* Validation feedback: the template renders this only while a submit
+   attempt left the form invalid. */
+.enquiry__error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--ft-danger);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.enquiry__error fa-icon {
+  font-size: 0.82rem;
+}
+
+.enquiry.is-submitted .field__input.is-invalid {
+  border-color: var(--ft-danger);
+  background: var(--ft-danger-soft);
+}
+
+.enquiry__submit {
+  width: 100%;
+  padding: 13px 20px;
+  font-size: 0.98rem;
+  background: var(--ft-gradient-brand);
+  box-shadow: var(--ft-glow-brand);
+}
+
+.enquiry__submit:hover {
+  filter: brightness(1.07);
+}
+
+.enquiry__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0;
+  color: var(--ft-text-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.enquiry__note fa-icon {
+  margin-top: 3px;
+  color: var(--ft-signal);
+  font-size: 0.78rem;
+}
+
+/* ------------------------------------------------------------
+   "What happens next" band
+   ------------------------------------------------------------ */
+.next-band {
+  position: relative;
+  background-color: var(--ft-surface-alt);
+  background-image:
+    linear-gradient(var(--ft-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ft-grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  box-shadow:
+    inset 0 1px 0 var(--ft-border),
+    inset 0 -1px 0 var(--ft-border);
+}
+
+.steps {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Connector line running through the step markers. */
+.steps::before {
+  content: '';
+  position: absolute;
+  top: 36px;
+  left: 6%;
+  right: 6%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ft-frame-line) 12%,
+    var(--ft-frame-line) 88%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.step {
+  position: relative;
+  padding: 24px;
+  border-radius: var(--ft-radius-lg);
+  box-shadow: var(--ft-shadow-sm);
+  transition:
+    transform var(--ft-transition),
+    border-color var(--ft-transition),
+    box-shadow var(--ft-transition);
+}
+
+.step:hover {
+  transform: translateY(-3px);
+  border-color: var(--ft-frame-line);
+  box-shadow: var(--ft-shadow-md), var(--ft-glow-brand);
+}
+
+.step__num {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 28px;
+  margin-bottom: 14px;
+  border: 1px solid var(--ft-frame-line);
+  border-radius: var(--ft-radius-full);
+  background: var(--ft-surface);
+  color: var(--ft-signal);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.step__title {
+  margin: 0 0 8px;
+  font-size: 1.04rem;
+}
+
+.step__text {
+  margin: 0;
+  color: var(--ft-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ------------------------------------------------------------
+   Enquiry topics
+   ------------------------------------------------------------ */
+.topics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.topic {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 22px;
+  border-radius: var(--ft-radius-lg);
+  box-shadow: var(--ft-shadow-sm);
+  transition:
+    transform var(--ft-transition),
+    border-color var(--ft-transition),
+    box-shadow var(--ft-transition);
+}
+
+.topic:hover {
+  transform: translateY(-3px);
+  border-color: var(--ft-frame-line);
+  box-shadow: var(--ft-shadow-md), var(--ft-glow-brand);
+}
+
+.topic__icon {
+  width: 46px;
+  height: 46px;
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+
+.topic__title {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.topic__text {
+  margin: 0;
+  color: var(--ft-text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+/* ------------------------------------------------------------
+   Coverage band + radar
+   ------------------------------------------------------------ */
+.coverage-band {
+  position: relative;
+  background-color: var(--ft-surface-alt);
+  background-image:
+    linear-gradient(var(--ft-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ft-grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  box-shadow:
+    inset 0 1px 0 var(--ft-border),
+    inset 0 -1px 0 var(--ft-border);
+}
+
+.coverage {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 36px;
+  align-items: center;
+}
+
+.coverage__stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.coverage__stat {
+  display: grid;
+  gap: 4px;
+  padding: 16px 18px;
+  border-radius: var(--ft-radius-md);
+}
+
+.coverage__stat-value {
+  color: var(--ft-signal);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.coverage__stat-label {
+  color: var(--ft-text-muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.radar {
+  position: relative;
+  padding: 18px;
+  border-radius: 24px;
+  box-shadow: var(--ft-shadow-md);
+}
+
+.radar__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.radar__ring {
+  fill: none;
+  stroke: var(--ft-frame-line);
+  stroke-width: 1;
+}
+
+.radar__ring--faint {
+  stroke-dasharray: 3 8;
+  opacity: 0.65;
+}
+
+.radar__axis {
+  stroke: var(--ft-frame-line);
+  stroke-width: 0.75;
+  stroke-dasharray: 4 6;
+  opacity: 0.5;
+}
+
+.radar__sweep {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: ft-sweep 6s linear infinite;
+}
+
+.radar__wedge {
+  fill: var(--ft-signal);
+  opacity: 0.13;
+}
+
+.radar__sweep-line {
+  stroke: var(--ft-signal);
+  stroke-width: 1.6;
+  opacity: 0.55;
+  stroke-linecap: round;
+}
+
+.radar__ping {
+  fill: var(--ft-signal);
+  filter: drop-shadow(0 0 7px var(--ft-signal));
+}
+
+.radar__label {
+  position: absolute;
+  top: 16px;
+  left: 22px;
+  color: var(--ft-text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+/* ------------------------------------------------------------
+   Closing trust panel
+   ------------------------------------------------------------ */
+.trust {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.5fr auto;
+  align-items: center;
+  gap: 28px;
+  padding: 38px 42px;
+  border-radius: 26px;
+  box-shadow: var(--ft-shadow-lg);
+  overflow: hidden;
+}
+
+.trust__glow {
+  position: absolute;
+  top: -140px;
+  right: -70px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: var(--ft-halo-anchor);
+  filter: blur(30px);
+  pointer-events: none;
+}
+
+.trust__copy,
+.trust__actions {
+  position: relative;
+}
+
+.trust__eyebrow {
+  margin: 0 0 10px;
+  color: var(--ft-signal);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.trust__title {
+  margin: 0 0 12px;
+  font-size: clamp(22px, 2.6vw, 30px);
+  letter-spacing: -0.02em;
+}
+
+.trust__text {
+  margin: 0;
+  max-width: 58ch;
+  color: var(--ft-text-secondary);
+  font-size: 0.96rem;
+  line-height: 1.65;
+}
+
+.trust__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+/* ------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------ */
+@media (min-width: 1021px) {
+  /* Keep the form in view while the visitor reads the channels. */
+  .contact-body__aside {
+    position: sticky;
+    top: 88px;
+  }
+}
+
+@media (max-width: 1020px) {
+  .contact-body__grid,
+  .coverage {
+    grid-template-columns: 1fr;
+  }
+
+  .coverage .radar {
+    max-width: 420px;
+    margin-inline: auto;
+  }
+
+  .topics {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .trust {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .steps {
+    grid-template-columns: 1fr;
+  }
+
+  .steps::before {
+    display: none;
+  }
 }
 
 @media (max-width: 680px) {
-  .contact {
-    flex-direction: column;
-    align-items: flex-start;
+  .contact-hero {
+    padding: 44px 0 36px;
+  }
+
+  .enquiry {
+    padding: 22px;
+  }
+
+  .enquiry__row {
+    grid-template-columns: 1fr;
+  }
+
+  .topics {
+    grid-template-columns: 1fr;
+  }
+
+  .coverage__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .trust {
+    padding: 26px 22px;
+  }
+
+  .trust__actions .ft-btn {
+    flex: 1 1 auto;
+  }
+
+  .channel {
+    padding: 18px;
   }
 }

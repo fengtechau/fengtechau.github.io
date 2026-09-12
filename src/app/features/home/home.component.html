@@ -1,31 +1,68 @@
-<section class="hero" aria-labelledby="hero-title">
+﻿<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__bg" aria-hidden="true">
+    <span class="ft-halo hero__halo hero__halo--a"></span>
+    <span class="ft-halo hero__halo hero__halo--b"></span>
+    <span class="hero__grid-lines"></span>
+  </div>
+
   <div class="ft-container hero__grid">
-    <div class="hero__image-wrap">
-      <img class="hero__image" src="/assets/images/About/banner.png" [attr.alt]="'HOME.HERO_IMAGE_ALT' | translate" />
-    </div>
     <div class="hero__copy">
-      <p class="hero__eyebrow">{{ 'HOME.HERO_EYEBROW' | translate }}</p>
-      <h1 id="hero-title" class="hero__title">{{ 'HOME.HERO_TITLE' | translate }}</h1>
-      <p class="hero__subtitle">{{ 'HOME.HERO_SUBTITLE' | translate }}</p>
-      <div class="hero__actions">
-        <a class="ft-btn ft-btn--primary" href="mailto:info@fengtech.com.au">
+      <p class="ft-eyebrow ft-reveal ft-reveal--1">
+        <span class="ft-pulse-dot" aria-hidden="true"></span>
+        {{ 'HOME.HERO_EYEBROW' | translate }}
+      </p>
+      <h1 id="hero-title" class="hero__title ft-reveal ft-reveal--2">
+        {{ 'HOME.HERO_TITLE' | translate }}
+      </h1>
+      <p class="hero__subtitle ft-reveal ft-reveal--3">
+        {{ 'HOME.HERO_SUBTITLE' | translate }}
+      </p>
+      <div class="hero__actions ft-reveal ft-reveal--4">
+        <a
+          class="ft-btn ft-btn--primary ft-btn--glow"
+          href="mailto:info@fengtech.com.au"
+        >
           <fa-icon [icon]="icons.faEnvelope" aria-hidden="true" />
           {{ 'HOME.HERO_CTA_EMAIL' | translate }}
         </a>
         <a class="ft-btn ft-btn--secondary" routerLink="/services">
           {{ 'HOME.HERO_CTA_SERVICES' | translate }}
+          <fa-icon [icon]="icons.faArrowRight" aria-hidden="true" />
         </a>
       </div>
+
+      <ul class="hero__chips ft-reveal ft-reveal--5">
+        @for (chip of heroChips; track chip) {
+          <li class="hero__chip">{{ chip | translate }}</li>
+        }
+      </ul>
+    </div>
+
+    <div class="hero__visual ft-reveal ft-reveal--3">
+      <figure class="hero__figure">
+        <img
+          class="hero__image"
+          src="/assets/images/designer.jpg"
+          [attr.alt]="'HOME.HERO_IMAGE_ALT' | translate"
+          width="1536"
+          height="1024"
+          fetchpriority="high"
+        />
+        <span class="hero__figure-frame" aria-hidden="true"></span>
+      </figure>
     </div>
   </div>
 
   <div class="ft-container hero__stats">
-    <dl class="stats">
-      @for (stat of stats; track stat.valueKey) {
-      <div class="stat">
-        <dt class="stat__value">{{ stat.valueKey | translate }}</dt>
-        <dd class="stat__label">{{ stat.labelKey | translate }}</dd>
-      </div>
+    <dl class="stats ft-glass ft-edge-lit ft-reveal ft-reveal--5">
+      @for (stat of stats; track stat.valueKey; let i = $index) {
+        <div class="stat">
+          <span class="stat__index ft-mono" aria-hidden="true">{{
+            (i + 1).toString().padStart(2, '0')
+          }}</span>
+          <dt class="stat__value">{{ stat.valueKey | translate }}</dt>
+          <dd class="stat__label">{{ stat.labelKey | translate }}</dd>
+        </div>
       }
     </dl>
   </div>
@@ -33,47 +70,103 @@
 
 <section class="ft-section" aria-labelledby="why-title">
   <div class="ft-container">
+    <div class="ft-section__head">
+      <p class="ft-eyebrow">
+        <span class="ft-pulse-dot" aria-hidden="true"></span>
+        {{ 'HOME.WHY_EYEBROW' | translate }}
+      </p>
+      <h2 id="why-title" class="ft-section__title">
+        {{ 'HOME.WHY_TITLE' | translate }}
+      </h2>
+      <p class="ft-section__lead">{{ 'HOME.WHY_LEAD' | translate }}</p>
+    </div>
+
     <div class="why">
-      <div class="why__intro">
-        <h2 id="why-title" class="ft-section__title">
-          {{ 'HOME.WHY_TITLE' | translate }}
-        </h2>
-        <p class="ft-section__lead">{{ 'HOME.WHY_LEAD' | translate }}</p>
-        <img class="why__image" src="/assets/images/meetings.jpg" [attr.alt]="'HOME.WHY_IMG_ALT' | translate"
-          loading="lazy" />
-      </div>
+      <figure class="why__figure">
+        <img
+          class="why__image"
+          src="/assets/images/meetings.jpg"
+          [attr.alt]="'HOME.WHY_IMG_ALT' | translate"
+          loading="lazy"
+        />
+        <span class="why__figure-frame" aria-hidden="true"></span>
+        <figcaption class="why__caption ft-glass">
+          <span class="why__caption-value ft-mono">{{
+            'HOME.WHY_CAPTION_VALUE' | translate
+          }}</span>
+          <span class="why__caption-label">{{ 'HOME.WHY_CAPTION' | translate }}</span>
+        </figcaption>
+      </figure>
 
       <div class="why__grid">
-        @for (item of whyUs; track item.titleKey) {
-        <div class="promise">
-          <span class="ft-icon-chip ft-icon-chip--{{ item.tone }} promise__icon">
-            <fa-icon [icon]="item.icon" aria-hidden="true" />
-          </span>
-          <h3 class="promise__title">{{ item.titleKey | translate }}</h3>
-          <p class="promise__text">{{ item.textKey | translate }}</p>
-        </div>
+        @for (item of whyUs; track item.titleKey; let i = $index) {
+          <article class="promise ft-scan ft-reveal ft-reveal--{{ i + 1 }}">
+            <span
+              class="ft-icon-chip ft-icon-chip--{{
+                item.tone
+              }} ft-icon-chip--glow promise__icon"
+            >
+              <fa-icon [icon]="item.icon" aria-hidden="true" />
+            </span>
+            <h3 class="promise__title">{{ item.titleKey | translate }}</h3>
+            <p class="promise__text">{{ item.textKey | translate }}</p>
+          </article>
         }
       </div>
     </div>
   </div>
 </section>
 
-<section class="ft-section ft-section--alt" aria-labelledby="tools-title">
+<section class="ft-section tools-band" aria-labelledby="tools-title">
   <div class="ft-container">
-    <h2 id="tools-title" class="ft-section__title">
-      {{ 'HOME.TOOLS_TITLE' | translate }}
-    </h2>
-    <p class="ft-section__lead">{{ 'HOME.TOOLS_LEAD' | translate }}</p>
+    <div class="ft-section__head">
+      <p class="ft-eyebrow">
+        <span class="ft-pulse-dot" aria-hidden="true"></span>
+        {{ 'HOME.TOOLS_EYEBROW' | translate }}
+      </p>
+      <h2 id="tools-title" class="ft-section__title">
+        {{ 'HOME.TOOLS_TITLE' | translate }}
+      </h2>
+      <p class="ft-section__lead">{{ 'HOME.TOOLS_LEAD' | translate }}</p>
+    </div>
 
-    <div class="tools__grid">
-      @for (tool of tools; track tool.path) {
-      <a class="tool" [routerLink]="[tool.path]" [attr.aria-label]="tool.ariaKey | translate">
-        <span class="ft-icon-chip ft-icon-chip--{{ tool.tone }} tool__icon">
-          <fa-icon [icon]="tool.icon" aria-hidden="true" />
+    <div class="bento">
+      <a
+        class="bento__feature ft-glass ft-edge-lit ft-scan"
+        routerLink="/ip"
+        [attr.aria-label]="'HOME.TOOL_IP_ARIA' | translate"
+      >
+        <span class="ft-icon-chip ft-icon-chip--blue ft-icon-chip--glow bento__icon">
+          <fa-icon [icon]="tools[0].icon" aria-hidden="true" />
         </span>
-        <span class="tool__label">{{ tool.labelKey | translate }}</span>
-        <span class="tool__desc">{{ tool.descKey | translate }}</span>
+        <span class="bento__label">{{ tools[0].labelKey | translate }}</span>
+        <span class="bento__desc">{{ tools[0].descKey | translate }}</span>
+        <span class="bento__cta">
+          {{ 'HOME.TOOLS_OPEN' | translate }}
+          <fa-icon [icon]="icons.faArrowRight" aria-hidden="true" />
+        </span>
       </a>
+
+      @for (tool of tools.slice(1); track tool.path) {
+        <a
+          class="bento__card ft-glass ft-edge-lit ft-scan"
+          [routerLink]="[tool.path]"
+          [attr.aria-label]="tool.ariaKey | translate"
+        >
+          <span
+            class="ft-icon-chip ft-icon-chip--{{
+              tool.tone
+            }} ft-icon-chip--glow bento__icon"
+          >
+            <fa-icon [icon]="tool.icon" aria-hidden="true" />
+          </span>
+          <span class="bento__label">{{ tool.labelKey | translate }}</span>
+          <span class="bento__desc">{{ tool.descKey | translate }}</span>
+          <span class="bento__cta">
+            {{ 'HOME.TOOLS_OPEN' | translate }}
+            <fa-icon [icon]="icons.faArrowRight" aria-hidden="true" />
+          </span>
+        </a>
       }
     </div>
   </div>
@@ -81,11 +174,25 @@
 
 <section class="ft-section" aria-labelledby="cta-title">
   <div class="ft-container">
-    <div class="cta">
-      <h2 id="cta-title" class="cta__title">{{ 'HOME.CTA_READY' | translate }}</h2>
+    <div class="cta ft-reveal">
+      <span class="cta__glow" aria-hidden="true"></span>
+      <div class="cta__copy">
+        <p class="cta__eyebrow ft-mono">{{ 'HOME.CTA_EYEBROW' | translate }}</p>
+        <h2 id="cta-title" class="cta__title">{{ 'HOME.CTA_READY' | translate }}</h2>
+        <p class="cta__lead">{{ 'HOME.CTA_LEAD' | translate }}</p>
+        <ul class="cta__chips">
+          @for (chip of ctaChips; track chip) {
+            <li class="cta__chip">
+              <fa-icon [icon]="icons.faCheck" aria-hidden="true" />
+              {{ chip | translate }}
+            </li>
+          }
+        </ul>
+      </div>
       <div class="cta__actions">
-        <a class="ft-btn ft-btn--primary" routerLink="/contact">
+        <a class="ft-btn ft-btn--primary ft-btn--glow" routerLink="/contact">
           {{ 'HOME.CTA_CONTACT' | translate }}
+          <fa-icon [icon]="icons.faArrowRight" aria-hidden="true" />
         </a>
         <a class="ft-btn ft-btn--secondary" href="mailto:info@fengtech.com.au">
           <fa-icon [icon]="icons.faEnvelope" aria-hidden="true" />

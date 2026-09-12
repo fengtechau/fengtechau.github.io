@@ -8,14 +8,23 @@
   >
 
   @if (!embedded.isEmbedded()) {
-    <header class="site-header">
+    <header
+      class="site-header"
+      [class.is-tools-open]="toolsOpen()"
+      [class.is-drawer-open]="mobileOpen()"
+    >
       <div class="ft-container site-header__inner">
-        <a class="brand" routerLink="/home" aria-label="FengTech — home">
+        <a
+          class="brand"
+          routerLink="/home"
+          (click)="closePanels()"
+          aria-label="FengTech — home"
+        >
           <img class="brand__logo" [src]="headerLogo()" alt="FengTech — FENG TECH" />
         </a>
 
         <nav class="site-nav" aria-label="Main navigation">
-          @for (item of navItems; track item.path) {
+          @for (item of primaryNav; track item.path) {
             <a
               class="site-nav__link"
               [routerLink]="[item.path]"
@@ -26,6 +35,48 @@
               <span>{{ item.labelKey | translate }}</span>
             </a>
           }
+
+          <div class="site-menu">
+            <button
+              type="button"
+              class="site-nav__link site-menu__trigger"
+              [class.is-active]="toolsOpen() || toolsActive()"
+              [attr.aria-expanded]="toolsOpen()"
+              aria-haspopup="true"
+              (click)="toggleTools()"
+            >
+              <fa-icon [icon]="icons.faChevronDown" aria-hidden="true" />
+              <span>{{ 'SHELL.NAV_TOOLS' | translate }}</span>
+            </button>
+
+            @if (toolsOpen()) {
+              <div
+                class="site-menu__panel"
+                role="menu"
+                [attr.aria-label]="'SHELL.MENU_TOOLS' | translate"
+              >
+                <p class="site-menu__title" aria-hidden="true">
+                  {{ 'SHELL.NAV_TOOLS' | translate }}
+                </p>
+                @for (item of toolLinks(); track item.path) {
+                  <a
+                    class="site-menu__item"
+                    role="menuitem"
+                    [routerLink]="[item.path]"
+                    [class.is-active]="item.active()"
+                    (click)="closeTools()"
+                  >
+                    <span class="site-menu__icon">
+                      <fa-icon [icon]="item.icon" aria-hidden="true" />
+                    </span>
+                    <span class="site-menu__label">{{
+                      item.labelKey | translate
+                    }}</span>
+                  </a>
+                }
+              </div>
+            }
+          </div>
         </nav>
 
         <div class="site-header__actions">
@@ -71,8 +122,72 @@
               </button>
             }
           </div>
+
+          <button
+            type="button"
+            class="site-burger"
+            [attr.aria-expanded]="mobileOpen()"
+            [attr.aria-label]="
+              (mobileOpen() ? 'SHELL.MENU_CLOSE' : 'SHELL.MENU_OPEN') | translate
+            "
+            (click)="toggleMobile()"
+          >
+            <fa-icon
+              [icon]="mobileOpen() ? icons.faXmark : icons.faBars"
+              aria-hidden="true"
+            />
+          </button>
         </div>
       </div>
+
+      @if (toolsOpen()) {
+        <button
+          type="button"
+          class="site-menu__backdrop"
+          aria-label="Close menu"
+          (click)="closeTools()"
+        ></button>
+      }
+
+      @if (mobileOpen()) {
+        <button
+          type="button"
+          class="site-drawer__backdrop"
+          aria-label="Close navigation menu"
+          (click)="closePanels()"
+        ></button>
+        <div class="site-drawer">
+          <nav class="ft-container site-drawer__nav" aria-label="Main navigation">
+            @for (item of primaryNav; track item.path) {
+              <a
+                class="site-drawer__link"
+                [routerLink]="[item.path]"
+                routerLinkActive="is-active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="closePanels()"
+              >
+                <fa-icon [icon]="item.icon" aria-hidden="true" />
+                <span>{{ item.labelKey | translate }}</span>
+              </a>
+            }
+
+            <p class="site-drawer__group">{{ 'SHELL.NAV_TOOLS' | translate }}</p>
+
+            @for (item of toolNav; track item.path) {
+              <a
+                class="site-drawer__link site-drawer__link--sub"
+                [routerLink]="[item.path]"
+                routerLinkActive="is-active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                (click)="closePanels()"
+              >
+                <fa-icon [icon]="item.icon" aria-hidden="true" />
+                <span>{{ item.labelKey | translate }}</span>
+              </a>
+            }
+          </nav>
+        </div>
+      }
     </header>
   }
 

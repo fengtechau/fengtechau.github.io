@@ -21,17 +21,52 @@
   --ft-accent: #00c2a8;
   --ft-accent-strong: #0a9e88;
   --ft-accent-soft: #e0f7f1;
+  --ft-violet: #7c3aed;
+  --ft-violet-soft: #f1e9fe;
 
   // Neutrals
   --ft-bg: #f4f6fa;
   --ft-surface: #ffffff;
   --ft-surface-alt: #f8fafc;
+  --ft-surface-raised: #ffffff;
   --ft-text: #0f172a;
   --ft-text-secondary: #475569;
   --ft-text-muted: #7c8aa0;
   --ft-border: #e2e8f0;
   --ft-border-strong: #cbd5e1;
   --ft-header-bg: rgba(255, 255, 255, 0.88);
+  --ft-backdrop: rgba(15, 23, 42, 0.32);
+
+  // Tech-theme surface layers
+  --ft-glass-bg: rgba(255, 255, 255, 0.78);
+  --ft-glass-bg-strong: rgba(255, 255, 255, 0.92);
+  --ft-glass-border: rgba(15, 23, 42, 0.08);
+  --ft-glass-blur: 16px;
+
+  // Grid overlay (blueprint / HUD lines)
+  --ft-grid-line: rgba(45, 106, 227, 0.11);
+  --ft-mesh: radial-gradient(
+    circle at 18% 0%,
+    rgba(45, 106, 227, 0.16),
+    transparent 44%
+  );
+  --ft-halo-anchor: radial-gradient(circle, rgba(45, 106, 227, 0.22), transparent 70%);
+  --ft-halo-accent: radial-gradient(circle, rgba(0, 194, 168, 0.2), transparent 70%);
+
+  // HUD frames
+  --ft-frame-line: rgba(45, 106, 227, 0.28);
+  --ft-scan-line: rgba(45, 106, 227, 0.14);
+
+  // Glows — deliberate but restrained on light backgrounds
+  --ft-glow-brand: 0 14px 34px -16px rgba(45, 106, 227, 0.5);
+  --ft-glow-accent: 0 14px 34px -16px rgba(0, 194, 168, 0.45);
+  --ft-glow-ring: 0 0 0 1px rgba(45, 106, 227, 0.2);
+
+  // Signals & text effects
+  --ft-signal: #00c2a8;
+  --ft-signal-soft: rgba(0, 194, 168, 0.16);
+  --ft-gradient-text: linear-gradient(100deg, #17439f 0%, #2d6ae3 46%, #00c2a8 100%);
+  --ft-gradient-brand: linear-gradient(135deg, #2d6ae3 0%, #17439f 100%);
 
   // Feedback
   --ft-danger: #e5484d;
@@ -91,17 +126,52 @@
   --ft-accent: #2ad4bc;
   --ft-accent-strong: #4de0cb;
   --ft-accent-soft: rgba(42, 212, 188, 0.14);
+  --ft-violet: #b18cff;
+  --ft-violet-soft: rgba(177, 140, 255, 0.14);
 
-  // Neutrals
+  // Neutrals — deep space blues instead of flat grey
   --ft-bg: #0d1420;
   --ft-surface: #141d2e;
   --ft-surface-alt: #0a111d;
+  --ft-surface-raised: #1a2540;
   --ft-text: #e8edf7;
   --ft-text-secondary: #c3ccda;
   --ft-text-muted: #8fa0b8;
   --ft-border: #263246;
   --ft-border-strong: #38465e;
   --ft-header-bg: rgba(13, 20, 32, 0.88);
+  --ft-backdrop: rgba(2, 6, 16, 0.62);
+
+  // Tech-theme surface layers
+  --ft-glass-bg: rgba(20, 29, 46, 0.62);
+  --ft-glass-bg-strong: rgba(20, 29, 46, 0.88);
+  --ft-glass-border: rgba(140, 175, 255, 0.14);
+  --ft-glass-blur: 18px;
+
+  // Grid overlay (blueprint / HUD lines)
+  --ft-grid-line: rgba(120, 165, 255, 0.09);
+  --ft-mesh: radial-gradient(
+    circle at 18% 0%,
+    rgba(91, 141, 239, 0.22),
+    transparent 46%
+  );
+  --ft-halo-anchor: radial-gradient(circle, rgba(91, 141, 239, 0.4), transparent 70%);
+  --ft-halo-accent: radial-gradient(circle, rgba(42, 212, 188, 0.34), transparent 70%);
+
+  // HUD frames
+  --ft-frame-line: rgba(120, 175, 255, 0.3);
+  --ft-scan-line: rgba(120, 175, 255, 0.18);
+
+  // Glows — neon on dark surfaces
+  --ft-glow-brand: 0 18px 44px -18px rgba(91, 141, 239, 0.75);
+  --ft-glow-accent: 0 18px 44px -18px rgba(42, 212, 188, 0.6);
+  --ft-glow-ring: 0 0 0 1px rgba(120, 165, 255, 0.28);
+
+  // Signals & text effects
+  --ft-signal: #2ad4bc;
+  --ft-signal-soft: rgba(42, 212, 188, 0.18);
+  --ft-gradient-text: linear-gradient(100deg, #a8c4ff 0%, #5b8def 40%, #2ad4bc 100%);
+  --ft-gradient-brand: linear-gradient(135deg, #5b8def 0%, #7c5cf0 100%);
 
   // Feedback
   --ft-danger: #ff6471;
@@ -283,7 +353,7 @@ img {
 // ------------------------------------------------------------
 .ft-container {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1280px;
   margin-inline: auto;
   padding-inline: 20px;
 }
@@ -390,6 +460,237 @@ kbd.ft-kbd {
 .ft-icon-chip--orange {
   background: var(--ft-warning-soft);
   color: var(--ft-warning);
+}
+
+.ft-icon-chip--violet {
+  background: var(--ft-violet-soft);
+  color: var(--ft-violet);
+}
+
+// Icon chip with a soft neon halo — the signature "tech" chip.
+.ft-icon-chip--glow {
+  position: relative;
+  box-shadow:
+    inset 0 0 0 1px var(--ft-glass-border),
+    var(--ft-glow-brand);
+}
+
+.ft-icon-chip--glow.ft-icon-chip--green {
+  box-shadow:
+    inset 0 0 0 1px var(--ft-glass-border),
+    var(--ft-glow-accent);
+}
+
+.ft-icon-chip--glow.ft-icon-chip--violet {
+  box-shadow:
+    inset 0 0 0 1px var(--ft-glass-border),
+    0 14px 34px -16px rgba(124, 58, 237, 0.55);
+}
+
+// ------------------------------------------------------------
+// Tech-theme primitives
+// ------------------------------------------------------------
+
+// Blueprint grid backdrop. Pair with a solid/`--ft-section--alt`
+// background; this only paints the HUD lines.
+.ft-grid-bg {
+  background-image:
+    linear-gradient(var(--ft-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ft-grid-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+
+// Frosted panel used for cards, the header and the hero stats.
+.ft-glass {
+  background: var(--ft-glass-bg);
+  border: 1px solid var(--ft-glass-border);
+  backdrop-filter: blur(var(--ft-glass-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--ft-glass-blur)) saturate(150%);
+}
+
+// Gradient hairline drawn along the top edge of a panel.
+.ft-edge-lit {
+  position: relative;
+  overflow: hidden;
+}
+
+.ft-edge-lit::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ft-frame-line) 22%,
+    var(--ft-signal) 50%,
+    var(--ft-frame-line) 78%,
+    transparent
+  );
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+// Small monospace label with a leading status dot.
+.ft-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 14px;
+  border: 1px solid var(--ft-glass-border);
+  border-radius: var(--ft-radius-full);
+  background: var(--ft-glass-bg);
+  color: var(--ft-text-secondary);
+  font-family: var(--ft-font-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.ft-pulse-dot {
+  position: relative;
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ft-signal);
+  box-shadow: 0 0 0 0 var(--ft-signal-soft);
+  animation: ft-pulse 2.4s ease-out infinite;
+}
+
+@keyframes ft-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--ft-signal-soft);
+  }
+  70% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+// Gradient-filled headline text.
+.ft-gradient-text {
+  background: var(--ft-gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+// Section heading that pairs an eyebrow with a large title.
+.ft-section__head {
+  max-width: 68ch;
+  margin-bottom: 30px;
+}
+
+.ft-section__head .ft-eyebrow {
+  margin-bottom: 14px;
+}
+
+// Entrance animation. Runs automatically (no JS observer needed);
+// `.ft-reveal--N` staggers siblings.
+.ft-reveal {
+  animation: ft-reveal 620ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.ft-reveal--1 {
+  animation-delay: 60ms;
+}
+
+.ft-reveal--2 {
+  animation-delay: 130ms;
+}
+
+.ft-reveal--3 {
+  animation-delay: 200ms;
+}
+
+.ft-reveal--4 {
+  animation-delay: 270ms;
+}
+
+.ft-reveal--5 {
+  animation-delay: 340ms;
+}
+
+.ft-reveal--6 {
+  animation-delay: 410ms;
+}
+
+@keyframes ft-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// Slow drifting halo — used behind hero sections.
+.ft-halo {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(34px);
+  pointer-events: none;
+}
+
+@keyframes ft-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -16px, 0) scale(1.05);
+  }
+}
+
+@keyframes ft-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(22px, 12px, 0) scale(1.08);
+  }
+}
+
+// Animated hairline that sweeps across a panel on hover.
+.ft-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.ft-scan::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 45%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ft-scan-line), transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.ft-scan:hover::after {
+  opacity: 1;
+  animation: ft-scan 1.5s linear infinite;
+}
+
+@keyframes ft-scan {
+  from {
+    left: -60%;
+  }
+  to {
+    left: 120%;
+  }
 }
 
 // Respect users who prefer reduced motion

@@ -2,7 +2,9 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
+  faArrowRight,
   faBolt,
+  faCheck,
   faComments,
   faDollarSign,
   faEnvelope,
@@ -16,7 +18,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { AppTitleService } from '../../core/services/app-title.service';
 
-type Tone = 'blue' | 'green' | 'orange';
+type Tone = 'blue' | 'green' | 'orange' | 'violet';
 
 interface StatItem {
   valueKey: string;
@@ -51,8 +53,22 @@ export class HomeComponent {
   private readonly i18n = inject(TranslateService);
 
   protected readonly icons = {
+    faArrowRight,
+    faCheck,
     faEnvelope,
   };
+
+  protected readonly heroChips: string[] = [
+    'HOME.CHIP_SAME_DAY',
+    'HOME.CHIP_FIXED_PRICE',
+    'HOME.CHIP_NO_AD_SPEND',
+  ];
+
+  protected readonly ctaChips: string[] = [
+    'HOME.CTA_CHIP1',
+    'HOME.CTA_CHIP2',
+    'HOME.CTA_CHIP3',
+  ];
 
   protected readonly stats: StatItem[] = [
     { valueKey: 'HOME.STAT1_VALUE', labelKey: 'HOME.STAT1_LABEL' },
@@ -82,7 +98,7 @@ export class HomeComponent {
     },
     {
       icon: faComments,
-      tone: 'blue',
+      tone: 'violet',
       titleKey: 'HOME.WHY4_TITLE',
       textKey: 'HOME.WHY4_TEXT',
     },

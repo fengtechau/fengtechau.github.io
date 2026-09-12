@@ -1,34 +1,401 @@
-<section class="ft-section" aria-labelledby="contact-title">
+<section class="contact-hero" aria-labelledby="contact-title">
+  <div class="contact-hero__bg" aria-hidden="true">
+    <span class="ft-halo contact-hero__halo contact-hero__halo--a"></span>
+    <span class="ft-halo contact-hero__halo contact-hero__halo--b"></span>
+    <span class="contact-hero__grid-lines"></span>
+  </div>
+
   <div class="ft-container">
-    <div class="contact">
-      <div class="contact__info">
-        <h1 id="contact-title" class="ft-section__title">
-          {{ 'HOME.CONTACT_TITLE' | translate }}
-        </h1>
-        <p class="contact__lead">{{ 'HOME.CONTACT_LEAD' | translate }}</p>
-        <a
-          class="ft-btn ft-btn--primary contact__cta"
-          href="mailto:info@fengtech.com.au"
-        >
-          <fa-icon [icon]="icons.faEnvelope" aria-hidden="true" />
-          {{ 'HOME.CONTACT_CTA' | translate }}
-        </a>
-        <p class="contact__line">
-          <strong>{{ 'HOME.CONTACT_EMAIL_LABEL' | translate }}</strong>
-          <a href="mailto:info@fengtech.com.au">info@fengtech.com.au</a>
-        </p>
-        <p class="contact__line">
-          <strong>{{ 'HOME.CONTACT_PHONE_LABEL' | translate }}</strong>
-          <a href="tel:+61411758128">0411 758 128</a>
-          <span class="contact__hint">{{ 'HOME.CONTACT_PHONE_HINT' | translate }}</span>
-        </p>
+    <p class="ft-eyebrow ft-reveal ft-reveal--1">
+      <span class="ft-pulse-dot" aria-hidden="true"></span>
+      {{ 'CONTACT.AVAILABILITY' | translate }}
+    </p>
+    <h1 id="contact-title" class="contact-hero__title ft-reveal ft-reveal--2">
+      {{ 'HOME.CONTACT_TITLE' | translate }}
+    </h1>
+    <p class="contact-hero__lead ft-reveal ft-reveal--3">
+      {{ 'HOME.CONTACT_LEAD' | translate }}
+    </p>
+
+    <div class="contact-hero__badges ft-reveal ft-reveal--4">
+      @for (badge of heroBadges; track badge.iconKey) {
+        <span class="contact-hero__badge ft-glass">
+          <fa-icon [icon]="icons[badge.iconKey]" aria-hidden="true" />
+          {{ badge.key | translate }}
+        </span>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="ft-section contact-body" aria-labelledby="contact-form-title">
+  <div class="ft-container contact-body__grid">
+    <div class="channels">
+      <h2 class="channels__title">{{ 'CONTACT.DIRECT_TITLE' | translate }}</h2>
+      <p class="channels__lead">{{ 'CONTACT.DIRECT_LEAD' | translate }}</p>
+
+      <div class="channels__grid">
+        @for (channel of channels; track channel.key; let i = $index) {
+          <article class="channel ft-glass ft-edge-lit ft-scan">
+            <span
+              class="ft-icon-chip ft-icon-chip--{{
+                channel.tone
+              }} ft-icon-chip--glow channel__icon"
+            >
+              <fa-icon [icon]="channel.icon" aria-hidden="true" />
+            </span>
+            <div class="channel__body">
+              <p class="channel__label ft-mono">{{ channel.labelKey | translate }}</p>
+              <p class="channel__value">{{ channel.valueKey | translate }}</p>
+              <p class="channel__hint">{{ channel.hintKey | translate }}</p>
+            </div>
+            @if (channel.copyValue || channel.href) {
+              <div class="channel__tools">
+                @if (channel.copyValue) {
+                  <button
+                    type="button"
+                    class="channel__copy"
+                    [attr.aria-label]="
+                      (channel.key | uppercase) + ' ' + ('CONTACT.COPY' | translate)
+                    "
+                    [title]="'CONTACT.COPY' | translate"
+                    (click)="copy(channel)"
+                  >
+                    <fa-icon
+                      [icon]="
+                        copiedKey() === channel.key ? icons.faCheck : icons.faCopy
+                      "
+                      aria-hidden="true"
+                    />
+                  </button>
+                }
+                @if (channel.href) {
+                  <a
+                    class="channel__link"
+                    [href]="channel.href"
+                    [attr.aria-label]="
+                      (channel.key | uppercase) +
+                      ' ' +
+                      ('CONTACT.OPEN_LINK' | translate)
+                    "
+                    [title]="'CONTACT.OPEN_LINK' | translate"
+                  >
+                    <fa-icon
+                      [icon]="icons.faArrowUpRightFromSquare"
+                      aria-hidden="true"
+                    />
+                  </a>
+                }
+              </div>
+            }
+          </article>
+        }
       </div>
-      <img
-        class="contact__logo"
-        src="/assets/images/Logo/png/ColorNoBg.png"
-        alt="FengTech logo"
-        loading="lazy"
-      />
+    </div>
+
+    <div class="contact-body__aside">
+      <form
+        class="enquiry ft-glass ft-edge-lit"
+        [class.is-submitted]="submitted()"
+        novalidate
+        (submit)="$event.preventDefault(); onSubmit()"
+      >
+        <header class="enquiry__head">
+          <span class="enquiry__icon">
+            <fa-icon [icon]="icons.faPaperPlane" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 id="contact-form-title" class="enquiry__title">
+              {{ 'CONTACT.FORM_TITLE' | translate }}
+            </h2>
+            <p class="enquiry__subtitle">{{ 'CONTACT.FORM_SUBTITLE' | translate }}</p>
+          </div>
+        </header>
+
+        <div class="enquiry__row">
+          <label class="field">
+            <span class="field__label ft-mono">{{ 'CONTACT.F_NAME' | translate }}</span>
+            <input
+              class="field__input"
+              [class.is-invalid]="nameInvalid()"
+              type="text"
+              name="name"
+              autocomplete="name"
+              [attr.aria-invalid]="nameInvalid()"
+              [placeholder]="'CONTACT.F_NAME_PH' | translate"
+              [value]="form().name"
+              (input)="setField('name', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field">
+            <span class="field__label ft-mono">{{
+              'CONTACT.F_EMAIL' | translate
+            }}</span>
+            <input
+              class="field__input"
+              [class.is-invalid]="emailInvalid()"
+              type="email"
+              name="email"
+              autocomplete="email"
+              [attr.aria-invalid]="emailInvalid()"
+              [placeholder]="'CONTACT.F_EMAIL_PH' | translate"
+              [value]="form().email"
+              (input)="setField('email', $any($event.target).value)"
+            />
+          </label>
+        </div>
+
+        <div class="enquiry__row">
+          <label class="field">
+            <span class="field__label ft-mono">{{
+              'CONTACT.F_COMPANY' | translate
+            }}</span>
+            <input
+              class="field__input"
+              type="text"
+              name="company"
+              autocomplete="organization"
+              [placeholder]="'CONTACT.F_COMPANY_PH' | translate"
+              [value]="form().company"
+              (input)="setField('company', $any($event.target).value)"
+            />
+          </label>
+
+          <label class="field">
+            <span class="field__label ft-mono">{{
+              'CONTACT.F_SERVICE' | translate
+            }}</span>
+            <select
+              class="field__input field__input--select"
+              name="topic"
+              [value]="form().topic"
+              (change)="setField('topic', $any($event.target).value)"
+            >
+              @for (option of serviceOptions; track option) {
+                <option [value]="option">{{ option | translate }}</option>
+              }
+            </select>
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="field__label ft-mono">{{
+            'CONTACT.F_MESSAGE' | translate
+          }}</span>
+          <textarea
+            class="field__input field__input--area"
+            [class.is-invalid]="messageInvalid()"
+            name="message"
+            rows="3"
+            [attr.aria-invalid]="messageInvalid()"
+            [placeholder]="'CONTACT.F_MESSAGE_PH' | translate"
+            [value]="form().message"
+            (input)="setField('message', $any($event.target).value)"
+          ></textarea>
+        </label>
+
+        @if (formInvalid()) {
+          <p class="enquiry__error" role="alert">
+            <fa-icon [icon]="icons.faCircleExclamation" aria-hidden="true" />
+            {{ 'CONTACT.FORM_ERROR' | translate }}
+          </p>
+        }
+
+        <button type="submit" class="ft-btn ft-btn--primary enquiry__submit">
+          <fa-icon [icon]="icons.faPaperPlane" aria-hidden="true" />
+          {{ 'CONTACT.FORM_SUBMIT' | translate }}
+        </button>
+
+        <p class="enquiry__note">
+          <fa-icon [icon]="icons.faShieldHalved" aria-hidden="true" />
+          {{ 'CONTACT.FORM_NOTE' | translate }}
+        </p>
+      </form>
+
+      <aside class="prefer ft-glass">
+        <div class="prefer__icon">
+          <fa-icon [icon]="icons.faComments" aria-hidden="true" />
+        </div>
+        <div>
+          <h3 class="prefer__title">{{ 'CONTACT.PREFER_TITLE' | translate }}</h3>
+          <p class="prefer__text">{{ 'CONTACT.PREFER_TEXT' | translate }}</p>
+          <ul class="prefer__list">
+            @for (tip of preferTips; track tip) {
+              <li class="prefer__item">
+                <fa-icon [icon]="icons.faCheck" aria-hidden="true" />
+                {{ tip | translate }}
+              </li>
+            }
+          </ul>
+        </div>
+      </aside>
+
+      <div class="mini-faq ft-glass ft-edge-lit">
+        <h3 class="mini-faq__title">{{ 'CONTACT.FAQ_TITLE' | translate }}</h3>
+        @for (faq of faqs; track faq.titleKey) {
+          <details class="mini-faq__item">
+            <summary class="mini-faq__q">
+              <span>{{ faq.titleKey | translate }}</span>
+              <fa-icon [icon]="icons.faChevronDown" aria-hidden="true" />
+            </summary>
+            <p class="mini-faq__a">{{ faq.textKey | translate }}</p>
+          </details>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ft-section next-band" aria-labelledby="next-title">
+  <div class="ft-container">
+    <div class="ft-section__head">
+      <p class="ft-eyebrow">
+        <span class="ft-pulse-dot" aria-hidden="true"></span>
+        {{ 'CONTACT.NEXT_EYEBROW' | translate }}
+      </p>
+      <h2 id="next-title" class="ft-section__title">
+        {{ 'CONTACT.NEXT_TITLE' | translate }}
+      </h2>
+      <p class="ft-section__lead">{{ 'CONTACT.NEXT_LEAD' | translate }}</p>
+    </div>
+
+    <ol class="steps">
+      @for (step of responseSteps; track step.titleKey; let i = $index) {
+        <li class="step ft-glass ft-reveal ft-reveal--{{ i + 1 }}">
+          <span class="step__num ft-mono" aria-hidden="true">0{{ i + 1 }}</span>
+          <h3 class="step__title">{{ step.titleKey | translate }}</h3>
+          <p class="step__text">{{ step.textKey | translate }}</p>
+        </li>
+      }
+    </ol>
+  </div>
+</section>
+
+<section class="ft-section" aria-labelledby="topics-title">
+  <div class="ft-container">
+    <div class="ft-section__head">
+      <p class="ft-eyebrow">
+        <span class="ft-pulse-dot" aria-hidden="true"></span>
+        {{ 'CONTACT.TOPICS_EYEBROW' | translate }}
+      </p>
+      <h2 id="topics-title" class="ft-section__title">
+        {{ 'CONTACT.TOPICS_TITLE' | translate }}
+      </h2>
+      <p class="ft-section__lead">{{ 'CONTACT.TOPICS_LEAD' | translate }}</p>
+    </div>
+
+    <div class="topics">
+      @for (topic of enquiryTypes; track topic.titleKey; let i = $index) {
+        <div class="topic ft-glass ft-scan ft-reveal ft-reveal--{{ i + 1 }}">
+          <span
+            class="ft-icon-chip ft-icon-chip--{{
+              topic.tone
+            }} ft-icon-chip--glow topic__icon"
+          >
+            <fa-icon [icon]="topic.icon" aria-hidden="true" />
+          </span>
+          <h3 class="topic__title">{{ topic.titleKey | translate }}</h3>
+          <p class="topic__text">{{ topic.textKey | translate }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<section class="ft-section coverage-band" aria-labelledby="coverage-title">
+  <div class="ft-container coverage">
+    <div class="coverage__copy">
+      <p class="ft-eyebrow">
+        <span class="ft-pulse-dot" aria-hidden="true"></span>
+        {{ 'CONTACT.COVERAGE_EYEBROW' | translate }}
+      </p>
+      <h2 id="coverage-title" class="ft-section__title">
+        {{ 'CONTACT.COVERAGE_TITLE' | translate }}
+      </h2>
+      <p class="ft-section__lead">{{ 'CONTACT.COVERAGE_LEAD' | translate }}</p>
+
+      <div class="coverage__stats">
+        <div class="coverage__stat ft-glass">
+          <span class="coverage__stat-value ft-mono">{{
+            'CONTACT.COVERAGE_SLA_VALUE' | translate
+          }}</span>
+          <span class="coverage__stat-label">{{
+            'CONTACT.COVERAGE_SLA_LABEL' | translate
+          }}</span>
+        </div>
+        <div class="coverage__stat ft-glass">
+          <span class="coverage__stat-value ft-mono">{{
+            'CONTACT.COVERAGE_REMOTE_VALUE' | translate
+          }}</span>
+          <span class="coverage__stat-label">{{
+            'CONTACT.COVERAGE_REMOTE_LABEL' | translate
+          }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="radar ft-glass ft-edge-lit" aria-hidden="true">
+      <svg
+        class="radar__svg"
+        viewBox="0 0 320 320"
+        role="presentation"
+        focusable="false"
+      >
+        <circle class="radar__ring" cx="160" cy="160" r="132" />
+        <circle class="radar__ring radar__ring--faint" cx="160" cy="160" r="96" />
+        <circle class="radar__ring radar__ring--faint" cx="160" cy="160" r="60" />
+        <line class="radar__axis" x1="160" y1="20" x2="160" y2="300" />
+        <line class="radar__axis" x1="20" y1="160" x2="300" y2="160" />
+
+        <g class="radar__sweep">
+          <path class="radar__wedge" d="M160 160 L160 28 A132 132 0 0 1 227 47 Z" />
+          <line class="radar__sweep-line" x1="160" y1="160" x2="160" y2="28" />
+        </g>
+
+        @for (node of coverageNodes; track node.x) {
+          <circle
+            class="radar__ping"
+            [attr.cx]="node.x"
+            [attr.cy]="node.y"
+            [attr.r]="node.r"
+          >
+            <animate
+              attributeName="opacity"
+              values="0.15;0.95;0.15"
+              [attr.dur]="node.dur + 's'"
+              [attr.begin]="node.delay + 's'"
+              repeatCount="indefinite"
+            />
+          </circle>
+        }
+      </svg>
+      <div class="radar__label ft-mono">SYD · AU</div>
+    </div>
+  </div>
+</section>
+
+<section class="ft-section" aria-labelledby="trust-title">
+  <div class="ft-container">
+    <div class="trust ft-glass ft-edge-lit">
+      <span class="trust__glow" aria-hidden="true"></span>
+      <div class="trust__copy">
+        <p class="trust__eyebrow ft-mono">{{ 'CONTACT.TRUST_EYEBROW' | translate }}</p>
+        <h2 id="trust-title" class="trust__title">
+          {{ 'CONTACT.TRUST_TITLE' | translate }}
+        </h2>
+        <p class="trust__text">{{ 'CONTACT.TRUST_TEXT' | translate }}</p>
+      </div>
+      <div class="trust__actions">
+        <a class="ft-btn ft-btn--primary" [href]="mailtoHref()">
+          <fa-icon [icon]="icons.faEnvelope" aria-hidden="true" />
+          {{ 'CONTACT.TRUST_CTA' | translate }}
+        </a>
+        <a class="ft-btn ft-btn--secondary" routerLink="/services">
+          {{ 'HOME.HERO_CTA_SERVICES' | translate }}
+          <fa-icon [icon]="icons.faArrowRight" aria-hidden="true" />
+        </a>
+      </div>
     </div>
   </div>
 </section>
