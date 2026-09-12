@@ -1,0 +1,1 @@
+import{Jt as v,Qt as x,_ as JO}from"./main-SZ3GTLRL.js";var n=`FENG TECH`;var m=(()=>{class t{constructor(){this.title=v(JO)}setTitle(e){this.title.setTitle(`${e} \xB7 ${n}`)}static{this.ɵfac=function(c){return new(c||t)}}static{this.ɵprov=x({token:t,factory:t.ɵfac,providedIn:`root`})}}return t})();export{m as t};
